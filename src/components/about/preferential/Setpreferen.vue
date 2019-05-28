@@ -30,7 +30,7 @@
           type="index">
         </el-table-column>
         <el-table-column
-          prop="card_kind"
+          prop="name"
           label="名称">
         </el-table-column>
         <el-table-column
@@ -72,7 +72,7 @@
           <div class="normright">
             <div style="width:350px;margin:20px auto 0;font-size:18px;height:40px;line-height:40px">
               <span>名称：</span>
-              <el-input style="width:250px" type="text" v-model="card_sel_editor.card_kind" clearable></el-input>
+              <el-input style="width:250px" type="text" v-model="card_sel_editor.name" clearable></el-input>
             </div>
             <div style="width:350px;margin:20px auto 0;font-size:18px;height:40px;line-height:40px">
               <span>月数：</span>
@@ -98,12 +98,7 @@ export default {
       add_header_text:'',
       consumptions: ['APP','微信小程序'],
       user_kind:'',
-      list_detail: [
-        {card_kind:'月卡',month_no:1,create_time:'2019-05-21 18:00:00',updata_time:'2019-06-21 18:00:00'},
-        {card_kind:'月卡',month_no:1,create_time:'2019-05-21 18:00:00',updata_time:'2019-06-21 18:00:00'},
-        {card_kind:'月卡',month_no:1,create_time:'2019-05-21 18:00:00',updata_time:'2019-06-21 18:00:00'},
-        {card_kind:'月卡',month_no:1,create_time:'2019-05-21 18:00:00',updata_time:'2019-06-21 18:00:00'}
-      ],
+      list_detail: [],
       card_kind:'',
       card_sel_editor:{},
       card_sel_reset:{},
@@ -113,35 +108,31 @@ export default {
       total_ps:40,
       allps:1,
       addshow:false,
-      url_park:'http://www.lcgxlm.com:13259/its/admin/query/berth'
+      url:'http://192.168.0.121:13259/its/card-type/types'
     }
   },
   mounted() {
-    this.get_park_list()
+    this.get_rule_list()
   },
   methods: {
-    //获取停车场列表
-    get_park_list(){
-      axios({
-        method: 'post',
-        url:this.url_park,
-        headers:{
-          'Authorization':'Web 123213213',
-          'content-type':'application/x-www-form-urlencoded'
-        },
-        data: {}
+    //封装获取月卡类型列表
+    get_card_kind(params){
+      axios.get(this.url,{
+        params:params
       }).then(res => {
-        this.parklists = res.data.data.map(item => {
-          return {
-            'key':item.parking_weiyi_no,
-            'label':item.parking_name,
-            'name':item.parking_name
-          }
-        })
+        console.log(res)
+        if(res.data.data.length > 0){
+          this.list_detail = res.data.data
+          this.total_ps = res.data.data.length
+        }else{
+          let text = '没有符合条件的数据'
+          this.show_warning(text)
+        }
       })
     },
-    filterMethod(query, item) {
-      return item.name.indexOf(query) > -1;
+    get_rule_list(){
+      let params ={}
+      this.get_card_kind(params)
     },
     //表格选中
     handleSelectionChange(val) {
@@ -175,9 +166,26 @@ export default {
     add_car(){
       this.addshow = true
       this.add_header_text = '新建月卡类型'
+
     },
     confirm(){
-      this.close()
+      console.log(this.card_sel_editor)
+      let params = {
+        name:this.card_sel_editor.name
+      }
+      params = JSON.stringify(params)
+      axios({
+        method:'post',
+        url:this.url,
+        headers: {
+          'Authorization': 'Web 123213213',
+          'content-type': 'application/json;charset=UTF-8'
+        },
+        data:params
+      }).then(res => {
+        console.log(res)
+      })
+      // this.close()
     },
     reset(){
       let data = JSON.parse(JSON.stringify(this.card_sel_reset))
@@ -224,20 +232,7 @@ export default {
     },
     //搜索
     sel_uesr(){
-      console.log(this.time_interval[0])
-      console.log(this.time_interval[1])
-      let params = new URLSearchParams()
-      params.append('pageIndex', this.pageIndex)
-      params.append('ps', this.ps)
-      if(this.user_kind == 'APP'){
-        params.append('appType','app')
-      }else if(this.user_kind == '微信小程序'){
-        params.append('smallType','微信小程序')
-      }
-      params.append('sTime', this.time_interval[0])
-      params.append('eTime', this.time_interval[1])
-      params.append('account', this.user_name)
-      this.get_user_list(params,this.url)
+
     }
   },
 }

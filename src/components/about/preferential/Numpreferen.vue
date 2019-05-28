@@ -68,13 +68,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      list_detail: [
-        {parkName:'停车场1',parkNum:111,cardNum:50,alreadyNum:20,edit:false},
-        {parkName:'停车场1',parkNum:111,cardNum:50,alreadyNum:20,edit:false},
-        {parkName:'停车场1',parkNum:111,cardNum:50,alreadyNum:20,edit:false},
-        {parkName:'停车场1',parkNum:111,cardNum:50,alreadyNum:20,edit:false},
-        {parkName:'停车场1',parkNum:111,cardNum:50,alreadyNum:20,edit:false}
-      ],
+      list_detail: [],
       park_name:'',
       reset_text:'',
       pageIndex: 1,
@@ -83,9 +77,6 @@ export default {
       allps:1,
       url:'http://192.168.0.121:13259/its/card-places/places'
     }
-  },
-  beforeCreate() {
-
   },
   beforeMount() {
     this.get_park_list()

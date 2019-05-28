@@ -270,9 +270,7 @@ export default {
       let data = this.multipleSelection.map(item => {
         return item.id
       })
-      let params = {
-        cardId: data
-      }
+      let params = data
       let textone = '此操作将所选择的月卡配置删除, 是否继续?'
       let texttwo = '月卡配置删除成功！'
       let textthree = '月卡配置删除失败！'
@@ -364,12 +362,7 @@ export default {
     },
     //表格内删除
     list_del(item){
-      console.log(typeof(item.id*1))
-      let data = [item.id*1]
-      console.log(data)
-      let params = {
-        cardId: data
-      }
+      let params = [item.id]
       let textone = '此操作将所选择的月卡配置删除, 是否继续?'
       let texttwo = '月卡配置删除成功！'
       let textthree = '月卡配置删除失败！'

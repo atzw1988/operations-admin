@@ -158,8 +158,8 @@ export default {
       ps:15,            //每页数量
       allps:1,          //总页数
       list_detail:[],    //订单数组
-      url:'http://192.168.0.192:13259/its/parking/findPage',
-      // url:'http://www.lcgxlm.com:13259/its/parking/findPage',
+      // url:'http://192.168.0.192:13259/its/parking/findPage',
+      url:'http://www.lcgxlm.com:13259/its/parking/findPage',
       url_park:'http://www.lcgxlm.com:13259/its/admin/query/berth'
     }
   },
@@ -227,10 +227,6 @@ export default {
         this.list_detail = res.data.data.pageInfo.list
         this.list_num = res.data.data.pageInfo.total
         this.sel_num = res.data.data.pageInfo.total
-        // this.list_detail.forEach(item => {
-        //   item.starttime = this.renderTime(item.starttime)
-        //   item.endtime = this.renderTime(item.endtime)
-        // })
         this.loading = false
       })
     },
@@ -277,6 +273,7 @@ export default {
       })
     },
     selbtn(){
+      console.log(this.time_interval)
       let params = {}
       if(this.time_interval){
         params = {

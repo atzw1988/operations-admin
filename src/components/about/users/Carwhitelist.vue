@@ -14,9 +14,7 @@
           <el-date-picker
             v-model="time_interval"
             type="datetimerange"
-            range-separator="-"
-            format='yyyy-MM-dd HH:mm:ss'
-            value-format='yyyyMMdd HH:mm:ss'
+            value-format='yyyy-MM-dd HH:mm:ss'
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
@@ -25,7 +23,7 @@
           <span style="float:left">车牌:</span>
           <el-input style="width:120px;float:left"
             placeholder="输入车牌号"
-            v-model="user_name"
+            v-model="white_car"
             clearable>
           </el-input>
         </div>
@@ -37,8 +35,6 @@
         :data="list_detail"
         tooltip-effect="dark"
         style="width: 100%"
-        :summary-method="getSummaries"
-        show-summary
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
@@ -54,7 +50,7 @@
         </el-table-column>
         <el-table-column
           sortable
-          prop="create_time"
+          prop="createTime"
           label="加入白名单日期">
         </el-table-column>
         <el-table-column
@@ -112,16 +108,8 @@ export default {
       add_header_text:'',
       consumptions: ['APP','微信小程序'],
       user_kind:'',
-      list_detail: [
-        {carNo:'粤A123456',create_time:'2019-04-18 15:23:56',info:'XX局XX领导'},
-        {carNo:'粤A123456',create_time:'2019-04-18 15:23:56',info:'XX局XX领导'},
-        {carNo:'粤A123456',create_time:'2019-04-18 15:23:56',info:'XX局XX领导'},
-        {carNo:'粤A123456',create_time:'2019-04-18 15:23:56',info:'XX局XX领导'},
-        {carNo:'粤A123456',create_time:'2019-04-18 15:23:56',info:'XX局XX领导'},
-        {carNo:'粤A123456',create_time:'2019-04-18 15:23:56',info:'XX局XX领导'},
-        {carNo:'粤A123456',create_time:'2019-04-18 15:23:56',info:'XX局XX领导'},
-      ],
-      user_name:'',
+      list_detail: [],
+      white_car:'',
       editor_car:{},
       multipleSelection:'',
       pageIndex: 1,
@@ -134,7 +122,10 @@ export default {
       rule_editor:false,
       car_reset_editor:{},
       // url:'http://www.lcgxlm.com:13259/its/admin/query/useressage',
-      url:'/http://192.168.0.121:13259/its/white-list/list',
+      textone:'',
+      texttwo:'',
+      url:'http://192.168.0.121:13259/its/white-list/list',
+      url_del:'http://192.168.0.121:13259/its/white-list/del',
       car_url:'http://www.lcgxlm.com:13259/its/admin/underthe/vehicle',
     }
   },
@@ -148,14 +139,16 @@ export default {
         params:params
       }).then(res => {
         console.log(res)
-        // if(res.data.data.length > 0){
-        //   this.card_kind_list = res.data.data
-        // }else{
-        //   let text = '您还没有配置白名单'
-        //   this.show_warning(text)
-        // }
+        if(res.data.data.pageInfo.list.length > 0){
+          this.list_detail = res.data.data.pageInfo.list
+          this.total_ps = res.data.data.pageInfo.total
+          this.list_num = res.data.data.pageInfo.total
+          this.sel_num = res.data.data.pageInfo.total
+        }else{
+          let text = '没有符合条件的数据'
+          this.show_warning(text)
+        }
       })
-
     },
     get_rule_list(){
       let params = {
@@ -174,29 +167,34 @@ export default {
       let data = this.multipleSelection.map(item => {
         return item.id
       })
-      let params = {
-        cardId: data
-      }
+      let params = data
       let textone = '此操作将所选择的车辆白名单删除, 是否继续?'
       let texttwo = '车辆白名单删除成功！'
       let textthree = '车辆白名单删除失败！'
-      let url = this.url + '/del'
+      let url = this.url_del
       this.show_delete_warning(textone,texttwo,textthree,url,params)
     },
     //新建白名单车牌
     add_car(){
       this.rule_editor = true
       this.add_header_text = '新建白名单'
+      this.textone = '添加车牌白名单成功！'
+      this.texttwo = '添加车牌白名单失败！'
+      this.url = 'http://192.168.0.121:13259/its/white-list/list'
     },
     //表格内编辑
     list_edit(rule){
       console.log(rule)
       this.rule_editor = true
       this.add_header_text = '编辑白名单'
+      this.textone = '更新车牌白名单成功！'
+      this.texttwo = '更新车牌白名单失败！'
+      this.url = 'http://192.168.0.121:13259/its/white-list/update'
       this.editor_car = rule
       this.car_reset_editor = JSON.parse(JSON.stringify(rule))
     },
     confirm_car(){
+      console.log(this.url)
       if(this.editor_car.carNo && this.editor_car.info){
         console.log(this.editor_car.carNo.length)
         if(this.editor_car.carNo.length != 7 && this.editor_car.carNo.length != 8){
@@ -211,7 +209,7 @@ export default {
             info:this.editor_car.info
           }
           if(this.editor_car.id){
-            params.id = his.editor_car.id
+            params.id = this.editor_car.id
           }
           params = JSON.stringify(params)
           axios({
@@ -224,6 +222,28 @@ export default {
             data:params
           }).then(res => {
             console.log(res)
+            if(res.data.mesg == 'OK'){
+              this.$notify({
+                title: '温馨提示',
+                message: this.textone,
+                type: 'success',
+                offset: 100
+              })
+              this.close()
+              this.get_rule_list()
+            }else if(res.data.code == 13001){
+              this.$notify.error({
+                title: '温馨提示',
+                message: '该车牌白名单已经存在！',
+                offset: 100
+              })
+            }else(
+              this.$notify.error({
+                title: '温馨提示',
+                message: this.texttwo,
+                offset: 100
+              })
+            )
           })
         }
       }
@@ -234,48 +254,12 @@ export default {
     },
     //表格内删除
     list_del(item){
-      let data = [item.id*1]
-      console.log(data)
-      let params = {
-        cardId: data
-      }
+      let params = [item.id]
       let textone = '此操作将所选择的月卡配置删除, 是否继续?'
       let texttwo = '月卡配置删除成功！'
       let textthree = '月卡配置删除失败！'
-      let url = this.url + '/del'
+      let url = this.url_del
       this.show_delete_warning(textone,texttwo,textthree,url,params)
-    },
-    //表格合计
-    getSummaries(param) {
-      const { columns, data } = param;
-      const sums = [];
-      columns.forEach((column, index) => {
-        if (index === 1) {
-          sums[index] = '合计';
-          return;
-        }
-        if (index === 2) {
-          sums[index] = '';
-          return;
-        }
-        const values = data.map(item => Number(item[column.property]));
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr);
-            if (!isNaN(value)) {
-              return prev + curr;
-            } else {
-              return prev;
-            }
-          }, 0);
-          sums[index] = sums[index].toFixed(2)
-          sums[index] += ' 元';
-        } else {
-          sums[index] = '';
-        }
-      });
-
-      return sums;
     },
     //分页
     handleCurrentChange(val) {
@@ -284,11 +268,21 @@ export default {
     close(){
       this.rule_editor = false
       this.editor_car = {}
+      this.url = 'http://192.168.0.121:13259/its/white-list/list'
       this.get_rule_list()
     },
     //搜索
     sel_uesr(){
-
+      console.log(this.white_car)
+      console.log(this.time_interval)
+      let params = {
+        pageNum:this.pageIndex,
+        pageSize:this.ps,
+        startTime:this.time_interval[0],
+        endTime:this.time_interval[1],
+        carNo:this.white_car
+      }
+      this.get_car_list(params)
     }
   },
 }
@@ -401,7 +395,7 @@ export default {
   width: 580px;
   height: 30px;
   position: absolute;
-  bottom: 10px;
+  bottom: -35px;
   right: 80px;
 }
 
