@@ -93,7 +93,7 @@
             </div>
             <div style="width:350px;margin:20px auto 0;font-size:18px;height:40px;line-height:40px">
               <span>月数：</span>
-              <el-input-number disabled v-model="card_sel_editor.monthNum" :step="1" style="width:250px"></el-input-number>
+              <el-input-number disabled v-model="monthNum" :step="1" style="width:250px"></el-input-number>
             </div>
             <div style="width:350px;margin:20px auto 0;font-size:18px;height:40px;line-height:40px">
               <span>售价：</span>
@@ -162,6 +162,7 @@ export default {
       card_editor_new:'',
       card_editor_new_id:'',
       method_kind:'',
+      monthNum:'',
       card_kind_no: false
     }
   },
@@ -191,7 +192,6 @@ export default {
       axios.get(this.url_cardkind,{
         params:{}
       }).then(res => {
-        console.log(res)
         if(res.data.data.length > 0){
           this.card_kind_list = res.data.data
         }else{
@@ -218,11 +218,15 @@ export default {
             'name':item.parking_name
           }
         })
-        console.log(this.parklists)
       })
     },
     //获取月卡类型名下的停车场
     get_card_park(ele){
+      let mydata = this.card_kind_list.filter(item => {
+        return item.id == ele
+      })
+      this.monthNum = mydata[0].monthNum
+      this.card_editor_new_id = ele
       axios({
         method: 'post',
         url:this.url_park,
@@ -244,15 +248,13 @@ export default {
             typeId: ele
           }
         }).then(res => {
-          console.log(res.data.data)
           if(res.data.data.length > 0){
             let data = res.data.data.map(item => {
               return item.parkNo
             })
             this.parklists = this.parklists.filter(item => {
-              return data.indexOf(item.key) == -1
+              return data.indexOf(item.key) != -1
             })
-            console.log(this.parklists)
           }
         })
       })
@@ -262,7 +264,6 @@ export default {
     },
     //表格选中
     handleSelectionChange(val) {
-      console.log(val)
       this.multipleSelection = val;
     },
     //删除选择月卡
@@ -276,7 +277,6 @@ export default {
       let textthree = '月卡配置删除失败！'
       let url = this.url + '/del'
       this.show_delete_warning(textone,texttwo,textthree,url,params)
-      console.log(data)
     },
     //新建月卡配置
     add_car(){
@@ -289,10 +289,11 @@ export default {
       this.get_park_list()
     },
     confirm(){
-      if(this.card_sel_editor.monthNum && this.card_sel_editor.money && this.card_sel_editor.info && this.card_editor_new && this.park_sel.length){
+      console.log()
+      if(this.card_sel_editor.money && this.card_sel_editor.info && this.card_editor_new && this.park_sel.length){
         this.params.typeId = this.card_editor_new_id
         this.params.id = this.card_sel_editor.id
-        this.params.monthNum = this.card_sel_editor.monthNum
+        this.params.monthNum = this.monthNum
         this.params.money = this.card_sel_editor.money * 100
         this.params.info = this.card_sel_editor.info
         this.params.parkNos = this.park_sel
@@ -307,7 +308,6 @@ export default {
           },
           data:this.params
         }).then(res => {
-          console.log(res)
           if(res.data.success){
             this.$notify({
               title: '温馨提示',
@@ -336,7 +336,6 @@ export default {
     },
     //表格内编辑
     list_edit(item){
-      console.log(item)
       this.card_kind_no = true
       this.addshow = true
       this.add_header_text = '编辑月卡配置'
@@ -345,15 +344,15 @@ export default {
       this.card_editor_new_id = item.typeId
       this.card_sel_editor = item
       this.card_editor_new = item.typeName
+      this.monthNum = item.monthNum
       this.card_sel_reset = JSON.parse(JSON.stringify(item))
-      this.get_card_kind_all()
+      this.get_park_list()
       axios.get(this.url + '/' + item.id + '/' + item.typeId,{
         params:{
           cardId: item.id,
           typeId: item.typeId
         }
       }).then(res => {
-        console.log(res)
         let data = res.data.data.alreadyHandle
         this.park_sel = data.map(item => {
           return item.parkNo
@@ -381,24 +380,16 @@ export default {
       this.park_sel_reset = []
       this.params = {}
       this.card_editor_new = ''
+      this.monthNum = ''
       this.get_rule_list()
     },
     //搜索
     sel_uesr(){
-      console.log(this.time_interval[0])
-      console.log(this.time_interval[1])
-      let params = new URLSearchParams()
-      params.append('pageIndex', this.pageIndex)
-      params.append('ps', this.ps)
-      if(this.user_kind == 'APP'){
-        params.append('appType','app')
-      }else if(this.user_kind == '微信小程序'){
-        params.append('smallType','微信小程序')
+      let params = {
+        pageNum: this.pageIndex,
+        pageSize: this.ps,
+
       }
-      params.append('sTime', this.time_interval[0])
-      params.append('eTime', this.time_interval[1])
-      params.append('account', this.user_name)
-      this.get_user_list(params,this.url)
     }
   },
 }

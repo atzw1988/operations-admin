@@ -101,10 +101,10 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
           {name:'越城区',value:[120.590445,29.997687,0]}
         ],
         timer_home:null,
-        // socket: new WebSocket("ws://www.lcgxlm.com:13259/its/websocket"),
-        socket: new WebSocket("ws://192.168.1.104:13259/its/websocket"),
-        // url:'http://www.lcgxlm.com:13259/its/admin/live/amount',
-        url:'/its/admin/live/amount'
+        socket: new WebSocket("ws://www.lcgxlm.com:13259/its/websocket"),
+        // socket: new WebSocket("ws://192.168.1.104:13259/its/websocket"),
+        url:'http://www.lcgxlm.com:13259/its/admin/live/amount',
+        // url:'/its/admin/live/amount'
       }
     },
     beforeCreate() {

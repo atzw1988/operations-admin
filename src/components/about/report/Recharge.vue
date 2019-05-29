@@ -50,7 +50,7 @@
         <div class="revenue-cont">
           <ul>
             <li v-for="item in revenues" :key="item.id">
-              <span>{{item.name}}：{{item.num}}</span>
+              <span class="num_all">{{item.name}}：{{item.num}}</span>
               <span class="sequen">{{item.sequen}}</span>
               <img v-show="item.sequen > 0" src="../../../assets/tubiao03.png" alt="">
               <img v-show="item.sequen < 0" src="../../../assets/tubiao04.png" alt="">
@@ -66,7 +66,7 @@
         <div class="owe-cont">
           <ul>
             <li v-for="item in owes" :key="item.id">
-              <span>{{item.name}}：{{item.num}}</span>
+              <span class="num_all">{{item.name}}：{{item.num}}</span>
               <span class="sequen">{{item.sequen}}</span>
               <img v-show="item.sequen > 0" src="../../../assets/tubiao03.png" alt="">
               <img v-show="item.sequen < 0" src="../../../assets/tubiao04.png" alt="">
@@ -218,6 +218,7 @@ export default {
         },
         data:{}
       }).then(res => {
+        console.log(res)
         let data = res.data.data
         console.log(data)
         if(!data.todayAmountRing){
@@ -234,7 +235,7 @@ export default {
         }
         this.revenues = [
           {name:'今日',sequen:(data.todayAmountRing*100).toFixed(2),num:data.todayAmount},
-          {name:'昨日',sequen:(data.yesterdayAmountRing*100).toFixed(2),num:data.yesterdayAmount},
+          {name:'昨日',sequen:(data.yesterdayAmountRing*100).toFixed(2),num:(data.yesterdayAmount).toFixed(2)},
           {name:'近一周',sequen:(0).toFixed(2),num:data.weeksAmount},
           {name:'近一月',sequen:(0).toFixed(2),num:(data.monthAmount).toFixed(2)}
         ]
@@ -775,6 +776,7 @@ export default {
   /* border-bottom: 1px solid navajowhite; */
 }
 .headertext{
+  width: 150px;
   font-size: 20px;
   font-weight: 600;
 }
@@ -790,11 +792,14 @@ export default {
 }
 .revenue-cont>ul>li>span,.owe-cont>ul>li>span,.owe-header>span,.revenue-header>span{
   display: inline-block;
-  width: 120px;
+}
+.num_all{
+  width: 150px;
 }
 .sequen{
   text-align: center;
   margin-left: 20%;
+  width: 50px;
 }
 .revenue-cont>ul>li>img,.owe-cont>ul>li>img{
   width: 35px;

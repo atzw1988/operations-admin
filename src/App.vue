@@ -78,16 +78,16 @@ ul{
   margin: 0;
   padding: 0;
 }
-.content::-webkit-scrollbar {/*滚动条整体样式*/
-  width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
-  height: 5px;
+::-webkit-scrollbar {/*滚动条整体样式*/
+  width: 3px;     /*高宽分别对应横竖滚动条的尺寸*/
+  height: 3px;
 }
-.content::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
     border-radius: 5px;
     -webkit-box-shadow: inset 0 0 5px rgba(252, 149, 14, 0.603);
     background: rgba(252, 149, 14, 0.603);
 }
-.content::-webkit-scrollbar-track {/*滚动条里面轨道*/
+::-webkit-scrollbar-track {/*滚动条里面轨道*/
     -webkit-box-shadow: inset 0 0 5px rgba(226, 216, 216, 0.651);
     border-radius: 0;
     background: rgba(226, 216, 216, 0.651);

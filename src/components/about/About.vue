@@ -230,19 +230,6 @@ export default {
 .el-menu-item{
   padding-right: 0;
 }
-.onemenu{
-  width: 100%;
-  height: 50px;
-  margin: 2px auto 0;
-  position: relative;
-  cursor: pointer;
-}
-.onemenu>span{
-  line-height: 50px;
-  font-size: 18px;
-  font-weight: 600;
-  margin-left: 20px;
-}
 img{
   width: 30px;
   height: 30px;
@@ -252,26 +239,16 @@ img{
 .one_img{
   margin-top: 13px;
 }
-.twomenus>li{
-  width: 160px;
-  height: 40px;
-  margin: 2px 0 0 40px;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 40px;
-  text-align: center;
-  cursor: pointer;
-}
-.twomenus>li>img{
-  width: 30px;
-  height: 30px;
-  float: left;
-  margin: 5px 0 0 20px;
-}
 .title_text{
   font-size: 20px;
   line-height: 56px;
   font-weight: 600;
   float: left;
+}
+.leftmenu>>>.el-menu-item{
+  width: 199px;
+}
+.el-menu{
+  border: 0;
 }
 </style>

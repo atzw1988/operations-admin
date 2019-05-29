@@ -14,7 +14,7 @@
           <el-date-picker
             v-model="time_interval"
             type="datetimerange"
-            value-format='yyyy-MM-dd HH:mm:ss'
+            value-format="yyyy-MM-dd HH:mm:ss"
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
@@ -275,6 +275,10 @@ export default {
     sel_uesr(){
       console.log(this.white_car)
       console.log(this.time_interval)
+      let start = this.time_interval[0].split(',')
+      let end = this.time_interval[1].split(',')
+      start = Date.UTC(start[0],start[1],start[2],start[3],start[4],start[5])
+      console.log(start,end)
       let params = {
         pageNum:this.pageIndex,
         pageSize:this.ps,

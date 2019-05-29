@@ -73,7 +73,7 @@
         <el-table-column
           prop="order_no"
           label="订单编号"
-          width="200">
+          width="280">
         </el-table-column>
         <el-table-column
           label="帐户名">
@@ -89,6 +89,7 @@
         <el-table-column
           sortable
           prop="charge_money"
+          width="130"
           label="消费金额(元)">
         </el-table-column>
         <el-table-column
@@ -277,11 +278,21 @@ export default {
   font-weight: 600;
   color: rgb(0, 162, 255);
 }
-.select{
-  width: 100%;
-  height: 60px;
-  background: #fff;
-  margin-top: 20px;
+@media screen and (min-width: 1443px) {
+  .select{
+    width: 100%;
+    height: 60px;
+    background: #fff;
+    margin-top: 20px;
+  }
+}
+@media screen and (max-width: 1442px) {
+  .select{
+    width: 100%;
+    height: 120px;
+    background: #fff;
+    margin-top: 20px;
+  }
 }
 .selstate,.selplace,.selparkkind,.selconsumption{
   width: 110px;
@@ -305,7 +316,6 @@ export default {
   height: 40px;
   float: left;
   margin-left: 10px;
-  /* border: 1px solid violet; */
 }
 .username>input{
   width: 100px;

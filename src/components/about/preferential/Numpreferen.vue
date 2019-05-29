@@ -84,13 +84,10 @@ export default {
   mounted() {
   },
   methods: {
-    //获取月卡名额配置列表
-    get_park_list(){
+    //封装获取月卡名额配置列表
+    get_all_list(ele){
       axios.get(this.url,{
-        params:{
-          pageNum:this.pageIndex,
-          pageSize:this.ps
-        }
+        params:ele
       }).then(res => {
         if(res.data.data.list.length > 0){
           let data = res.data.data.list
@@ -99,12 +96,19 @@ export default {
             item.edit = false
           })
           this.list_detail = data
-          console.log(this.list_detail)
         }else{
           let text = '暂无数据'
           this.show_warning(text)
         }
       })
+    },
+    //获取月卡名额配置列表
+    get_park_list(){
+      let params = {
+        pageNum:this.pageIndex,
+        pageSize:this.ps
+      }
+      this.get_all_list(params)
     },
     change_input(index,row){
       this.reset_text = JSON.parse(JSON.stringify(row.cardNum))
@@ -171,7 +175,12 @@ export default {
     },
     //分页
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pageIndex = val
+      let params = {
+        pageNum:this.pageIndex,
+        pageSize:this.ps
+      }
+      this.get_all_list(params)
     },
     //搜索
     sel_uesr(){
