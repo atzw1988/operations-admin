@@ -92,8 +92,7 @@ export default {
       downfristnum: '1',
       upparks: [],
       downparks: [],
-      url:'http://www.lcgxlm.com:13259/its/admin/parking/parkNo'
-      // url:'/its/admin/parking/parkNo'
+      url:'/its/admin/parking/parkNo'
     };
   },
   computed: {

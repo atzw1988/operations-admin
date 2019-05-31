@@ -109,13 +109,7 @@ export default {
       data:[],
       data_new:[],
       detail_show: false,
-      park_list:[
-        {name:'停车场1',allpark:200,freepark:200},
-        {name:'停车场2',allpark:200,freepark:200},
-        {name:'停车场3',allpark:200,freepark:200},
-        {name:'停车场4',allpark:200,freepark:200},
-        {name:'停车场5',allpark:200,freepark:200}
-      ],
+      park_list:[],
       vol_list:[
         {name:'停车场1',num:10},
         {name:'停车场2',num:10},
@@ -123,11 +117,11 @@ export default {
         {name:'停车场4',num:10},
         {name:'停车场5',num:10}
       ],
-      url_high:'http://www.lcgxlm.com:13259/its/admin/area/highAnalyze',
+      url_high:'/its/admin/area/highAnalyze',
       // url_high:'/its/admin/area/highAnalyze',
-      url_low:'http://www.lcgxlm.com:13259/its/admin/area/lowAnalyze',
+      url_low:'/its/admin/area/lowAnalyze',
       // url_low:'/its/admin/area/lowAnalyze',
-      url_park: 'http://www.lcgxlm.com:13259/its/admin/query/berth'
+      url_park: '/its/admin/query/berth'
     }
   },
   mounted() {

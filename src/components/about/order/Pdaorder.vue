@@ -159,8 +159,8 @@ export default {
       allps:1,          //总页数
       list_detail:[],    //订单数组
       // url:'http://192.168.0.192:13259/its/parking/findPage',
-      url:'http://www.lcgxlm.com:13259/its/parking/findPage',
-      url_park:'http://www.lcgxlm.com:13259/its/admin/query/berth'
+      url:'/its/parking/findPage',
+      url_park:'/its/admin/query/berth'
     }
   },
   mounted() {
@@ -273,8 +273,10 @@ export default {
       })
     },
     selbtn(){
-      console.log(this.time_interval)
       let params = {}
+      if(this.username){
+        this.pageIndex =1
+      }
       if(this.time_interval){
         params = {
           'currentPage': this.pageIndex,

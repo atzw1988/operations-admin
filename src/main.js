@@ -21,7 +21,8 @@ import { store } from './store/store.js';
 
 // 配置默认根路径
 // axios.defaults.baseURL = 'https://wd0992259444dcaaxf.wilddogio.com/';
-axios.defaults.baseURL = 'http://192.168.1.104:13259';
+// axios.defaults.baseURL = 'http://192.168.1.104:13259';
+axios.defaults.baseURL = 'http://www.lcgxlm.com:13259';
 
 // 配置Vue原型 (在任何组件中都可以正常使用axios)
 Vue.prototype.$axios = axios;

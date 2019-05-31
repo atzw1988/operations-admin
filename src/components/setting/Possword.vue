@@ -77,7 +77,7 @@ export default {
       password:'',        //原始密码
       newpasswordone:'',      //新密码
       newpasswordtwo:'',       //新密码确认
-      url_password:'http://www.lcgxlm.com:13259/its/admin/chang/password',
+      url_password:'/its/admin/chang/password',
     }
   },
   mounted() {

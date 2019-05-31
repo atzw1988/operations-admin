@@ -186,8 +186,8 @@ export default {
       ps:10,
       nowday:'',
       nowtime:'',
-      url_order:'http://www.lcgxlm.com:13259/its/admin/order/report',
-      url_park:'http://www.lcgxlm.com:13259/its/admin/query/berth'
+      url_order:'/its/admin/order/report',
+      url_park:'/its/admin/query/berth'
     }
   },
   mounted() {

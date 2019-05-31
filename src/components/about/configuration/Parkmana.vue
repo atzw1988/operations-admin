@@ -130,7 +130,7 @@ export default {
       rule_editor:false,
       // url:'http://www.lcgxlm.com:13259/its/admin/query/useressage',
       url:'/its/admin/query/useressage',
-      car_url:'http://www.lcgxlm.com:13259/its/admin/underthe/vehicle'
+      car_url:'/its/admin/underthe/vehicle'
     }
   },
   mounted() {

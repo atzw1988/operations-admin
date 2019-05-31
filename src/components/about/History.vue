@@ -52,7 +52,7 @@ export default {
       roadnum: '0',
       ps: 7,
       parkname:'',
-      url_park:'http://www.lcgxlm.com:13259/its/admin/query/berth'
+      url_park:'/its/admin/query/berth'
       // url_park:'/its/admin/query/berth'
     }
   },

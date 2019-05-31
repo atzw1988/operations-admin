@@ -103,8 +103,8 @@ export default {
   data() {
     return {
       time_interval: '',    //时间区间
-      list_num: 58046,
-      sel_num: 58046,
+      list_num: 0,
+      sel_num: 0,
       add_header_text:'',
       consumptions: ['APP','微信小程序'],
       user_kind:'',
@@ -114,8 +114,8 @@ export default {
       multipleSelection:'',
       pageIndex: 1,
       ps:10,
-      total_ps:40,
-      allps:1,
+      total_ps:0,
+      allps:0,
       sel_user: '18318039639',
       sel_user_car_list:[],
       user_car_show:false,

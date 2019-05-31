@@ -197,8 +197,8 @@ export default {
       list_num:8,
       total:40000,
       nototal:8000,
-      url: 'http://www.lcgxlm.com:13259/its/admin/topup/statements',
-      url1: 'http://www.lcgxlm.com:13259/its/admin/user/balance'
+      url: '/its/admin/topup/statements',
+      url1: '/its/admin/user/balance'
     }
   },
   mounted() {

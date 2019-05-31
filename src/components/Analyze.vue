@@ -141,10 +141,10 @@
         timer: null,
         owetimer: null,
         predicttimer: null,
-        url_predicts: 'http://www.lcgxlm.com:13259/its/admin/load/dateQueryOrder',
-        url_load:'http://www.lcgxlm.com:13259/its/admin/area/parking',
-        url_owe:'http://www.lcgxlm.com:13259/its/admin/not/unpaid',
-        url_line:'http://www.lcgxlm.com:13259/its/admin/vehicle/movements'
+        url_predicts: '/its/admin/load/dateQueryOrder',
+        url_load:'/its/admin/area/parking',
+        url_owe:'/its/admin/not/unpaid',
+        url_line:'/its/admin/vehicle/movements'
       }
     },
     mounted() {

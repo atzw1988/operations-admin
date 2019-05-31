@@ -219,10 +219,10 @@ export default {
       pageIndex: 1,
       ps: 10,
       allps: 0,
-      url_income:'http://www.lcgxlm.com:13259/its/admin/income/statements',
+      url_income:'/its/admin/income/statements',
       // url_excel:'http://www.lcgxlm.com:13259/its/admin/income/tableData',
       url_excel:'/its/admin/income/tableData',
-      url_park:'http://www.lcgxlm.com:13259/its/admin/query/berth'
+      url_park:'/its/admin/query/berth'
     }
   },
   watch: {

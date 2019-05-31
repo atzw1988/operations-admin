@@ -143,7 +143,7 @@ export default{
       state3_show: false,
       tooltips:{},
       person_detail:{},
-      url_park:'http://www.lcgxlm.com:13259/its/admin/query/berth'
+      url_park:'/its/admin/query/berth'
       // url_park:'/its/admin/query/berth'
     }
   },

@@ -6,22 +6,31 @@
       <span>筛选月卡数：<a href="javascript:void(0)">{{sel_num}}</a>个</span>
     </div>
     <div class="select">
-      <el-select v-model="card_kind" placeholder="月卡类型" class="selconsumption">
+      <el-select v-model="card_kind_sel" placeholder="月卡类型" class="selconsumption">
         <el-option value="">全部类型</el-option>
         <el-option
-          v-for="item in consumptions"
-          :key="item"
-          :label="item"
-          :value="item">
+          v-for="item in card_kind"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id">
         </el-option>
       </el-select>
-      <el-select v-model="card_status" placeholder="月卡状态" class="selconsumption">
+      <el-select v-model="card_status_sel" placeholder="月卡状态" class="selconsumption">
         <el-option value="">全部状态</el-option>
         <el-option
-          v-for="item in consumptions"
-          :key="item"
-          :label="item"
-          :value="item">
+          v-for="item in card_status"
+          :key="item.stauts"
+          :label="item.name"
+          :value="item.stauts">
+        </el-option>
+      </el-select>
+      <el-select v-model="card_source_sel" placeholder="办理来源" class="selconsumption">
+        <el-option value="">全部状态</el-option>
+        <el-option
+          v-for="item in card_source"
+          :key="item.source"
+          :label="item.name"
+          :value="item.source">
         </el-option>
       </el-select>
       <div class="data-interval">
@@ -70,35 +79,42 @@
           type="index">
         </el-table-column>
         <el-table-column
-          prop="car"
+          prop="carNo"
           label="车牌">
         </el-table-column>
         <el-table-column
-          prop="card_kind"
+          prop="typeName"
           label="月卡类型">
         </el-table-column>
         <el-table-column
-          prop="park_name"
+          prop="parkName"
           label="停车场">
         </el-table-column>
         <el-table-column
-          prop="source"
           label="办理来源">
+          <template slot-scope="scope">
+            <span v-if="scope.row.source == 1">微信</span>
+            <span v-if="scope.row.source == 0">APP</span>
+            <span v-if="scope.row.source == 2">PDA</span>
+          </template>
         </el-table-column>
         <el-table-column
-          prop="start_time"
+          prop="opendTime"
           label="开卡时间">
         </el-table-column>
         <el-table-column
-          prop="end_time"
+          prop="expirationTime"
           label="到期时间">
         </el-table-column>
         <el-table-column
-          prop="status"
           label="状态">
+          <template slot-scope="scope">
+            <span v-if="scope.row.state == 1">生效中</span>
+            <span v-if="scope.row.state == 0">已过期</span>
+          </template>
         </el-table-column>
         <el-table-column
-          prop="mobile"
+          prop="phone"
           label="手机号">
         </el-table-column>
       </el-table>
@@ -119,20 +135,23 @@ export default {
   data() {
     return {
       time_interval: '',    //时间区间
-      list_num: 58046,
-      sel_num: 58046,
+      list_num: 0,
+      sel_num: 0,
       add_header_text:'',
-      consumptions: ['APP','微信小程序'],
-      card_kind:['月卡','季卡','半年卡','年卡'],
-      card_status:['生效中','已失效'],
-      list_detail: [
-        {car:'粤A123456',card_kind:'月卡',park_name:'龙胜路',source:'PDA',start_time:'2019-05-22 15:00:00',end_time:'2019-06-22 15:00:00',status:'生效中',mobile:'13432456678'},
-        {car:'粤A123456',card_kind:'年卡',park_name:'龙胜路',source:'PDA',start_time:'2019-05-22 15:00:00',end_time:'2019-06-22 15:00:00',status:'生效中',mobile:'13432456678'},
-        {car:'粤A123456',card_kind:'月卡',park_name:'龙胜路',source:'PDA',start_time:'2019-05-22 15:00:00',end_time:'2019-06-22 15:00:00',status:'生效中',mobile:'13432456678'},
-        {car:'粤A123456',card_kind:'月卡',park_name:'龙胜路',source:'PDA',start_time:'2019-05-22 15:00:00',end_time:'2019-06-22 15:00:00',status:'生效中',mobile:'13432456678'},
-        {car:'粤A123456',card_kind:'月卡',park_name:'龙胜路',source:'PDA',start_time:'2019-05-22 15:00:00',end_time:'2019-06-22 15:00:00',status:'生效中',mobile:'13432456678'},
-        {car:'粤A123456',card_kind:'月卡',park_name:'龙胜路',source:'PDA',start_time:'2019-05-22 15:00:00',end_time:'2019-06-22 15:00:00',status:'生效中',mobile:'13432456678'}
+      card_kind:[],
+      card_kind_sel:'',
+      card_status:[
+        {name:'生效中',stauts:1},
+        {name:'已过期',stauts:0}
       ],
+      card_status_sel:'',
+      card_source:[
+        {name:'APP',source:0},
+        {name:'PDA',source:2},
+        {name:'微信小程序',source:1},
+      ],
+      card_source_sel:'',
+      list_detail: [],
       car_no:'',
       mobile_no:'',
       park_name:'',
@@ -144,44 +163,67 @@ export default {
       sel_user_car_list:[],
       user_car_show:false,
       rule_editor:false,
-      // url:'http://www.lcgxlm.com:13259/its/admin/query/useressage',
-      url:'/its/admin/query/useressage',
-      car_url:'http://www.lcgxlm.com:13259/its/admin/underthe/vehicle'
+      url:'http://192.168.0.121:13259/its/user-card/records',
+      url_card:'http://192.168.0.121:13259/its/card-type/types'
     }
   },
   mounted() {
-
+    this.get_rule_list()
+    this.get_card_kind()
   },
   methods: {
-    //新建白名单车牌
-    add_car(){
-      console.log(1)
-      this.rule_editor = true
-      this.add_header_text = '新建白名单'
+    //封装获取月卡用户列表
+    get_all_user(ele){
+      axios.get(this.url,{
+        params: ele
+      }).then(res => {
+        console.log(res)
+        this.total_ps = res.data.data.total
+        this.list_detail = res.data.data.list
+        this.list_num = res.data.data.total
+        this.sel_num = res.data.data.total
+      })
+    },
+    //获取月卡用户列表
+    get_rule_list(){
+      let params = {
+        pageNum: this.pageIndex,
+        pageSize: this.ps
+      }
+      this.get_all_user(params)
+    },
+    //获取月卡类型
+    get_card_kind(){
+      axios.get(this.url_card,{
+      }).then(res => {
+        if(res.data.code == 0){
+          this.card_kind = res.data.data
+        }
+      })
     },
     //分页
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-    close(){
-      this.user_car_show = false
-    },
     //搜索
     sel_uesr(){
-      console.log(this.time_interval[0])
-      console.log(this.time_interval[1])
-      let params = new URLSearchParams()
-      params.append('pageIndex', this.pageIndex)
-      params.append('ps', this.ps)
-      if(this.user_kind == 'APP'){
-        params.append('appType','app')
-      }else if(this.user_kind == '微信小程序'){
-        params.append('smallType','微信小程序')
-      }
-      params.append('sTime', this.time_interval[0])
-      params.append('eTime', this.time_interval[1])
-      params.append('account', this.user_name)
-      this.get_user_list(params,this.url)
+      axios.get(this.url,{
+        params:{
+          pageNum: 1,
+          pageSize: this.ps,
+          carNo:this.car_no,
+          phone:this.mobile_no,
+          parkName:this.park_name,
+          typeId: this.card_kind_sel,
+          state:this.card_status_sel,
+          source:this.card_source_sel
+        }
+      }).then(res => {
+        console.log(res)
+        this.total_ps = res.data.data.total
+        this.list_detail = res.data.data.list
+        this.sel_num = res.data.data.total
+      })
     }
   },
 }

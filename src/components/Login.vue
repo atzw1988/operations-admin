@@ -49,7 +49,7 @@ import axios from 'axios';
       return {
         username:'',
         password:'',
-        url:'http://www.lcgxlm.com:13259/its/admin/user/login'
+        url:'/its/admin/user/login'
       }
     },
     // 组件内的守卫

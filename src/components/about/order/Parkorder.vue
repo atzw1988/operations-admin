@@ -7,13 +7,13 @@
       <span>筛选订单数：<a href="#">{{sel_num}}</a>个</span>
     </div>
     <div class="select">
-      <el-select v-model="statues" class="selstate" placeholder="订单状态">
-        <el-option value="" label="全部状态">全部状态</el-option>
-        <el-option value="0" label="未支付">未支付</el-option>
-        <el-option value="1" label="交易完成">交易完成</el-option>
-        <el-option value="2" label="无需支付">无需支付</el-option>
+      <el-select v-model="statues" class="selstate" placeholder="订单状态" clearable>
+        <el-option value="" label="全部状态"></el-option>
+        <el-option value="0" label="未支付"></el-option>
+        <el-option value="1" label="交易完成"></el-option>
+        <el-option value="2" label="无需支付"></el-option>
       </el-select>
-      <el-select v-model="selpark" placeholder="停车区域" class="selplace">
+      <el-select v-model="selpark" placeholder="停车区域" class="selplace" filterable clearable>
         <el-option value="">全部区域</el-option>
         <el-option
           v-for="item in parkareas"
@@ -22,7 +22,7 @@
           :value="item.parking_name">
         </el-option>
       </el-select>
-      <el-select v-model="selparkkind" placeholder="停车类别" class="selparkkind">
+      <el-select v-model="selparkkind" placeholder="停车类别" class="selparkkind" clearable>
         <el-option value="">全部类别</el-option>
         <el-option
           v-for="item in parkkinds"
@@ -31,10 +31,10 @@
           :value="item">
         </el-option>
       </el-select>
-      <el-select v-model="selconsumptions" class="selconsumption" placeholder="消费渠道">
-        <el-option value="">全部渠道</el-option>
-        <el-option value="appType">APP</el-option>
-        <el-option value="smallType">微信小程序</el-option>
+      <el-select v-model="selconsumptions" class="selconsumption" placeholder="消费渠道" clearable>
+        <el-option label="全部渠道" value=""></el-option>
+        <el-option label="APP" value="appType"></el-option>
+        <el-option label="微信小程序" value="smallType"></el-option>
       </el-select>
       <div class="data-interval">
         <div class="block">
@@ -73,7 +73,7 @@
         <el-table-column
           prop="order_no"
           label="订单编号"
-          width="280">
+          width="290">
         </el-table-column>
         <el-table-column
           label="帐户名">
@@ -165,8 +165,8 @@ export default {
       ps:15,            //每页数量
       allps:1,          //总页数
       list_detail:[],    //订单数组
-      url:'http://www.lcgxlm.com:13259/its/admin/all/orders',
-      url_park:'http://www.lcgxlm.com:13259/its/admin/query/berth'
+      url:'/its/admin/all/orders',
+      url_park:'/its/admin/query/berth'
     }
   },
   mounted() {

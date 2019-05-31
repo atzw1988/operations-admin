@@ -264,7 +264,7 @@ export default {
       allps_norm:1,     //标准总页数
       total_pa_norm:0,   //标准总条数
       url:'http://192.168.0.192:13259/its/parking/rule',  //查询规则借口
-      url_park:'http://www.lcgxlm.com:13259/its/admin/query/berth'  //停车场接口
+      url_park:'/its/admin/query/berth'  //停车场接口
     }
   },
   mounted() {

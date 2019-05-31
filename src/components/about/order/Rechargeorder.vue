@@ -109,9 +109,9 @@ export default {
   data() {
     return {
       time_interval: '',    //时间区间
-      allmoney: 58046,          //总金额
+      allmoney: '',          //总金额
       list_num:0,            //总充值订单数
-      selmoney: 58046,          //筛选总金额数
+      selmoney: '',          //筛选总金额数
       sel_num:0,            //筛选总充值订单数
       ps_total:0,                //当前页总金额
       rec_consumptions:'',       //充值渠道绑定
@@ -121,7 +121,7 @@ export default {
       pageIndex: 1,        //当前页数
       ps:15,               //每页数据量
       allps:1,              //总页数
-      url: 'http://www.lcgxlm.com:13259/its/admin/recharge/orders'
+      url: '/its/admin/recharge/orders'
     }
   },
   mounted() {
@@ -131,8 +131,18 @@ export default {
     this.get_all_list(params,this.url)
   },
   methods: {
-    page_change(){
-
+    //翻页
+    page_change(val){
+      console.log(val)
+      let params = new URLSearchParams();
+      params.append('pageIndex', val);
+      params.append('ps', this.ps);
+      params.append('order_No', this.order_no);
+      params.append('sTime', this.msgstart);
+      params.append('eTime', this.msgend);
+      params.append('account', this.user_name);
+      params.append(this.rec_consumptions, '123');
+      this.get_list(params,this.url)
     },
     //表格合计
     getSummaries(param) {
@@ -165,56 +175,11 @@ export default {
       });
       return sums;
     },
-    forward(){
-      this.ps_total = 0
-      if(this.pageIndex < this.allps){
-        this.pageIndex ++;
-        console.log(this.pageIndex)
-        let params = new URLSearchParams();
-        params.append('pageIndex', this.pageIndex);
-        params.append('ps', this.ps);
-        params.append('order_No', this.order_no);
-        params.append('sTime', this.time_interval[0]);
-        params.append('eTime', this.time_interval[1]);
-        params.append('account', this.user_name);
-        params.append(this.rec_consumptions, '123');
-        this.get_list(params,this.url)
-      }else{
-        this.$notify({
-          title: '温馨提示',
-          message: '已经是最后一页了',
-          type: 'warning',
-          offset: 100
-        })
-      }
-    },
-    goback(){
-      this.ps_total = 0
-      if(this.pageIndex > 1){
-        this.pageIndex --;
-        console.log(this.pageIndex)
-        let params = new URLSearchParams();
-        params.append('pageIndex', this.pageIndex);
-        params.append('ps', this.ps);
-        params.append('order_No', this.order_no);
-        params.append('sTime', this.msgstart);
-        params.append('eTime', this.msgend);
-        params.append('account', this.user_name);
-        params.append(this.rec_consumptions, '123');
-        this.get_list(params,this.url)
-      }else{
-        this.$notify({
-          title: '温馨提示',
-          message: '已经是第一页了',
-          type: 'warning',
-          offset: 100
-        })
-      }
-    },
+    //搜索
     sel_regorder(){
       this.ps_total = 0
       let params = new URLSearchParams();
-      params.append('pageIndex', this.pageIndex);
+      params.append('pageIndex', 1);
       params.append('ps', this.ps);
       params.append('order_No', this.order_no);
       params.append('sTime', this.msgstart);

@@ -12,7 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/its': {
-        target: 'http://192.168.1.104:13259',
+        // target: 'http://192.168.1.104:13259',
+        target: 'http://www.lcgxlm.com:13259',
         changeOrigin: true,
         pathRewrite: {
           '^/its': '',
