@@ -23,6 +23,19 @@ import { store } from './store/store.js';
 // axios.defaults.baseURL = 'https://wd0992259444dcaaxf.wilddogio.com/';
 // axios.defaults.baseURL = 'http://192.168.1.104:13259';
 axios.defaults.baseURL = 'http://www.lcgxlm.com:13259';
+// axios.defaults.headers.common['Authorization'] = 'Web ' + store.state.token
+
+axios.interceptors.request.use((config) => {
+  if (window.localStorage.getItem('token')) {
+    config.headers.common['Authorization'] = 'Web ' + window.localStorage.getItem('token')
+  }else{
+    // config.headers.common['Authorization'] = 'Web null'
+  }
+  return config
+}, (error) => {
+  router.push('/')
+  return Promise.reject(error)
+})
 
 // 配置Vue原型 (在任何组件中都可以正常使用axios)
 Vue.prototype.$axios = axios;

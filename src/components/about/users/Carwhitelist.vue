@@ -121,12 +121,11 @@ export default {
       user_car_show:false,
       rule_editor:false,
       car_reset_editor:{},
-      // url:'http://www.lcgxlm.com:13259/its/admin/query/useressage',
       textone:'',
       texttwo:'',
-      url:'http://192.168.0.121:13259/its/white-list/list',
-      url_del:'http://192.168.0.121:13259/its/white-list/del',
-      car_url:'http://www.lcgxlm.com:13259/its/admin/underthe/vehicle',
+      url:'/its/white-list/list',
+      url_del:'/its/white-list/del',
+      car_url:'/its/operations/underthe/vehicle',
     }
   },
   mounted() {
@@ -138,7 +137,6 @@ export default {
       axios.get(this.url,{
         params:params
       }).then(res => {
-        console.log(res)
         if(res.data.data.pageInfo.list.length > 0){
           this.list_detail = res.data.data.pageInfo.list
           this.total_ps = res.data.data.pageInfo.total
@@ -180,7 +178,7 @@ export default {
       this.add_header_text = '新建白名单'
       this.textone = '添加车牌白名单成功！'
       this.texttwo = '添加车牌白名单失败！'
-      this.url = 'http://192.168.0.121:13259/its/white-list/list'
+      this.url = '/its/white-list/list'
     },
     //表格内编辑
     list_edit(rule){
@@ -189,12 +187,11 @@ export default {
       this.add_header_text = '编辑白名单'
       this.textone = '更新车牌白名单成功！'
       this.texttwo = '更新车牌白名单失败！'
-      this.url = 'http://192.168.0.121:13259/its/white-list/update'
+      this.url = '/its/white-list/update'
       this.editor_car = rule
       this.car_reset_editor = JSON.parse(JSON.stringify(rule))
     },
     confirm_car(){
-      console.log(this.url)
       if(this.editor_car.carNo && this.editor_car.info){
         console.log(this.editor_car.carNo.length)
         if(this.editor_car.carNo.length != 7 && this.editor_car.carNo.length != 8){
@@ -216,12 +213,10 @@ export default {
             method:'post',
             url:this.url,
             headers: {
-              'Authorization': 'Web 123213213',
               'content-type': 'application/json;charset=UTF-8'
             },
             data:params
           }).then(res => {
-            console.log(res)
             if(res.data.mesg == 'OK'){
               this.$notify({
                 title: '温馨提示',
@@ -268,17 +263,11 @@ export default {
     close(){
       this.rule_editor = false
       this.editor_car = {}
-      this.url = 'http://192.168.0.121:13259/its/white-list/list'
+      this.url = '/its/white-list/list'
       this.get_rule_list()
     },
     //搜索
     sel_uesr(){
-      console.log(this.white_car)
-      console.log(this.time_interval)
-      let start = this.time_interval[0].split(',')
-      let end = this.time_interval[1].split(',')
-      start = Date.UTC(start[0],start[1],start[2],start[3],start[4],start[5])
-      console.log(start,end)
       let params = {
         pageNum:this.pageIndex,
         pageSize:this.ps,
@@ -286,7 +275,18 @@ export default {
         endTime:this.time_interval[1],
         carNo:this.white_car
       }
-      this.get_car_list(params)
+      axios.get(this.url,{
+        params:params
+      }).then(res => {
+        if(res.data.data.pageInfo.list.length > 0){
+          this.list_detail = res.data.data.pageInfo.list
+          this.total_ps = res.data.data.pageInfo.total
+          this.sel_num = res.data.data.pageInfo.total
+        }else{
+          let text = '没有符合条件的数据'
+          this.show_warning(text)
+        }
+      })
     }
   },
 }

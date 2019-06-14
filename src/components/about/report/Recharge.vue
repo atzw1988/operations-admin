@@ -197,8 +197,8 @@ export default {
       list_num:8,
       total:40000,
       nototal:8000,
-      url: '/its/admin/topup/statements',
-      url1: '/its/admin/user/balance'
+      url: '/its/operations/topup/statements',
+      url1: '/its/operations/user/balance'
     }
   },
   mounted() {
@@ -213,7 +213,6 @@ export default {
         method: 'post',
         url: this.url,
         headers:{
-        'Authorization':'Web 123213213',
         'content-type':'application/x-www-form-urlencoded'
         },
         data:{}
@@ -247,7 +246,6 @@ export default {
         method: 'post',
         url: this.url1,
         headers:{
-        'Authorization':'Web 123213213',
         'content-type':'application/x-www-form-urlencoded'
         },
         data:{}

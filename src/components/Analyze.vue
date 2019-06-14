@@ -141,10 +141,10 @@
         timer: null,
         owetimer: null,
         predicttimer: null,
-        url_predicts: '/its/admin/load/dateQueryOrder',
-        url_load:'/its/admin/area/parking',
-        url_owe:'/its/admin/not/unpaid',
-        url_line:'/its/admin/vehicle/movements'
+        url_predicts: '/its/operations/load/dateQueryOrder',
+        url_load:'/its/operations/area/parking',
+        url_owe:'/its/operations/not/unpaid',
+        url_line:'/its/operations/vehicle/movements'
       }
     },
     mounted() {
@@ -242,7 +242,6 @@
           method: 'post',
           url:this.url_line,
           headers:{
-            'Authorization':'Web 123213213',
             'content-type':'application/x-www-form-urlencoded'
           },
           data: {}
@@ -915,17 +914,18 @@
           method: 'post',
           url:this.url_predicts,
           headers:{
-            'Authorization':'Web 123213213',
             'content-type':'application/x-www-form-urlencoded'
           },
           data: {}
         }).then(res => {
-          let data = res.data.data
-          this.predicts = data.sort(function(a,b){
-            return b.times/b.parkingTotal - a.times/a.parkingTotal
-          })
-          if(this.predicts.length > 5){
-            this.predicts_lunbo()
+          if(res.data.code == 0){
+            let data = res.data.data
+            this.predicts = data.sort(function(a,b){
+              return b.times/b.parkingTotal - a.times/a.parkingTotal
+            })
+            if(this.predicts.length > 5){
+              this.predicts_lunbo()
+            }
           }
         })
       },
@@ -956,7 +956,6 @@
           method: 'post',
           url:this.url_load,
           headers:{
-            'Authorization':'Web 123213213',
             'content-type':'application/x-www-form-urlencoded'
           },
           data: {}
@@ -976,18 +975,18 @@
           method: 'post',
           url:this.url_owe,
           headers:{
-            'Authorization':'Web 123213213',
             'content-type':'application/x-www-form-urlencoded'
           },
           data: {}
         }).then(res => {
-          console.log(res)
-          let data = res.data.data
-          this.owes = data.sort(function(a,b){
-            return b.totalMoney - a.totalMoney
-          })
-          if(this.owes.length > 5){
-            this.myowe_lunbo()
+          if(res.data.code == 0){
+            let data = res.data.data
+            this.owes = data.sort(function(a,b){
+              return b.totalMoney - a.totalMoney
+            })
+            if(this.owes.length > 5){
+              this.myowe_lunbo()
+            }
           }
         })
         // this.myowe_lunbo()

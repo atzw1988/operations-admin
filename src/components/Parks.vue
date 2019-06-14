@@ -92,7 +92,7 @@ export default {
       downfristnum: '1',
       upparks: [],
       downparks: [],
-      url:'/its/admin/parking/parkNo'
+      url:'/its/operations/parking/parkNo'
     };
   },
   computed: {
@@ -113,7 +113,6 @@ export default {
       method: 'post',
       url:this.url,
       headers:{
-        'Authorization':'Web 123213213',
         'content-type':'application/x-www-form-urlencoded'
       },
       data: params

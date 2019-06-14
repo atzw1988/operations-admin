@@ -103,8 +103,8 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
         timer_home:null,
         socket: new WebSocket("ws://www.lcgxlm.com:13259/its/websocket"),
         // socket: new WebSocket("ws://192.168.1.104:13259/its/websocket"),
-        url:'/its/admin/live/amount',
-        // url:'/its/admin/live/amount'
+        url:'/its/operations/live/amount',
+        // url:'/its/operations/live/amount'
       }
     },
     beforeCreate() {
@@ -126,13 +126,11 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
           method: 'post',
           url:that.url,
           headers:{
-          'Authorization':'Web 123213213',
           'content-type':'application/x-www-form-urlencoded'
           },
           data:{
           }
         }).then(res => {
-          console.log(res)
           that.income = res.data.data.amount
           that.user = res.data.data.total_revenue
           that.order = res.data.data.total_order
@@ -152,9 +150,8 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
       // this.timer_home = setInterval(() => {
       //   axios({
       //     method: 'post',
-      //     url:'/its/admin/live/amount',
+      //     url:'/its/operations/live/amount',
       //     headers:{
-      //     'Authorization':'Web 123213213',
       //     'content-type':'application/x-www-form-urlencoded'
       //     },
       //     data:{
@@ -176,7 +173,6 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
         method: 'post',
         url:that.url,
         headers:{
-        'Authorization':'Web 123213213',
         'content-type':'application/x-www-form-urlencoded'
         },
         data:{

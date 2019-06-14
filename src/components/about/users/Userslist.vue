@@ -6,7 +6,7 @@
     </div>
     <div class="select">
       <el-button style="float:right;margin-right:20px;margin-top:10px;" type="danger" @click="sel_del">删除</el-button>
-      <el-button style="float:right;margin-right:20px;margin-top:10px;" type="warning" @click="sel_to_black">加入黑名单</el-button>
+      <!-- <el-button style="float:right;margin-right:20px;margin-top:10px;" type="warning" @click="sel_to_black">加入黑名单</el-button> -->
       <el-select v-model="user_kind" placeholder="用户类型" class="selconsumption">
         <el-option value="">全部用户</el-option>
         <el-option
@@ -101,13 +101,13 @@
           prop="create_time"
           label="注册日期">
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           label="操作"
           width="80">
           <template slot-scope="scope">
             <el-button style="color:#E6A23C" @click="to_black_list(scope.row)" type="text" size="small">移至黑名单</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <el-pagination
         @current-change="handleCurrentChange"
@@ -156,9 +156,8 @@ export default {
       sel_user: '18318039639',
       sel_user_car_list:[],
       user_car_show:false,
-      // url:'http://www.lcgxlm.com:13259/its/admin/query/useressage',
-      url:'/its/admin/query/useressage',
-      car_url:'/its/admin/underthe/vehicle'
+      url:'/its/operations/query/useressage',
+      car_url:'/its/operations/underthe/vehicle'
     }
   },
   mounted() {
@@ -192,7 +191,6 @@ export default {
         method: 'post',
         url: this.car_url,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/x-www-form-urlencoded'
         },
         data: params

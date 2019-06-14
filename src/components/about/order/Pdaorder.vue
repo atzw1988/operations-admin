@@ -160,7 +160,7 @@ export default {
       list_detail:[],    //订单数组
       // url:'http://192.168.0.192:13259/its/parking/findPage',
       url:'/its/parking/findPage',
-      url_park:'/its/admin/query/berth'
+      url_park:'/its/operations/query/berth'
     }
   },
   mounted() {
@@ -169,12 +169,10 @@ export default {
       method: 'post',
       url:this.url_park,
       headers:{
-        'Authorization':'Web 123213213',
         'content-type':'application/x-www-form-urlencoded'
       },
       data: {}
     }).then(res => {
-      console.log(res)
       this.parkareas = res.data.data
     })
   },
@@ -216,12 +214,10 @@ export default {
         method:'post',
         url: this.url,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/json;charset=UTF-8'
         },
         data:{}
       }).then(res => {
-        console.log(res.data.data.pageInfo.list)
         this.allmoney = res.data.data.sumMoney
         this.selmoney = res.data.data.currentMoney
         this.list_detail = res.data.data.pageInfo.list
@@ -257,7 +253,6 @@ export default {
         method:'post',
         url: this.url,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/json;charset=UTF-8'
         },
         data:params
@@ -295,11 +290,11 @@ export default {
         method:'post',
         url: this.url,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/json;charset=UTF-8'
         },
         data:params
       }).then(res => {
+        console.log(res)
         if(res.data.data.pageInfo.list.length > 0){
           this.allmoney = res.data.data.sumMoney
           this.selmoney = res.data.data.currentMoney

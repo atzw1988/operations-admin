@@ -77,7 +77,7 @@ export default {
       password:'',        //原始密码
       newpasswordone:'',      //新密码
       newpasswordtwo:'',       //新密码确认
-      url_password:'/its/admin/chang/password',
+      url_password:'/its/operations/chang/password',
     }
   },
   mounted() {
@@ -100,7 +100,6 @@ export default {
             method: 'post',
             url: this.url_password,
             headers:{
-              'Authorization':'Web 123213213',
               'content-type':'application/x-www-form-urlencoded'
             },
             data: params
@@ -154,7 +153,6 @@ export default {
       //     method: 'post',
       //     url: this.url_password,
       //     headers:{
-      //       'Authorization':'Web 123213213',
       //       'content-type':'application/x-www-form-urlencoded'
       //     },
       //     data: params

@@ -75,7 +75,7 @@ export default {
       ps:10,
       total_ps:40,
       allps:1,
-      url:'http://192.168.0.121:13259/its/card-places/places'
+      url:'/its/card-places/places'
     }
   },
   beforeMount() {
@@ -142,7 +142,6 @@ export default {
           method: 'post',
           url: this.url,
           headers: {
-            'Authorization': 'Web 123213213',
             'content-type': 'application/json;charset=UTF-8'
           },
           data:params

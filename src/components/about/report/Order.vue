@@ -186,8 +186,8 @@ export default {
       ps:10,
       nowday:'',
       nowtime:'',
-      url_order:'/its/admin/order/report',
-      url_park:'/its/admin/query/berth'
+      url_order:'/its/operations/order/report',
+      url_park:'/its/operations/query/berth'
     }
   },
   mounted() {
@@ -202,7 +202,6 @@ export default {
         method: 'post',
         url:this.url_park,
         headers:{
-          'Authorization':'Web 123213213',
           'content-type':'application/x-www-form-urlencoded'
         },
         data: {}
@@ -216,7 +215,6 @@ export default {
       method: 'post',
       url:this.url_order,
       headers:{
-        'Authorization':'Web 123213213',
         'content-type':'application/x-www-form-urlencoded'
       },
       data: {}

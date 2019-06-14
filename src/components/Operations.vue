@@ -117,11 +117,9 @@ export default {
         {name:'停车场4',num:10},
         {name:'停车场5',num:10}
       ],
-      url_high:'/its/admin/area/highAnalyze',
-      // url_high:'/its/admin/area/highAnalyze',
-      url_low:'/its/admin/area/lowAnalyze',
-      // url_low:'/its/admin/area/lowAnalyze',
-      url_park: '/its/admin/query/berth'
+      url_high:'/its/operations/area/highAnalyze',
+      url_low:'/its/operations/area/lowAnalyze',
+      url_park: '/its/operations/query/berth'
     }
   },
   mounted() {
@@ -135,7 +133,6 @@ export default {
         method: 'post',
         url: this.url_high,
         headers:{
-        'Authorization':'Web 123213213',
         'content-type':'application/x-www-form-urlencoded'
         },
         data:{}
@@ -162,7 +159,6 @@ export default {
         method: 'post',
         url: this.url_low,
         headers:{
-        'Authorization':'Web 123213213',
         'content-type':'application/x-www-form-urlencoded'
         },
         data:{}
@@ -189,7 +185,6 @@ export default {
         method: 'post',
         url:this.url_park,
         headers:{
-          'Authorization':'Web 123213213',
           'content-type':'application/x-www-form-urlencoded'
         },
         data: {}

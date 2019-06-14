@@ -79,8 +79,8 @@ ul{
   padding: 0;
 }
 ::-webkit-scrollbar {/*滚动条整体样式*/
-  width: 3px;     /*高宽分别对应横竖滚动条的尺寸*/
-  height: 3px;
+  width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
+  height: 10px;
 }
 ::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
     border-radius: 5px;

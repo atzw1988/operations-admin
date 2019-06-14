@@ -52,8 +52,7 @@ export default {
       roadnum: '0',
       ps: 7,
       parkname:'',
-      url_park:'/its/admin/query/berth'
-      // url_park:'/its/admin/query/berth'
+      url_park:'/its/operations/query/berth'
     }
   },
   mounted() {
@@ -66,12 +65,10 @@ export default {
         method: 'post',
         url:this.url_park,
         headers:{
-          'Authorization':'Web 123213213',
           'content-type':'application/x-www-form-urlencoded'
         },
         data: {}
       }).then(res => {
-        console.log(res)
         this.area_list = res.data.data
       })
     },
@@ -83,12 +80,10 @@ export default {
         method: 'post',
         url:this.url_park,
         headers:{
-          'Authorization':'Web 123213213',
           'content-type':'application/x-www-form-urlencoded'
         },
         data: params
       }).then(res => {
-        console.log(res)
         this.roads = res.data.data.data
         this.pageindex = res.data.data.pc
         this.allps = res.data.data.tp
@@ -110,7 +105,6 @@ export default {
         method: 'post',
         url:this.url_park,
         headers:{
-          'Authorization':'Web 123213213',
           'content-type':'application/x-www-form-urlencoded'
         },
         data: params
@@ -134,7 +128,6 @@ export default {
           method: 'post',
           url:this.url_park,
           headers:{
-            'Authorization':'Web 123213213',
             'content-type':'application/x-www-form-urlencoded'
           },
           data: params
@@ -158,7 +151,6 @@ export default {
           method: 'post',
           url:this.url_park,
           headers:{
-            'Authorization':'Web 123213213',
             'content-type':'application/x-www-form-urlencoded'
           },
           data: params

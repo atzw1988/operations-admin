@@ -129,7 +129,6 @@ export default {
         method:'post',
         url: this.url + '/findEPInfo',
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/json;charset=UTF-8'
         },
         data:params
@@ -390,7 +389,6 @@ export default {
           method:'post',
           url: this.url + this.url_kind,
           headers: {
-            'Authorization': 'Web 123213213',
             'content-type': 'application/json;charset=UTF-8'
           },
           data:this.params

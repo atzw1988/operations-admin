@@ -145,9 +145,8 @@ export default {
       sel_user: '18318039639',
       sel_user_car_list:[],
       user_car_show:false,
-      // url:'http://www.lcgxlm.com:13259/its/admin/query/useressage',
-      url:'/its/admin/query/useressage',
-      car_url:'/its/admin/underthe/vehicle'
+      url:'/its/operations/query/useressage',
+      car_url:'/its/operations/underthe/vehicle'
     }
   },
   mounted() {

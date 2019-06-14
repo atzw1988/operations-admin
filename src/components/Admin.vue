@@ -143,8 +143,7 @@ export default{
       state3_show: false,
       tooltips:{},
       person_detail:{},
-      url_park:'/its/admin/query/berth'
-      // url_park:'/its/admin/query/berth'
+      url_park:'/its/operations/query/berth'
     }
   },
   mounted() {
@@ -157,12 +156,10 @@ export default{
         method: 'post',
         url:this.url_park,
         headers:{
-          'Authorization':'Web 123213213',
           'content-type':'application/x-www-form-urlencoded'
         },
         data: {}
       }).then(res => {
-        console.log(res)
         let park = res.data.data
         window.localStorage.setItem('park_list', park)
         //高德坐标转百度坐标
@@ -186,7 +183,6 @@ export default{
           let arr = [park[i].longitude,park[i].latitude,{name:park[i].parking_name,kyCount:park[i].kyCount,maxCount:park[i].maxCount},color]
           this.data.push(arr)
         }
-        console.log(this.data)
         this.mymap()
       })
     },

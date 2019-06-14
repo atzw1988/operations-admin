@@ -6,7 +6,6 @@ export default {
         method:'post',
         url: url,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/x-www-form-urlencoded'
         },
         data:params
@@ -20,12 +19,14 @@ export default {
             offset: 100
           })
         }else{
+          this.selmoney = res.data.data.data[0].screenMoney
           this.sel_num = res.data.data.tr
           this.allps = res.data.data.tp
           this.list_detail = res.data.data.data
           this.list_detail.map(element => {
             if (element.parkstart_time){
               element.parkstart_time = this.formatDate(element.parkstart_time)
+              element.parkend_time = this.formatDate(element.parkend_time)
             } else if (element.pay_date){
               element.pay_date = this.formatDate(element.pay_date)
             }
@@ -45,7 +46,6 @@ export default {
         method: 'post',
         url: url,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/x-www-form-urlencoded'
         },
         data: params
@@ -58,6 +58,8 @@ export default {
             offset: 100
           })
         } else {
+          this.allmoney = res.data.data.data[0].totalMoney
+          this.selmoney = res.data.data.data[0].screenMoney
           this.list_num = res.data.data.tr
           this.sel_num = res.data.data.tr
           this.allps = res.data.data.tp
@@ -65,6 +67,7 @@ export default {
           this.list_detail.map(element => {
             if (element.parkstart_time) {
               element.parkstart_time = this.formatDate(element.parkstart_time)
+              element.parkend_time = this.formatDate(element.parkend_time)
             } else if (element.pay_date) {
               element.pay_date = this.formatDate(element.pay_date)
             }
@@ -84,7 +87,6 @@ export default {
         method: 'post',
         url: url,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/x-www-form-urlencoded'
         },
         data: params
@@ -122,7 +124,6 @@ export default {
         method: 'post',
         url: url,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/x-www-form-urlencoded'
         },
         data: params
@@ -149,7 +150,6 @@ export default {
         method: 'post',
         url: url,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/x-www-form-urlencoded'
         },
         data: params
@@ -187,7 +187,6 @@ export default {
         method: 'post',
         url: url,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/x-www-form-urlencoded'
         },
         data: params
@@ -220,7 +219,6 @@ export default {
         method: 'post',
         url: url,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/x-www-form-urlencoded'
         },
         data: params
@@ -258,7 +256,6 @@ export default {
           method: 'post',
           url: url,
           headers: {
-            'Authorization': 'Web 123213213',
             'content-type': 'application/json;charset=UTF-8'
           },
           data: params

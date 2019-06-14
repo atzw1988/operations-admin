@@ -264,7 +264,7 @@ export default {
       allps_norm:1,     //标准总页数
       total_pa_norm:0,   //标准总条数
       url:'http://192.168.0.192:13259/its/parking/rule',  //查询规则借口
-      url_park:'/its/admin/query/berth'  //停车场接口
+      url_park:'/its/operations/query/berth'  //停车场接口
     }
   },
   mounted() {
@@ -278,7 +278,6 @@ export default {
         method: 'post',
         url:this.url_park,
         headers:{
-          'Authorization':'Web 123213213',
           'content-type':'application/x-www-form-urlencoded'
         },
         data: {}
@@ -303,7 +302,6 @@ export default {
         method:'post',
         url: this.url + '/findCRInfo',
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/json;charset=UTF-8'
         },
         data:params
@@ -385,7 +383,6 @@ export default {
         method:'post',
         url: this.url + '/findCSInfo',
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/json;charset=UTF-8'
         },
         data:params
@@ -552,7 +549,6 @@ export default {
           method:'post',
           url: this.url + '/saveCRInfo',
           headers: {
-            'Authorization': 'Web 123213213',
             'content-type': 'application/json;charset=UTF-8'
           },
           data:params
@@ -708,7 +704,6 @@ export default {
         method:'post',
         url: this.url + '/findInfo',
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/json;charset=UTF-8'
         },
         data:params
@@ -755,7 +750,6 @@ export default {
         method:'post',
         url: this.url + '/updateCR',
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/json;charset=UTF-8'
         },
         data:params
@@ -785,7 +779,6 @@ export default {
         method:'post',
         url: this.url + '/findCRInfo',
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/json;charset=UTF-8'
         },
         data:params

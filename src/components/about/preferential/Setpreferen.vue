@@ -110,7 +110,7 @@ export default {
       addshow:false,
       textone:'',
       texttwo:'',
-      url:'http://192.168.0.121:13259/its/card-type',
+      url:'/its/card-type',
       url_kind:''
     }
   },
@@ -187,7 +187,6 @@ export default {
         method:'post',
         url:this.url + this.url_kind,
         headers: {
-          'Authorization': 'Web 123213213',
           'content-type': 'application/json;charset=UTF-8'
         },
         data:params

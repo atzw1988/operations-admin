@@ -90,8 +90,6 @@ import axios from 'axios';
               let token = res.data.data
               window.localStorage.setItem('username', this.username)
               window.localStorage.setItem('token', token)
-              // this.$router.replace({name: "homeLink"});
-              // window.location.pathname = '/'
               this.$store.dispatch("setUser",this.username)
               this.$router.push({name:"homeLink"})
               this.$emit('header', true)

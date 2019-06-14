@@ -80,12 +80,12 @@
             <router-link tag="li" class="twomenu" :to="{name:'userslistLink'}">用户信息</router-link>
           </template>
         </el-menu-item>
-        <el-menu-item index="3-2">
+        <!-- <el-menu-item index="3-2">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'userblacklistLink'}">用户黑名单</router-link>
           </template>
-        </el-menu-item>
+        </el-menu-item> -->
         <el-menu-item index="3-3">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
@@ -93,7 +93,7 @@
           </template>
         </el-menu-item>
       </el-submenu>
-      <el-submenu index="4">
+      <!-- <el-submenu index="4">
         <template slot="title">
           <img class="one_img" v-show="show_4" src="../../assets/wenjianjia_1.png" alt="">
           <img class="one_img" v-show="!show_4" src="../../assets/wenjianjia.png" alt="">
@@ -117,8 +117,8 @@
             <router-link tag="li" class="twomenu" :to="{name:'garagemanaLink'}">车库管理</router-link>
           </template>
         </el-menu-item>
-      </el-submenu>
-      <el-submenu index="5">
+      </el-submenu> -->
+      <!-- <el-submenu index="5">
         <template slot="title">
           <img class="one_img" v-show="show_5" src="../../assets/wenjianjia_1.png" alt="">
           <img class="one_img" v-show="!show_5" src="../../assets/wenjianjia.png" alt="">
@@ -148,7 +148,7 @@
             <router-link tag="li" class="twomenu" :to="{name:'numpreferenLink'}">月卡名额配置</router-link>
           </template>
         </el-menu-item>
-      </el-submenu>
+      </el-submenu> -->
     </el-menu>
     </div>
     <div class="rightdetile">

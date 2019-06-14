@@ -22,7 +22,7 @@
           :value="item.parking_name">
         </el-option>
       </el-select>
-      <el-select v-model="selparkkind" placeholder="停车类别" class="selparkkind" clearable>
+      <!-- <el-select v-model="selparkkind" placeholder="停车类别" class="selparkkind" clearable>
         <el-option value="">全部类别</el-option>
         <el-option
           v-for="item in parkkinds"
@@ -30,7 +30,7 @@
           :label="item"
           :value="item">
         </el-option>
-      </el-select>
+      </el-select> -->
       <el-select v-model="selconsumptions" class="selconsumption" placeholder="消费渠道" clearable>
         <el-option label="全部渠道" value=""></el-option>
         <el-option label="APP" value="appType"></el-option>
@@ -43,7 +43,7 @@
             type="datetimerange"
             range-separator="-"
             format='yyyy-MM-dd HH:mm:ss'
-            value-format='yyyyMMdd HH:mm:ss'
+            value-format='yyyy/MM/dd HH:mm:ss'
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
@@ -72,8 +72,7 @@
         </el-table-column>
         <el-table-column
           prop="order_no"
-          label="订单编号"
-          width="290">
+          label="订单编号">
         </el-table-column>
         <el-table-column
           label="帐户名">
@@ -84,6 +83,7 @@
         </el-table-column>
         <el-table-column
           prop="car_no"
+          width="100"
           label="停泊车辆">
         </el-table-column>
         <el-table-column
@@ -94,42 +94,47 @@
         </el-table-column>
         <el-table-column
           prop=""
+          width="80"
           label="支付方式">
           <template slot-scope="scope">
             ***
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop=""
           label="停车类别">
           <template slot-scope="scope">
             泊位停车
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop="money"
+          width="80"
           label="消费渠道">
           <template slot-scope="scope">
-            <span v-if="scope.row.mobile">APP</span>
-            <span v-if="!scope.row.mobile">小程序</span>
+            <span v-if="scope.row.user_id == 2">APP</span>
+            <span v-if="scope.row.user_id == 1">小程序</span>
           </template>
         </el-table-column>
         <el-table-column
           prop="parking_name"
-          label="停车地点"
-          width="220">
+          label="停车地点">
         </el-table-column>
         <el-table-column
           prop="parkstart_time"
-          label="订单时间"
-          width="150">
+          label="入场时间">
         </el-table-column>
         <el-table-column
+          prop="parkend_time"
+          label="出场时间">
+        </el-table-column>
+        <el-table-column
+          width="80"
           label="订单状态">
           <template slot-scope="scope">
             <span v-if="scope.row.pay_type == 1">交易完成</span>
             <span v-if="scope.row.pay_type == 0">未支付</span>
-            <span v-if="scope.row.pay_type == 2">无需支付</span>
+            <span v-if="scope.row.pay_type == 2">免费时段</span>
           </template>
         </el-table-column>
       </el-table>
@@ -165,8 +170,8 @@ export default {
       ps:15,            //每页数量
       allps:1,          //总页数
       list_detail:[],    //订单数组
-      url:'/its/admin/all/orders',
-      url_park:'/its/admin/query/berth'
+      url:'/its/operations/all/orders',
+      url_park:'/its/operations/query/berth'
     }
   },
   mounted() {
@@ -178,7 +183,6 @@ export default {
       method: 'post',
       url:this.url_park,
       headers:{
-        'Authorization':'Web 123213213',
         'content-type':'application/x-www-form-urlencoded'
       },
       data: {}
@@ -248,6 +252,7 @@ export default {
       params.append('account', this.username)
       params.append(this.selconsumptions, '123')
       this.get_list(params,this.url)
+      console.log(this.list_detail)
     }
   },
 }
@@ -278,7 +283,7 @@ export default {
   font-weight: 600;
   color: rgb(0, 162, 255);
 }
-@media screen and (min-width: 1443px) {
+@media screen and (min-width: 1313px) {
   .select{
     width: 100%;
     height: 60px;
@@ -286,7 +291,7 @@ export default {
     margin-top: 20px;
   }
 }
-@media screen and (max-width: 1442px) {
+@media screen and (max-width: 1312px) {
   .select{
     width: 100%;
     height: 120px;

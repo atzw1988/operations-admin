@@ -17,6 +17,8 @@
             v-model="time_interval"
             type="datetimerange"
             range-separator="-"
+            format='yyyy-MM-dd HH:mm:ss'
+            value-format='yyyy/MM/dd HH:mm:ss'
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
@@ -121,7 +123,7 @@ export default {
       pageIndex: 1,        //当前页数
       ps:15,               //每页数据量
       allps:1,              //总页数
-      url: '/its/admin/recharge/orders'
+      url: '/its/operations/recharge/orders'
     }
   },
   mounted() {
@@ -182,8 +184,8 @@ export default {
       params.append('pageIndex', 1);
       params.append('ps', this.ps);
       params.append('order_No', this.order_no);
-      params.append('sTime', this.msgstart);
-      params.append('eTime', this.msgend);
+      params.append('sTime', this.time_interval[0]);
+      params.append('eTime', this.time_interval[1]);
       params.append('account', this.user_name);
       params.append(this.rec_consumptions, '123');
       this.get_list(params,this.url)

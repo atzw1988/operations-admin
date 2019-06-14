@@ -153,11 +153,11 @@ export default {
       sel_user: '18318039639',
       sel_user_car_list:[],
       addshow:false,
-      url:'http://192.168.0.121:13259/its/month-card/cards',
-      url_cardkind:'http://192.168.0.121:13259/its/card-type/types',
-      url_park:'http://www.lcgxlm.com:13259/its/admin/query/berth',
-      url_card_park:'http://192.168.0.121:13259/its/month-card/cards',
-      url_card_park_all:'http://192.168.0.121:13259/its/month-card/parkInfo',
+      url:'/its/month-card/cards',
+      url_cardkind:'/its/card-type/types',
+      url_park:'/its/operations/query/berth',
+      url_card_park:'/its/month-card/cards',
+      url_card_park_all:'/its/month-card/parkInfo',
       params:{},
       card_editor_new:'',
       card_editor_new_id:'',
@@ -206,7 +206,6 @@ export default {
         method: 'post',
         url:this.url_park,
         headers:{
-          'Authorization':'Web 123213213',
           'content-type':'application/x-www-form-urlencoded'
         },
         data: {}
@@ -231,7 +230,6 @@ export default {
         method: 'post',
         url:this.url_park,
         headers:{
-          'Authorization':'Web 123213213',
           'content-type':'application/x-www-form-urlencoded'
         },
         data: {}
@@ -303,7 +301,6 @@ export default {
           method: 'post',
           url: this.url,
           headers: {
-            'Authorization': 'Web 123213213',
             'content-type': 'application/json;charset=UTF-8'
           },
           data:this.params

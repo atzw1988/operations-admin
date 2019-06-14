@@ -163,8 +163,8 @@ export default {
       sel_user_car_list:[],
       user_car_show:false,
       rule_editor:false,
-      url:'http://192.168.0.121:13259/its/user-card/records',
-      url_card:'http://192.168.0.121:13259/its/card-type/types'
+      url:'/its/user-card/records',
+      url_card:'/its/card-type/types'
     }
   },
   mounted() {
@@ -203,7 +203,23 @@ export default {
     },
     //分页
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pageIndex = val
+      axios.get(this.url,{
+        params:{
+          pageNum: this.pageIndex,
+          pageSize: this.ps,
+          carNo:this.car_no,
+          phone:this.mobile_no,
+          parkName:this.park_name,
+          typeId: this.card_kind_sel,
+          state:this.card_status_sel,
+          source:this.card_source_sel
+        }
+      }).then(res => {
+        this.total_ps = res.data.data.total
+        this.list_detail = res.data.data.list
+        this.sel_num = res.data.data.total
+      })
     },
     //搜索
     sel_uesr(){
@@ -219,7 +235,6 @@ export default {
           source:this.card_source_sel
         }
       }).then(res => {
-        console.log(res)
         this.total_ps = res.data.data.total
         this.list_detail = res.data.data.list
         this.sel_num = res.data.data.total

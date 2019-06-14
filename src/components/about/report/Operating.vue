@@ -219,10 +219,9 @@ export default {
       pageIndex: 1,
       ps: 10,
       allps: 0,
-      url_income:'/its/admin/income/statements',
-      // url_excel:'http://www.lcgxlm.com:13259/its/admin/income/tableData',
-      url_excel:'/its/admin/income/tableData',
-      url_park:'/its/admin/query/berth'
+      url_income:'/its/operations/income/statements',
+      url_excel:'/its/operations/income/tableData',
+      url_park:'/its/operations/query/berth'
     }
   },
   watch: {
@@ -231,7 +230,6 @@ export default {
   mounted() {
     this.get_park()
     this.get_income()
-    this.get_excel()
     this.drowincome()
   },
   methods: {
@@ -290,7 +288,6 @@ export default {
         method: 'post',
         url:this.url_park,
         headers:{
-          'Authorization':'Web 123213213',
           'content-type':'application/x-www-form-urlencoded'
         },
         data: {}
@@ -307,7 +304,6 @@ export default {
       method: 'post',
       url:this.url_income,
       headers:{
-        'Authorization':'Web 123213213',
         'content-type':'application/x-www-form-urlencoded'
       },
       data: {}
@@ -382,6 +378,7 @@ export default {
       }
       if(!this.isShow){
         this.fromtext = '可视化报表'
+        this.get_excel()
       }
     },
     //图表绘制

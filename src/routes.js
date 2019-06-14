@@ -22,6 +22,7 @@ import Alluser from './components/setting/Alluser.vue'
 // 三级路由
 import Phone from './components/about/contact/Phone';
 import PersonName from './components/about/contact/PersonName';
+import Statistical from './components/about/report/Statistical.vue'
 import Users from './components/about/report/Users.vue';
 import Operating from './components/about/report/Operating.vue';
 import Order from './components/about/report/Order.vue';
@@ -95,6 +96,11 @@ export const routes = [
     component:About,
     redirect: '/about/operating',
     children: [
+      {
+        path: '/about/statistical',
+        name: 'statisticalLink',
+        component: Statistical
+      },
       {
         path: '/about/users',
         name: 'usersLink',

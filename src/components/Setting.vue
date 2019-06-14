@@ -42,15 +42,15 @@ export default {
             // {name:'用户信息',to:'usernameLink'},
           ]
         },
-        {
-          name: '账号管理',
-          issubshow: false,
-          subitems: [
-            {name:'账号列表',to:'alluserLink'},
-            {name:'添加账号',to:'adduserLink'},
-            // {name:'账号日志',to:'userlogLink'}
-          ]
-        }
+        // {
+        //   name: '账号管理',
+        //   issubshow: false,
+        //   subitems: [
+        //     {name:'账号列表',to:'alluserLink'},
+        //     {name:'添加账号',to:'adduserLink'},
+        //     {name:'账号日志',to:'userlogLink'}
+        //   ]
+        // }
       ]
     };
   },

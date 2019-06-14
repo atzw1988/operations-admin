@@ -128,9 +128,9 @@ export default {
       sel_user_car_list:[],
       user_car_show:false,
       rule_editor:false,
-      // url:'http://www.lcgxlm.com:13259/its/admin/query/useressage',
-      url:'/its/admin/query/useressage',
-      car_url:'/its/admin/underthe/vehicle'
+      // url:'http://www.lcgxlm.com:13259/its/operations/query/useressage',
+      url:'/its/operations/query/useressage',
+      car_url:'/its/operations/underthe/vehicle'
     }
   },
   mounted() {
