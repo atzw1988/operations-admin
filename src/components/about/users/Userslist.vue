@@ -7,7 +7,7 @@
     <div class="select">
       <el-button style="float:right;margin-right:20px;margin-top:10px;" type="danger" @click="sel_del">删除</el-button>
       <!-- <el-button style="float:right;margin-right:20px;margin-top:10px;" type="warning" @click="sel_to_black">加入黑名单</el-button> -->
-      <el-select v-model="user_kind" placeholder="用户类型" class="selconsumption">
+      <!-- <el-select v-model="user_kind" placeholder="用户类型" class="selconsumption">
         <el-option value="">全部用户</el-option>
         <el-option
           v-for="item in consumptions"
@@ -15,7 +15,7 @@
           :label="item"
           :value="item">
         </el-option>
-      </el-select>
+      </el-select> -->
       <div class="data-interval">
         <span>注册日期：</span>
         <div class="block">
@@ -117,23 +117,12 @@
         :total="sel_num">
       </el-pagination>
     </div>
-    <div v-if="user_car_show" class="usr_car">
-      <div class="car_detail">
-        <span class="close" @click="close">X</span>
-        <ul>
-          <li style="margin-top:60px">
-            <span>用户名：</span>
-            <span>{{sel_user}}</span>
-          </li>
-          <li>
-            <span>所有车辆：</span>
-            <li v-for="(car,index) in sel_user_car_list">
-              <span>车牌号：{{car.car_no}}</span>
-            </li>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <el-dialog :title="user_mobile" :visible.sync="user_car_show">
+      <el-table :data="user_car_list">
+        <el-table-column property="car_no" label="车牌号"></el-table-column>
+        <el-table-column property="addTime" label="添加日期"></el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -150,6 +139,8 @@ export default {
       user_kind:'',
       list_detail: [],
       user_name:'',
+      user_mobile:'',
+      user_car_list:[],
       pageIndex: 1,
       ps:15,
       allps:1,
@@ -179,14 +170,10 @@ export default {
     },
     //获取用户下挂车辆
     get_user_car(e){
+      console.log(e)
+      this.user_mobile = '账号：' + e.mobile
       let params = new URLSearchParams();
-      if(e.id){
-        params.append('accountNo', e.id);
-        this.sel_user = e.id
-      }else if(e.mobile){
-        params.append('accountNo', e.mobile);
-        this.sel_user = e.mobile
-      }
+      params.append('accountNo', e.mobile);
       axios({
         method: 'post',
         url: this.car_url,
@@ -204,7 +191,10 @@ export default {
             offset: 100
           })
         } else {
-          this.sel_user_car_list = res.data.data
+          let cars = res.data.data.forEach(item => {
+            item.addTime = this.formatDate(item.addTime)
+          })
+          this.user_car_list = res.data.data
           this.user_car_show = true
         }
       })
@@ -490,6 +480,18 @@ export default {
   float: left;
   height: 40px;
   margin-top: -2px;
+}
+#row>>>.el-dialog{
+  position: absolute;
+  left: 30%;
+  top: 20%;
+  border-radius: 5px;
+}
+#row>>>.el-dialog__body{
+  padding-top: 0;
+}
+#row>>>.el-dialog__header{
+  padding-left: 30px;
 }
 </style>
 
