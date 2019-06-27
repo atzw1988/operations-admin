@@ -18,22 +18,34 @@
         <el-menu-item index="1-1">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'operatingLink'}">收入报表</router-link>
+            <router-link tag="li" class="twomenu" :to="{name:'summaryLink'}">首页</router-link>
           </template>
         </el-menu-item>
         <el-menu-item index="1-2">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'orderLink'}">订单报表</router-link>
+            <router-link tag="li" class="twomenu" :to="{name:'financialLink'}">财务报表</router-link>
           </template>
         </el-menu-item>
         <el-menu-item index="1-3">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'rechargeLink'}">充值报表</router-link>
+            <router-link tag="li" class="twomenu" :to="{name:'operatingLink'}">收入报表</router-link>
           </template>
         </el-menu-item>
         <el-menu-item index="1-4">
+          <template slot="title">
+            <img src="../../assets/wenjian.png" alt="">
+            <router-link tag="li" class="twomenu" :to="{name:'orderLink'}">订单报表</router-link>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="1-5">
+          <template slot="title">
+            <img src="../../assets/wenjian.png" alt="">
+            <router-link tag="li" class="twomenu" :to="{name:'rechargeLink'}">充值报表</router-link>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="1-6">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'usersLink'}">用户报表</router-link>
@@ -90,6 +102,12 @@
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'carwhitelistLink'}">车辆白名单</router-link>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="3-4">
+          <template slot="title">
+            <img src="../../assets/wenjian.png" alt="">
+            <router-link tag="li" class="twomenu" :to="{name:'owequeryLink'}">欠费查询</router-link>
           </template>
         </el-menu-item>
       </el-submenu>

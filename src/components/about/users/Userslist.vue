@@ -2,6 +2,7 @@
   <div id="row">
     <div class="total">
       <span style="border-right:2px solid rgb(0, 162, 255)">会员总数：<a href="javascript:void(0)">{{list_num}}</a>人</span>
+      <el-divider direction="vertical"></el-divider>
       <span style="border-right:2px solid rgb(0, 162, 255)">筛选会员数：<a href="javascript:void(0)">{{sel_num}}</a>人</span>
     </div>
     <div class="select">
@@ -34,6 +35,14 @@
           <el-input style="width:120px;float:left"
             placeholder="输入用户名"
             v-model="user_name"
+            clearable>
+          </el-input>
+        </div>
+        <div class="username">
+          <span style="float:left">车牌:</span>
+          <el-input style="width:120px;float:left"
+            placeholder="输入车牌号"
+            v-model="user_car"
             clearable>
           </el-input>
         </div>
@@ -139,6 +148,7 @@ export default {
       user_kind:'',
       list_detail: [],
       user_name:'',
+      user_car:'',
       user_mobile:'',
       user_car_list:[],
       pageIndex: 1,
@@ -252,19 +262,13 @@ export default {
     },
     //搜索
     sel_uesr(){
-      console.log(this.time_interval[0])
-      console.log(this.time_interval[1])
       let params = new URLSearchParams()
       params.append('pageIndex', this.pageIndex)
       params.append('ps', this.ps)
-      if(this.user_kind == 'APP'){
-        params.append('appType','app')
-      }else if(this.user_kind == '微信小程序'){
-        params.append('smallType','微信小程序')
-      }
       params.append('sTime', this.time_interval[0])
       params.append('eTime', this.time_interval[1])
       params.append('account', this.user_name)
+      params.append('carNo', this.user_car)
       this.get_user_list(params,this.url)
     },
     //删除所选择用户
@@ -379,7 +383,7 @@ export default {
   float: left;
 }
 .data-interval{
-  width: 780px;
+  width: 960px;
   height: 40px;
   float: left;
   line-height: 40px;

@@ -48,14 +48,62 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
+          <el-button type="primary" @click="sel_btn">搜索</el-button>
         </div>
-        <button class="data_btn" @click="sel_btn">搜索</button>
       </div>
-      <button class="form" @click="toform">{{fromtext}}</button>
+      <el-button type="success" class="form" @click="toform">{{fromtext}}</el-button>
     </div>
     <!-- 环比图 -->
     <div v-if="isShow" class="sequential">
-      <div class="revenue">
+      <div class="total">
+        <div class="header_text">
+          <div class="text">营业收入(元)</div>
+          <div class="text_one">环比(%)</div>
+        </div>
+        <div class="per_data">
+          <div v-for="item in booked" class="line">
+            <div class="left">{{item.name}}:{{item.num}}</div>
+            <div class="right">{{item.sequen}}</div>
+            <div class="data_img">
+              <img v-show="item.sequen>0" src="../../../assets/tubiao03.png" alt="">
+              <img v-show="item.sequen<0" src="../../../assets/tubiao04.png" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="total">
+        <div class="header_text">
+          <div class="text">欠费金额(元)</div>
+          <div class="text_one">环比(%)</div>
+        </div>
+        <div class="per_data">
+          <div v-for="item in income" class="line">
+            <div class="left">{{item.name}}:{{item.num}}</div>
+            <div class="right">{{item.sequen}}</div>
+            <div class="data_img">
+              <img v-show="item.sequen>0" src="../../../assets/tubiao03.png" alt="">
+              <img v-show="item.sequen<0" src="../../../assets/tubiao04.png" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="total">
+        <div class="header_text">
+          <div class="text">付费率</div>
+          <div class="text_one">环比(%)</div>
+        </div>
+        <div class="per_data">
+          <div v-for="item in recharge" class="line">
+            <div class="left">{{item.name}}:{{item.num}}</div>
+            <div class="right">{{item.sequen}}</div>
+            <div class="data_img">
+              <img v-show="item.sequen>0" src="../../../assets/tubiao03.png" alt="">
+              <img v-show="item.sequen<0" src="../../../assets/tubiao04.png" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="revenue">
         <div class="revenue-header">
           <span class="headertext">营收总额(元)</span>
           <span class="sequen">环比(%)</span>
@@ -86,62 +134,86 @@
             </li>
           </ul>
         </div>
-      </div>
+      </div> -->
     </div>
     <!-- 图表 -->
     <div v-if="isShow" id="chart" class="chart">
-      <div class="switch_cont">
+      <!-- <div class="switch_cont">
         <div class="switch_btn" @click="switch_btn">{{switch_text}}</div>
-      </div>
+      </div> -->
       <div id="income"></div>
     </div>
     <div v-if="!isShow" class="table">
       <el-table
-        :summary-method="getSummaries"
-        show-summary
         :data="list_detail"
-        tooltip-effect="dark"
+        show-summary
         style="width: 100%">
         <el-table-column
           label="序号"
+          width="70"
           type="index">
         </el-table-column>
         <el-table-column
-          prop="the_time"
-          label="时间"
-          width="200">
+          prop="date"
+          label="日期">
         </el-table-column>
         <el-table-column
-          sortable
-          prop="Total_amount"
-          label="营收总额(元)">
+          prop="a"
+          label="营业收入">
         </el-table-column>
         <el-table-column
-          sortable
-          prop="stay_amount"
-          label="待缴总额(元)">
+          prop="b"
+          label="营业实收">
         </el-table-column>
         <el-table-column
-          prop="revenue_from"
-          label="营收环比(%)">
+          prop="c"
+          label="欠费金额">
         </el-table-column>
         <el-table-column
-          prop="stay_on"
-          label="待缴环比(%)">
+          prop="d"
+          label="付费率">
         </el-table-column>
-        <el-table-column
-          label="营收同比(%)">
-          <template slot-scope="scope">
-            <span v-if="scope.row.sequenc">{{scope.row.sequenc}}</span>
-            <span v-if="!scope.row.sequenc">0</span>
-          </template>
+        <el-table-column label="PDA">
+          <el-table-column
+            prop="e"
+            label="营业收入">
+          </el-table-column>
+          <el-table-column
+            prop="f"
+            label="营业实收">
+          </el-table-column>
+          <el-table-column
+            prop="g"
+            label="欠费金额">
+          </el-table-column>
         </el-table-column>
-        <el-table-column
-          label="待缴同比(%)">
-          <template slot-scope="scope">
-            <span v-if="scope.row.sequend">{{scope.row.sequend}}</span>
-            <span v-if="!scope.row.sequend">0</span>
-          </template>
+        <el-table-column label="APP">
+          <el-table-column
+            prop="h"
+            label="营业收入">
+          </el-table-column>
+          <el-table-column
+            prop="i"
+            label="营业实收">
+          </el-table-column>
+          <el-table-column
+            prop="g"
+            label="欠费金额">
+          </el-table-column>
+        </el-table-column>
+        <el-table-column label="小程序">
+          <el-table-column
+            prop="k"
+            label="营业收入">
+          </el-table-column>
+          <el-table-column
+            prop="l"
+            label="营业实收">
+          </el-table-column>
+          <el-table-column
+            prop="m"
+            label="欠费金额">
+          </el-table-column>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -206,12 +278,41 @@ export default {
       ],
       revenues: [],
       owes: [],
+      booked:[
+        {name:'今日',num:10000,sequen:10.00},
+        {name:'昨日',num:10000,sequen:10.00},
+        {name:'近一周',num:10000,sequen:10.00},
+        {name:'近一月',num:10000,sequen:-10.00},
+      ],
+      income:[
+        {name:'今日',num:10000,sequen:10.00},
+        {name:'昨日',num:10000,sequen:10.00},
+        {name:'近一周',num:10000,sequen:10.00},
+        {name:'近一月',num:10000,sequen:-10.00},
+      ],
+      recharge:[
+        {name:'今日',num:10000,sequen:10.00},
+        {name:'昨日',num:10000,sequen:10.00},
+        {name:'近一周',num:10000,sequen:10.00},
+        {name:'近一月',num:10000,sequen:-10.00},
+      ],
       recovered: [7090,19170,24550,26100,17190,14330,15440,32805,52080,33720,24840,40780],
       norecovered: [327,1776,507,1200,800,482,204,1390,1001,951,381,220],
-      recoveredsequen: [103,269,296,281,251,191,174,267,120,232,286,129],
-      norecoveredsequen: [10,26,29,28,25,19,17,26,12,23,28,12],
+      recoveredsequen: [6000,18000,23000,25300,16500,10330,14400,32000,50800,31000,24000,39000],
+      norecoveredsequen: [90,85,79,92,99,85,65,93,86,92,75,96],
       xData: ['4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','4.9','4.10','4.11','4.12'],
-      list_detail:[],
+      list_detail:[
+        {date:'2019-06-10',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
+        {date:'2019-06-09',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
+        {date:'2019-06-08',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
+        {date:'2019-06-07',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
+        {date:'2019-06-06',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
+        {date:'2019-06-05',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
+        {date:'2019-06-04',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
+        {date:'2019-06-03',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
+        {date:'2019-06-02',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
+        {date:'2019-06-01',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
+      ],
       export_list:[],    //存放要导出的表格数据
       list_num: 0,
       total: 0,
@@ -397,7 +498,7 @@ export default {
         },
         grid: {
           "borderWidth": 0,
-          "top": 10,
+          "top": 40,
           "bottom": 45,
           containLabel: true,
           textStyle: {
@@ -410,7 +511,7 @@ export default {
           textStyle: {
             color: '#90979c',
           },
-          'data': ['营收总额', '待缴金额', '营收环比','待缴环比']
+          'data': ['营收收入', '营业实收', '营业欠费','付费率']
         },
         calculable: true,
         xAxis: [{
@@ -455,8 +556,8 @@ export default {
             splitLine: {                // 网格线 y轴对应的是否显示
               show: false
             },
-            min: -200,
-            max: 300,
+            min: 0,
+            max: 100,
             type: 'value',
             inverse: false,
             axisLine: {
@@ -495,9 +596,8 @@ export default {
         }],
         series: [
           {
-            name: '营收总额',
+            name: '营收收入',
             type: 'bar',
-            stack: '总量',
             barMaxWidth: 35,
             barGap: '10%',
             itemStyle: {
@@ -518,40 +618,15 @@ export default {
             data: that.recovered
           },
           {
-            name: '待缴金额',
+            name: '营业实收',
             type: 'bar',
-            stack: '总量',
+            barMaxWidth: 35,
             itemStyle: {
               normal: {
-                color: "rgba(255,144,128,1)",
+                color: "#00BFFF",
                 barBorderRadius: 0,
                 label: {
                   show: true,
-                  position: "top",
-                  formatter: function (p) {
-                    return p.value > 0 ? (p.value) : '';
-                  }
-                }
-              }
-            },
-            data: that.norecovered
-          },
-          {
-            name: '营收环比',
-            type: 'line',
-            // stack: '总量',
-            symbolSize: 5,
-            symbol:'circle',
-            yAxisIndex: 1,
-            itemStyle: {
-              normal: {
-                color: "rgba(0,191,183,1)",
-                barBorderRadius: 0,
-                label: {
-                  show: true,
-                  textStyle: {
-                    color: "#000"
-                  },
                   position: "insideTop",
                   formatter: function (p) {
                     return p.value > 0 ? (p.value) : '';
@@ -562,7 +637,26 @@ export default {
             data: that.recoveredsequen
           },
           {
-            name: '待缴环比',
+            name: '营业欠费',
+            type: 'bar',
+            barMaxWidth: 35,
+            itemStyle: {
+              normal: {
+                color: "rgba(255,144,128,1)",
+                barBorderRadius: 0,
+                label: {
+                  show: true,
+                  position: "insideTop",
+                  formatter: function (p) {
+                    return p.value > 0 ? (p.value) : '';
+                  }
+                }
+              }
+            },
+            data: that.norecovered
+          },
+          {
+            name: '付费率',
             type: 'line',
             // stack: '总量',
             symbolSize: 5,
@@ -570,7 +664,7 @@ export default {
             yAxisIndex: 1,
             itemStyle: {
               normal: {
-                color: "rgba(255,144,128,1)",
+                color: "#FFD700",
                 barBorderRadius: 0,
                 label: {
                   show: true,
@@ -766,14 +860,9 @@ export default {
   cursor: pointer;
 }
 .form{
-  width: 100px;
-  height: 40px;
   position: absolute;
-  background: #0ab088;
-  border: 0;
   right: 50px;
   top: 20px;
-  border-radius: 5px;
 }
 .sequential{
   width: 100%;
@@ -855,12 +944,15 @@ export default {
 .table>>>td{
   text-align: center;
 }
+.table>>>.is-group>tr>th{
+  background: #fff;
+}
 /* 分页控制 */
 .el-pagination{
   width: 580px;
   height: 30px;
   position: absolute;
-  bottom: 10px;
+  bottom: -35px;
   right: 80px;
 }
 .switch_cont{
@@ -886,6 +978,55 @@ export default {
   float: left;
   height: 40px;
   margin-top: -2px;
+}
+/* 环比 */
+.total{
+  width: 30%;
+  height: 200px;
+  float: left;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-left: 2.5%;
+  border: 1px solid #9999;
+}
+.header_text{
+  height: 40px;
+  background: #1296db;
+}
+.text{
+  font-size: 20px;
+  font-weight: 500;
+  float: left;
+  line-height: 40px;
+  margin-left: 20px;
+}
+.text_one{
+  float: right;
+  margin-right: 80px;
+  line-height: 40px;
+}
+.line{
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+}
+.left{
+  float: left;
+  margin-left: 20px;
+}
+.data_img,.right{
+  position: absolute;
+}
+.data_img{
+  right: 0;
+}
+.right{
+  right: 100px;
+}
+.data_img>img{
+  width: 40px;
+  height: 40px;
 }
 </style>
 

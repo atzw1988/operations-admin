@@ -62,20 +62,20 @@
       <button class="form" @click="toform">{{fromtext}}</button>
     </div>
     <div v-if="isShow" class="sequential">
-      <div class="revenue">
-        <div class="revenue-header">
-          <span class="headertext">订单量(个)</span>
-          <span class="sequen">环比(%)</span>
+      <div class="total">
+        <div class="header_text">
+          <div class="text">订单量(个)</div>
+          <div class="text_one">环比(%)</div>
         </div>
-        <div class="revenue-cont">
-          <ul>
-            <li v-for="item in revenues" :key="item.id">
-              <span>{{item.name}}:{{item.num}}</span>
-              <span class="sequen">{{item.sequen}}</span>
+        <div class="per_data">
+          <div v-for="item in revenues" class="line">
+            <div class="left">{{item.name}}:{{item.num}}</div>
+            <div class="right">{{item.sequen}}</div>
+            <div class="data_img">
               <img v-show="item.sequen>0" src="../../../assets/tubiao03.png" alt="">
               <img v-show="item.sequen<0" src="../../../assets/tubiao04.png" alt="">
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -336,7 +336,7 @@ export default {
         },
         grid: {
           "borderWidth": 0,
-          "top": 10,
+          "top": 50,
           "bottom": 45,
           containLabel: true,
           textStyle: {
@@ -685,49 +685,7 @@ export default {
   position: relative;
   background: #fff;
 }
-.revenue,.owe{
-  width: 30%;
-  height: 180px;
-  /* border: 1px solid blueviolet; */
-  float: left;
-  margin: 10px 0 0 13%;;
-}
-.revenue-header,.owe-header{
-  width: 100%;
-  height: 40px;
-  /* line-height: 40px; */
-  /* border-bottom: 1px solid navajowhite; */
-}
-.headertext{
-  font-size: 20px;
-  font-weight: 600;
-}
-.revenue-cont,.owe-cont{
-  width: 100%;
-  height: 140px;
-}
-.revenue-cont>ul>li,.owe-cont>ul>li{
-  width: 100%;
-  height: 35px;
-  line-height: 35px;
-  position: relative;
-  border-bottom: 1px
-}
-.revenue-cont>ul>li>span,.owe-cont>ul>li>span,.owe-header>span,.revenue-header>span{
-  display: inline-block;
-  width: 100px;
-}
-.sequen{
-  text-align: center;
-  margin-left: 20%;
-}
-.revenue-cont>ul>li>img,.owe-cont>ul>li>img{
-  width: 35px;
-  height: 35px;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
+
 .chart{
   width: 100%;
   height: 435px;
@@ -790,6 +748,55 @@ export default {
   float: left;
   height: 40px;
   margin-top: -2px;
+}
+/* 环比 */
+.total{
+  width: 30%;
+  height: 200px;
+  /* float: left; */
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0 auto;
+  border: 1px solid #9999;
+}
+.header_text{
+  height: 40px;
+  background: #1296db;
+}
+.text{
+  font-size: 20px;
+  font-weight: 500;
+  float: left;
+  line-height: 40px;
+  margin-left: 20px;
+}
+.text_one{
+  float: right;
+  margin-right: 80px;
+  line-height: 40px;
+}
+.line{
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+}
+.left{
+  float: left;
+  margin-left: 20px;
+}
+.data_img,.right{
+  position: absolute;
+}
+.data_img{
+  right: 0;
+}
+.right{
+  right: 100px;
+}
+.data_img>img{
+  width: 40px;
+  height: 40px;
 }
 </style>
 

@@ -22,6 +22,8 @@ import Alluser from './components/setting/Alluser.vue'
 // 三级路由
 import Phone from './components/about/contact/Phone';
 import PersonName from './components/about/contact/PersonName';
+import Summary from './components/about/report/Summary.vue'
+import Financial from './components/about/report/Financial.vue'
 import Statistical from './components/about/report/Statistical.vue'
 import Users from './components/about/report/Users.vue';
 import Operating from './components/about/report/Operating.vue';
@@ -33,6 +35,7 @@ import Rechargeorder from './components/about/order/Rechargeorder.vue';
 import Userslist from './components/about/users/Userslist.vue';
 import Userblacklist from './components/about/users/Userblacklist.vue';
 import Carwhitelist from './components/about/users/Carwhitelist.vue';
+import Owequery from './components/about/users/Owequery.vue'
 import Chargingrules from './components/about/configuration/Chargingrules.vue';
 import Garagemana from './components/about/configuration/Garagemana.vue';
 import Parkmana from './components/about/configuration/Parkmana.vue';
@@ -94,8 +97,18 @@ export const routes = [
     path:'/about',
     name:'aboutLink',
     component:About,
-    redirect: '/about/operating',
+    redirect: '/about/summary',
     children: [
+      {
+        path: '/about/summary',
+        name: 'summaryLink',
+        component: Summary
+      },
+      {
+        path: '/about/financial',
+        name: 'financialLink',
+        component: Financial
+      },
       {
         path: '/about/statistical',
         name: 'statisticalLink',
@@ -150,6 +163,11 @@ export const routes = [
         path: '/about/carwhitelist',
         name: 'carwhitelistLink',
         component: Carwhitelist
+      },
+      {
+        path: '/about/owequery',
+        name: 'owequeryLink',
+        component: Owequery
       },
       {
         path: '/about/chargingrules',

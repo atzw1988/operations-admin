@@ -92,21 +92,21 @@
           width="180"
           label="停车时长(分)">
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="pledgemoney"
           sortable
           label="预缴押金">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop="shouldmoney"
           sortable
           label="应缴金额">
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="realmoney"
           sortable
           label="出场补交">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop="afterbalance"
           sortable
@@ -120,10 +120,10 @@
             <span v-if="scope.row.afterPayType == 2">支付宝支付</span>
           </template>
         </el-table-column>
-        <!-- <el-table-column
+        <el-table-column
           prop="stauts"
           label="订单状态">
-        </el-table-column> -->
+        </el-table-column>
       </el-table>
       <el-pagination
         @current-change="page_change"
@@ -158,7 +158,6 @@ export default {
       ps:15,            //每页数量
       allps:1,          //总页数
       list_detail:[],    //订单数组
-      // url:'http://192.168.0.192:13259/its/parking/findPage',
       url:'/its/parking/findPage',
       url_park:'/its/operations/query/berth'
     }
