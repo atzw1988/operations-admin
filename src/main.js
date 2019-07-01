@@ -22,7 +22,8 @@ import { store } from './store/store.js';
 // 配置默认根路径
 // axios.defaults.baseURL = 'https://wd0992259444dcaaxf.wilddogio.com/';
 // axios.defaults.baseURL = 'http://192.168.1.104:13259';
-axios.defaults.baseURL = 'http://www.lcgxlm.com:13259';
+// axios.defaults.baseURL = 'http://www.lcgxlm.com:13259';
+axios.defaults.baseURL = '112.33.13.149:13259';   //测试环境接口
 // axios.defaults.headers.common['Authorization'] = 'Web ' + store.state.token
 
 axios.interceptors.request.use((config) => {
