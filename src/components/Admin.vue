@@ -11,80 +11,88 @@
             <router-link tag="span" :to="{name:list.to}">{{list.name}}</router-link>
           </li>
         </ul>
-      <div class="clear"></div>
-      <div class="mingxi">
-        <router-view></router-view>
+        <div class="clear"></div>
+        <div class="mingxi">
+          <router-view></router-view>
+        </div>
       </div>
-    </div>
-    <div id="right" class="right">
-      <img src="../assets/bj-1.png" alt="" class="bj-1">
-      <img src="../assets/bj-2.png" alt="" class="bj-2">
-      <img src="../assets/bj-3.png" alt="" class="bj-3">
-      <img src="../assets/bj-4.png" alt="" class="bj-4">
-      <div id="state" class="state">
-        <!-- <button v-on:click="showFull" id="btn">
-          <img src="../assets/quanping.png" alt="">
-          <span>全屏</span>
-        </button> -->
-        <ul v-if="state1_show" id="state1">
-          <li><a href="javascript:void(0)" style="background:rgb(0, 255, 34)"></a><span>充足</span></li>
-          <li><a href="javascript:void(0)" style="background: rgb(0, 153, 255);"></a><span>较少</span></li>
-          <li><a href="javascript:void(0)" style="background: rgb(255, 0, 0);"></a><span>已满</span></li>
-        </ul>
-        <ul v-if="state2_show" id="state2">
-          <li>
-            <img src="../assets/yonghu1.png" alt="">
-            <span>正常上班</span>
-          </li>
-          <li>
-            <img src="../assets/yonghu2.png" alt="">
-            <span>未按时上班</span>
-          </li>
-          <li>
-            <img src="../assets/yonghu3.png" alt="">
-            <span>休息</span>
-          </li>
-          <li>
-            <span>(早班07:30-14:30,晚班14:30-21:00,正常班09:00-18:00)</span>
-          </li>
-        </ul>
-      </div>
-      <div class="map_content">
-        <div class="tooltips" style="display:none">
-          <ul>
+      <div id="right" class="right">
+        <img src="../assets/bj-1.png" alt="" class="bj-1">
+        <img src="../assets/bj-2.png" alt="" class="bj-2">
+        <img src="../assets/bj-3.png" alt="" class="bj-3">
+        <img src="../assets/bj-4.png" alt="" class="bj-4">
+        <div id="state" class="state">
+          <!-- <button v-on:click="showFull" id="btn">
+            <img src="../assets/quanping.png" alt="">
+            <span>全屏</span>
+          </button> -->
+          <ul v-if="state1_show" id="state1">
+            <li><a href="javascript:void(0)" style="background:rgb(0, 255, 34)"></a><span>充足</span></li>
+            <li><a href="javascript:void(0)" style="background: rgb(0, 153, 255);"></a><span>较少</span></li>
+            <li><a href="javascript:void(0)" style="background: rgb(255, 0, 0);"></a><span>已满</span></li>
+          </ul>
+          <ul v-if="state2_show" id="state2">
             <li>
-              <span>停车场名称：{{tooltips.name}}</span>
+              <img src="../assets/yonghu1.png" alt="">
+              <span>正常上班</span>
             </li>
             <li>
-              <span>空余车位数：{{tooltips.kyCount}}个</span>
+              <img src="../assets/yonghu2.png" alt="">
+              <span>未按时上班</span>
             </li>
             <li>
-              <span>总车位数：{{tooltips.maxCount}}个</span>
+              <img src="../assets/yonghu3.png" alt="">
+              <span>休息</span>
+            </li>
+            <li>
+              <span>(早班07:30-14:30,晚班14:30-21:00,正常班09:00-18:00)</span>
             </li>
           </ul>
         </div>
-        <div class="person_det" style="display:none">
-          <ul>
-            <li>
-              <span>人员姓名：{{person_detail.name}}</span>
-            </li>
-            <li>
-              <span>人员状态：{{person_detail.status}}</span>
-            </li>
-            <li>
-              <span>PDA编号：{{person_detail.pda}}</span>
-            </li>
-            <li>
-              <span>所在停车场：{{person_detail.park}}</span>
-            </li>
-          </ul>
-        </div>
-        <div v-if="state1_show" class="map" id="map">
-        </div>
-        <div v-if="state2_show" class="map" id="mapone">
-        </div>
-        <div v-if="state3_show" class="map" id="maptwo">
-        </div>
+        <div class="map_content">
+          <div class="tips" >
+              <div
+                class="tipslist"
+                v-for="(item,index) in tip_list"
+                v-if="item.isshow">
+                <div class="close" @click="tip_close(index)">X</div>
+                <div class="tip_text">路段：{{item.zonename}}</div>
+                <div class="tip_text">人员：{{item.operatorname}}</div>
+                <div class="tip_text">车位：{{item.placename.join(',')}}</div>
+              </div>
+          </div>
+          <div class="tooltips" style="display:none">
+            <ul>
+              <li>
+                <span>停车场名称：{{tooltips.name}}</span>
+              </li>
+              <li>
+                <span>空余车位数：{{tooltips.kyCount}}个</span>
+              </li>
+              <li>
+                <span>总车位数：{{tooltips.maxCount}}个</span>
+              </li>
+            </ul>
+          </div>
+          <div class="person_det" style="display:none">
+            <ul>
+              <li>
+                <span>人员姓名：{{person_detail.name}}</span>
+              </li>
+              <li>
+                <span>人员状态：{{person_detail.status}}</span>
+              </li>
+              <li>
+                <span>PDA编号：{{person_detail.pda}}</span>
+              </li>
+              <li>
+                <span>所在停车场：{{person_detail.park}}</span>
+              </li>
+            </ul>
+          </div>
+          <div v-if="state1_show" class="map" id="map"></div>
+          <div v-if="state2_show" class="map" id="mapone"></div>
+          <div v-if="state3_show" class="map" id="maptwo"></div>
         </div>
       </div>
     </div>
@@ -97,6 +105,9 @@ import echarts from "echarts";
 export default{
   data() {
     return {
+      tip_list:[],
+      timer: null,
+      nowtime:null,
       radio:'1',
       isshow:true,
       adminlists:[
@@ -148,6 +159,12 @@ export default{
   },
   mounted() {
     this.getparks()
+    // this.showtip()
+    this.get_list()
+    this.get_time()
+  },
+  beforeDestroy(){
+    clearInterval(this.timer)
   },
   methods: {
     //获取停车场列表
@@ -847,6 +864,126 @@ export default{
         }, 1000);
       }
     },
+    //关闭选定的框
+    tip_close(num){
+      this.tip_list[num].isshow = false
+    },
+    //获取当前时间
+    get_time(){
+      this.timer = setInterval(() => {
+        let data = new Date()
+        let year = data.getFullYear();
+        let month =data.getMonth() + 1 < 10? "0" + (data.getMonth() + 1): data.getMonth() + 1;
+        let date =data.getDate() < 10? "0" + data.getDate(): data.getDate();
+        let hh =data.getHours() < 10? "0" + data.getHours(): data.getHours();
+        let mm =data.getMinutes() < 10? "0" + data.getMinutes(): data.getMinutes();
+        let ss =data.getSeconds() < 10? "0" + data.getSeconds(): data.getSeconds();
+        this.nowday = year + '-' + month + '-' + date;
+        this.nowtime = hh + ':' + mm + ':' + ss;
+        console.log(hh)
+        if(hh > 8 && hh < 20){
+          this.time_for()
+        }
+      }, 120000);
+    },
+    //先获取数组
+    get_list(){
+      let data = {
+        zoneid: 'z3027069,z3023959,z3048991,z3025928'
+      }
+      axios({
+        method:'post',
+        url:'http://192.168.0.104:13259/its/charge/isOrder',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8'
+        },
+        data:data
+      }).then(res => {
+        let list = res.data.data
+        let new_list = []
+        list.forEach(item => {
+          if(new_list.length == 0){
+            new_list.push(item)
+          }else{
+            new_list.forEach(res => {
+              if(!this.issame(item.zonename,new_list)){
+                new_list.push(item)
+              }else{
+                res.placename = res.placename + ',' + item.placename
+              }
+            })
+          }
+        })
+        new_list.forEach(item => {
+          item.placename = item.placename.split(',')
+          item.isshow = true
+        })
+        this.tip_list = new_list
+      })
+    },
+    //接口访问定时器
+    time_for(){
+      let data = {
+        zoneid: 'z3027069,z3023959,z3048991,z3025928'
+      }
+      axios({
+        method:'post',
+        url:'http://192.168.0.104:13259/its/charge/isOrder',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8'
+        },
+        data:data
+      }).then(res => {
+        let list = res.data.data
+        let new_list = []
+        list.forEach(item => {
+          if(new_list.length == 0){
+            new_list.push(item)
+          }else{
+            new_list.forEach(res => {
+              if(!this.issame(item.zonename,new_list)){
+                new_list.push(item)
+              }else{
+                res.placename = res.placename + ',' + item.placename
+              }
+            })
+          }
+        })
+        new_list.forEach(item => {
+          item.placename = item.placename.split(',')
+          item.isshow = true
+        })
+        new_list.forEach(item => {
+          this.tip_list.forEach(res => {
+            if(res.zonename == item.zonename){
+              item.isshow = res.isshow
+              item.placename.forEach(a => {
+                if(res.placename.indexOf(a) == -1){
+                  res.placename = item.placename
+                  res.isshow = true
+                }
+              })
+            }
+          })
+          if(!this.ishave(item.name)){
+            this.tip_list.push(item)
+          }
+        })
+      })
+      // this.timer = setInterval(() => {
+
+      // }, 120000);
+    },
+    ishave(item){
+    return  this.tip_list.some(res => {
+        return res.name == item
+      })
+    },
+    issame(item,arr){
+      return arr.some(res => {
+        return res.zonename == item
+      })
+    }
   }
 }
 </script>
@@ -854,46 +991,23 @@ export default{
 #home{
   height: 904px;
 }
-@media screen and (min-width: 1500px) {
-  .left{
-    width: 21%;
-    height: 95%;
-    float: left;
-    border: 2px solid #013254;
-    margin: 0 1%;
-    color: #fff;
-    position: relative;
-  }
-  .right{
-    width: 77%;
-    height: 95%;
-    float: left;
-    position: relative;
-    border: 2px solid #013254;
-    color: #fff;
-    z-index: 8000;
-  }
-
+.left{
+  width: 314px;
+  height: 95%;
+  float: left;
+  border: 2px solid #013254;
+  margin: 0 1%;
+  color: #fff;
+  position: relative;
 }
-@media screen and (max-width: 1499px) {
-  .left{
-    width: 314px;
-    height: 95%;
-    float: left;
-    border: 2px solid #013254;
-    margin: 0 1%;
-    color: #fff;
-    position: relative;
-  }
-  .right{
-    width: 100%;
-    height: 95%;
-    position: relative;
-    border: 2px solid #013254;
-    margin-left: 350px;
-    color: #fff;
-    z-index: 8000;
-  }
+.right{
+  width: calc(100% - 360px);
+  height: 95%;
+  float: left;
+  position: relative;
+  border: 2px solid #013254;
+  color: #fff;
+  /* z-index: 8000; */
 }
 .nav-link{
   width: 33%;
@@ -950,7 +1064,7 @@ export default{
   z-index: 8000;
 }
 .map{
-  z-index: 8000;
+  /* z-index: 8000; */
   width: 100%;
   height: 100%
 }
@@ -1009,5 +1123,36 @@ export default{
   z-index: 9001;
   padding: 10px;
   border-radius: 5px;
+}
+.tips{
+  position: absolute;
+  right: 5px;
+  top: 10px;
+  height: calc(100% - 10px);
+  overflow: hidden;
+  z-index: 8001;
+}
+.tipslist{
+  width: 350px;
+  height: auto;
+  background: #d81f0667;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 10px 20px;
+  position: relative;
+}
+.tipslist:hover{
+  background: #d81f06;
+}
+.tip_text{
+  width: 100%;
+  word-break:break-all;
+}
+.close{
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  color: #fff;
+  font-size: 16px;
 }
 </style>

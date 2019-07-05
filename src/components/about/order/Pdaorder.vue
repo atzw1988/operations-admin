@@ -37,7 +37,7 @@
         <div class="username">
           <span style="float:left">车牌:</span>
           <el-input style="width:120px;float:left"
-            placeholder="请输入帐户"
+            placeholder="请输入车牌"
             v-model="username"
             clearable>
           </el-input>
@@ -110,7 +110,10 @@
         <el-table-column
           prop="afterbalance"
           sortable
-          label="扣款后余额">
+          label="欠费金额">
+        </el-table-column>
+        <el-table-column
+          label="支付渠道">
         </el-table-column>
         <el-table-column
           label="支付方式">
@@ -158,7 +161,7 @@ export default {
       ps:15,            //每页数量
       allps:1,          //总页数
       list_detail:[],    //订单数组
-      url:'/its/parking/findPage',
+      url:'/its/admin/findPage',
       url_park:'/its/operations/query/berth'
     }
   },

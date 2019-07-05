@@ -219,11 +219,21 @@ export default {
   font-weight: 600;
   color: rgb(0, 162, 255);
 }
-.select{
-  width: 100%;
-  height: 60px;
-  background: #fff;
-  margin-top: 20px;
+@media screen and (min-width: 1250px) {
+  .select{
+    width: 100%;
+    height: 60px;
+    background: #fff;
+    margin-top: 20px;
+  }
+}
+@media screen and (max-width: 1249px) {
+  .select{
+    width: 100%;
+    height: 120px;
+    background: #fff;
+    margin-top: 20px;
+  }
 }
 .selstate,.selplace,.selparkkind,.selconsumption{
   width: 110px;

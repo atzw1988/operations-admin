@@ -20,6 +20,7 @@
           <div class="inp-box">
             <label for="username">账号:</label>
             <input
+              @change="change_text"
               type="username"
               class="form-control"
               v-model="username"
@@ -29,13 +30,14 @@
           <div class="inp-box">
             <label for="password">密码:</label>
             <input
+              @change="change_text"
               type="password"
               class="form-control"
               v-model="password"
               placeholder="请输入密码"
               >
           </div>
-          <button type="submit" class="gologin">登录</button>
+          <button type="submit" class="gologin"><i v-if="is_login" class="el-icon-loading"></i>{{login_text}}</button>
         </form>
       </div>
     </div>
@@ -49,7 +51,9 @@ import axios from 'axios';
       return {
         username:'',
         password:'',
-        url:'/its/admin/user/login'
+        url:'/its/admin/user/login',
+        login_text:'登陆',
+        is_login: false
       }
     },
     // 组件内的守卫
@@ -70,9 +74,12 @@ import axios from 'axios';
     methods:{
       onSubmit(){
         if(!this.username || !this.password){
-          alert('请输入账号密码')
+          // alert('请输入账号密码')
+          this.$message.error('请输入账号密码')
         }
         if(this.username && this.password){
+          this.login_text = '登陆中'
+          this.is_login = true
           let that = this
           var params = new URLSearchParams();
           params.append('userName', this.username);
@@ -85,8 +92,9 @@ import axios from 'axios';
             },
             data: params
           }).then(res => {
-            console.log(res)
             if(res.data.success){
+              this.login_text = '登陆'
+              this.is_login = false
               let token = res.data.data
               window.localStorage.setItem('username', this.username)
               window.localStorage.setItem('token', token)
@@ -106,6 +114,10 @@ import axios from 'axios';
             }
           })
         }
+      },
+      change_text(){
+        this.login_text = '登陆'
+        this.is_login = false
       }
     }
   }
