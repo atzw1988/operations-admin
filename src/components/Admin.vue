@@ -884,21 +884,22 @@ export default{
         if(hh > 8 && hh < 20){
           this.time_for()
         }
-      }, 120000);
+      }, 60000);
     },
     //先获取数组
     get_list(){
       let data = {
-        zoneid: 'z3027069,z3023959,z3048991,z3025928'
+        zoneid: 'z3027069,z3048991'
       }
       axios({
         method:'post',
-        url:'http://192.168.0.104:13259/its/charge/isOrder',
+        url:'/its/admin/isOrder',
         headers: {
           'content-type': 'application/json;charset=UTF-8'
         },
         data:data
       }).then(res => {
+        console.log(res)
         let list = res.data.data
         let new_list = []
         list.forEach(item => {
@@ -906,10 +907,12 @@ export default{
             new_list.push(item)
           }else{
             new_list.forEach(res => {
-              if(!this.issame(item.zonename,new_list)){
-                new_list.push(item)
+              if(this.issame(item.zonename,new_list)){
+                if(res.zonename == item.zonename){
+                  res.placename = res.placename + ',' + item.placename
+                }
               }else{
-                res.placename = res.placename + ',' + item.placename
+                new_list.push(item)
               }
             })
           }
@@ -924,11 +927,11 @@ export default{
     //接口访问定时器
     time_for(){
       let data = {
-        zoneid: 'z3027069,z3023959,z3048991,z3025928'
+        zoneid: 'z3027069,z3048991'
       }
       axios({
         method:'post',
-        url:'http://192.168.0.104:13259/its/charge/isOrder',
+        url:'/its/admin/isOrder',
         headers: {
           'content-type': 'application/json;charset=UTF-8'
         },
@@ -944,7 +947,9 @@ export default{
               if(!this.issame(item.zonename,new_list)){
                 new_list.push(item)
               }else{
-                res.placename = res.placename + ',' + item.placename
+                if(res.zonename == item.zonename){
+                  res.placename = res.placename + ',' + item.placename
+                }
               }
             })
           }
@@ -957,12 +962,10 @@ export default{
           this.tip_list.forEach(res => {
             if(res.zonename == item.zonename){
               item.isshow = res.isshow
-              item.placename.forEach(a => {
-                if(res.placename.indexOf(a) == -1){
-                  res.placename = item.placename
-                  res.isshow = true
-                }
-              })
+              if(res.placename != item.zonename){
+                res.placename = item.placename
+                res.isshow = true
+              }
             }
           })
           if(!this.ishave(item.name)){
@@ -970,9 +973,6 @@ export default{
           }
         })
       })
-      // this.timer = setInterval(() => {
-
-      // }, 120000);
     },
     ishave(item){
     return  this.tip_list.some(res => {

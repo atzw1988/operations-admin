@@ -7,12 +7,12 @@
       <span>筛选订单数：<a href="#">{{sel_num}}</a>个</span>
     </div>
     <div class="select">
-      <!-- <el-select v-model="statues" class="selstate" placeholder="订单状态">
+      <el-select v-model="statues" class="selstate" placeholder="订单状态">
         <el-option value="" label="全部状态">全部状态</el-option>
         <el-option value="0" label="未支付">未支付</el-option>
         <el-option value="1" label="交易完成">交易完成</el-option>
         <el-option value="2" label="无需支付">无需支付</el-option>
-      </el-select> -->
+      </el-select>
       <!-- <el-select v-model="selpark" placeholder="停车区域" class="selplace" clearable>
         <el-option value="">全部区域</el-option>
         <el-option
@@ -29,7 +29,7 @@
             type="datetimerange"
             range-separator="-"
             format='yyyy-MM-dd HH:mm:ss'
-            value-format='yyyy-MM-dd HH:mm:ss'
+            value-format='yyyy/MM/dd HH:mm:ss'
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
@@ -58,36 +58,36 @@
           type="index">
         </el-table-column>
         <el-table-column
-          prop="carnumber"
+          prop="car_no"
           label="车牌">
         </el-table-column>
         <el-table-column
-          prop="typename"
+          prop="account_type"
           label="帐户类型">
         </el-table-column>
         <el-table-column
-          prop="zonename"
+          prop="parking_name"
           label="停车场"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="parkingspace"
+          prop="park_no"
           label="车位号">
         </el-table-column>
         <el-table-column
-          prop="starttime"
+          prop="parkstart_time"
           label="入场时间"
           sortable
           width="180">
         </el-table-column>
         <el-table-column
-          prop="endtime"
+          prop="parkend_time"
           sortable
           label="出场时间"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="sumMins"
+          prop="buy_time"
           sortable
           width="180"
           label="停车时长(分)">
@@ -98,34 +98,44 @@
           label="预缴押金">
         </el-table-column> -->
         <el-table-column
-          prop="shouldmoney"
+          prop="charge_money"
           sortable
-          label="应缴金额">
+          label="消费金额">
         </el-table-column>
         <!-- <el-table-column
           prop="realmoney"
           sortable
           label="出场补交">
         </el-table-column> -->
-        <el-table-column
+        <!-- <el-table-column
           prop="afterbalance"
           sortable
           label="欠费金额">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           label="支付渠道">
+          <template slot-scope="scope">
+            <span v-if="scope.row.pay_channel == 0">PDA</span>
+            <span v-if="scope.row.pay_channel == 1">小程序</span>
+            <span v-if="scope.row.pay_channel == 2">APP</span>
+          </template>
         </el-table-column>
         <el-table-column
           label="支付方式">
           <template slot-scope="scope">
-            <span v-if="scope.row.afterPayType == 0">现金支付</span>
-            <span v-if="scope.row.afterPayType == 1">微信支付</span>
-            <span v-if="scope.row.afterPayType == 2">支付宝支付</span>
+            <span v-if="scope.row.pay_way == 0">现金支付</span>
+            <span v-if="scope.row.pay_way == 1">微信支付</span>
+            <span v-if="scope.row.pay_way == 2">支付宝支付</span>
+            <span v-if="scope.row.pay_way == 3">余额支付</span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="stauts"
           label="订单状态">
+          <template slot-scope="scope">
+            <span v-if="scope.row.pay_type == 0">未支付</span>
+            <span v-if="scope.row.pay_type == 1">已支付</span>
+            <span v-if="scope.row.pay_type == 2">无需支付</span>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -161,7 +171,7 @@ export default {
       ps:15,            //每页数量
       allps:1,          //总页数
       list_detail:[],    //订单数组
-      url:'/its/admin/findPage',
+      url:'/its/operations/query/pdaOrder',
       url_park:'/its/operations/query/berth'
     }
   },
@@ -210,22 +220,71 @@ export default {
       });
       return sums;
     },
-    get_order_list(){
-      this.loading = true
+    //封装获取
+    get_my_order(params){
       axios({
         method:'post',
         url: this.url,
         headers: {
-          'content-type': 'application/json;charset=UTF-8'
+          'content-type': 'application/x-www-form-urlencoded'
         },
-        data:{}
+        data:params
       }).then(res => {
-        this.allmoney = res.data.data.sumMoney
-        this.selmoney = res.data.data.currentMoney
-        this.list_detail = res.data.data.pageInfo.list
-        this.list_num = res.data.data.pageInfo.total
-        this.sel_num = res.data.data.pageInfo.total
-        this.loading = false
+        console.log(res)
+        if(res.data.mesg == '暂无数据'){
+          this.$notify({
+            title: '温馨提示',
+            message: '暂无符合搜索条件的数据',
+            type: 'warning',
+            offset: 100
+          })
+        }else{
+          this.allmoney = res.data.data.data[0].totalMoney
+          this.selmoney = res.data.data.data[0].screenMoney
+          this.list_detail = res.data.data.data
+          this.sel_num = res.data.data.tr
+          this.loading = false
+          this.list_detail.map(element => {
+            element.parkstart_time = this.formatDate(element.parkstart_time)
+            element.parkend_time = this.formatDate(element.parkend_time)
+          })
+        }
+      })
+    },
+    get_order_list(){
+      this.loading = true
+      let params = new URLSearchParams()
+      params.append('pageIndex', this.pageIndex)
+      params.append('ps', this.ps)
+      // this.get_my_order(params)
+      axios({
+        method:'post',
+        url: this.url,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        data:params
+      }).then(res => {
+        console.log(res)
+        if(res.data.mesg == '暂无数据'){
+          this.$notify({
+            title: '温馨提示',
+            message: '暂无符合搜索条件的数据',
+            type: 'warning',
+            offset: 100
+          })
+        }else{
+          this.allmoney = res.data.data.data[0].totalMoney
+          this.selmoney = res.data.data.data[0].screenMoney
+          this.list_detail = res.data.data.data
+          this.list_num = res.data.data.tr
+          this.sel_num = res.data.data.tr
+          this.loading = false
+          this.list_detail.map(element => {
+            element.parkstart_time = this.formatDate(element.parkstart_time)
+            element.parkend_time = this.formatDate(element.parkend_time)
+          })
+        }
       })
     },
     //时间格式转换
@@ -236,86 +295,27 @@ export default {
     //换页
     page_change(val){
       this.pageIndex = val
-      let params = {}
-      if(this.time_interval){
-        params = {
-          'currentPage': this.pageIndex,
-          'starttime': this.time_interval[0],
-          'endtime': this.time_interval[1],
-          'carnumber': this.username
-        }
-      }else{
-        params = {
-          'currentPage': this.pageIndex,
-          'carnumber': this.username
-        }
-      }
-      params = JSON.stringify(params)
-      axios({
-        method:'post',
-        url: this.url,
-        headers: {
-          'content-type': 'application/json;charset=UTF-8'
-        },
-        data:params
-      }).then(res => {
-        this.allmoney = res.data.data.sumMoney
-        this.selmoney = res.data.data.currentMoney
-        this.list_detail = res.data.data.pageInfo.list
-        this.sel_num = res.data.data.pageInfo.total
-        this.list_detail.forEach(item => {
-          item.starttime = this.renderTime(item.starttime)
-          item.endtime = this.renderTime(item.endtime)
-        })
-      })
+      let params = new URLSearchParams()
+      params.append('pageIndex', this.pageIndex)
+      params.append('ps', this.ps)
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      params.append('carNo', this.username)
+      params.append('parkingName', this.selpark)
+      params.append('orderStatus', this.statues)
+      this.get_my_order(params)
     },
     selbtn(){
-      let params = {}
-      if(this.username){
-        this.pageIndex =1
-      }
-      if(this.time_interval){
-        params = {
-          'currentPage': this.pageIndex,
-          'starttime': this.time_interval[0],
-          'endtime': this.time_interval[1],
-          'carnumber': this.username
-        }
-      }else{
-        params = {
-          'currentPage': this.pageIndex,
-          'carnumber': this.username
-        }
-      }
-      params = JSON.stringify(params)
-      axios({
-        method:'post',
-        url: this.url,
-        headers: {
-          'content-type': 'application/json;charset=UTF-8'
-        },
-        data:params
-      }).then(res => {
-        console.log(res)
-        if(res.data.data.pageInfo.list.length > 0){
-          this.allmoney = res.data.data.sumMoney
-          this.selmoney = res.data.data.currentMoney
-          this.list_detail = res.data.data.pageInfo.list
-          this.sel_num = res.data.data.pageInfo.total
-          this.list_detail.forEach(item => {
-            item.starttime = this.renderTime(item.starttime)
-            item.endtime = this.renderTime(item.endtime)
-          })
-        }else{
-          this.$notify({
-            title: '温馨提示',
-            message: '暂时无符合条件的数据!',
-            type: 'warning',
-            offset: 100
-          })
-          return
-        }
-      })
+      this.pageIndex = 1
+      let params = new URLSearchParams()
+      params.append('pageIndex', this.pageIndex)
+      params.append('ps', this.ps)
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      params.append('carNo', this.username)
+      params.append('parkingName', this.selpark)
+      params.append('orderStatus', this.statues)
+      this.get_my_order(params)
     }
   },
 }

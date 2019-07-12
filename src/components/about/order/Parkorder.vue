@@ -154,7 +154,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      time_interval: '',    //时间区间
+      time_interval: [],    //时间区间
       allmoney: '',   //总金额
       list_num:0,     //总订单数
       selmoney: '',   //筛选总金额

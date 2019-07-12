@@ -50,6 +50,7 @@ export default {
         },
         data: params
       }).then(res => {
+        console.log(res)
         if (res.data.mesg == "暂无数据") {
           this.$notify({
             title: '温馨提示',
@@ -72,13 +73,13 @@ export default {
               element.pay_date = this.formatDate(element.pay_date)
             }
           });
-          this.list_detail.forEach((val) => {
-            if (val.charge_money) {
-              this.ps_total += val.charge_money
-            } else if (val.jin_e) {
-              this.ps_total += (val.jin_e * 1)
-            }
-          })
+          // this.list_detail.forEach((val) => {
+          //   if (val.charge_money) {
+          //     this.ps_total += val.charge_money
+          //   } else if (val.jin_e) {
+          //     this.ps_total += (val.jin_e * 1)
+          //   }
+          // })
         }
       })
     },
