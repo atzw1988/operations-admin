@@ -59,8 +59,8 @@ export default {
             offset: 100
           })
         } else {
-          this.allmoney = res.data.data.data[0].totalMoney
-          this.selmoney = res.data.data.data[0].screenMoney
+          this.allmoney = res.data.data.data[0].totalMoney.toFixed(2)
+          this.selmoney = res.data.data.data[0].screenMoney.toFixed(2)
           this.list_num = res.data.data.tr
           this.sel_num = res.data.data.tr
           this.allps = res.data.data.tp

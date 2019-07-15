@@ -1,9 +1,12 @@
 <template>
   <div id="row">
     <div class="total">
-      <span style="border-right:2px solid rgb(0, 162, 255)">总金额：<a href="javascript:void(0)">{{allmoney}}</a>元</span>
-      <span style="border-right:4px solid rgb(0, 47, 255)">订单总数：<a href="javascript:void(0)">{{list_num}}</a>个</span>
-      <span style="border-right:2px solid rgb(0, 162, 255)">筛选金额：<a href="javascript:void(0)">{{selmoney}}</a>元</span>
+      <span style="margin-left:50px">总金额：<a href="javascript:void(0)">{{allmoney}}</a>元</span>
+      <el-divider direction="vertical"></el-divider>
+      <span>订单总数：<a href="javascript:void(0)">{{list_num}}</a>个</span>
+      <el-divider direction="vertical"></el-divider>
+      <span>筛选金额：<a href="javascript:void(0)">{{selmoney}}</a>元</span>
+      <el-divider direction="vertical"></el-divider>
       <span>筛选订单数：<a href="#">{{sel_num}}</a>个</span>
     </div>
     <div class="select">
@@ -205,14 +208,17 @@ export default {
   background: #fff;
 }
 .total>span{
-  display: inline-block;
   font-size: 20px;
-  width: 200px;
-  height: 50px;
-  /* border: 1px solid firebrick; */
   line-height: 50px;
   font-weight: 600;
   text-align: center;
+}
+.el-divider{
+  height: 30px;
+  width: 2px;
+  line-height: 50px;
+  background: rgb(0, 162, 255);
+  margin-top: -8px;
 }
 .total>span>a{
   font-size: 20px;

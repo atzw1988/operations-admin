@@ -1,9 +1,9 @@
 <template>
   <div id="row">
     <div class="total">
-      <span style="border-right:2px solid rgb(0, 162, 255)">会员总数：<a href="javascript:void(0)">{{list_num}}</a>人</span>
+      <span style="margin-left:50px">会员总数：<a href="javascript:void(0)">{{list_num}}</a>人</span>
       <el-divider direction="vertical"></el-divider>
-      <span style="border-right:2px solid rgb(0, 162, 255)">筛选会员数：<a href="javascript:void(0)">{{sel_num}}</a>人</span>
+      <span>筛选会员数：<a href="javascript:void(0)">{{sel_num}}</a>人</span>
     </div>
     <div class="select">
       <el-button style="float:right;margin-right:20px;margin-top:10px;" type="danger" @click="sel_del">删除</el-button>
@@ -356,13 +356,17 @@ export default {
   background: #fff;
 }
 .total>span{
-  float: left;
   font-size: 20px;
-  width: 250px;
-  height: 50px;
   line-height: 50px;
   font-weight: 600;
   text-align: center;
+}
+.el-divider{
+  height: 30px;
+  width: 2px;
+  line-height: 50px;
+  background: rgb(0, 162, 255);
+  margin-top: -8px;
 }
 .total>span>a{
   font-size: 20px;

@@ -38,10 +38,10 @@
           prop="mobile"
           label="手机号">
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="lastmoney"
           label="消费金额">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop="balance"
           label="欠费金额">
@@ -125,12 +125,22 @@ export default {
         },
         data: params
       }).then(res => {
-        if(res.data.data.tr){
-          this.list_detail = res.data.data.data
-          this.total_ps = res.data.data.tr
+        console.log(res)
+        if(res.data.code == 0){
+          if(res.data.data.tr){
+            this.list_detail = res.data.data.data
+            this.total_ps = res.data.data.tr
+          }else{
+            this.list_detail = res.data.data
+            this.total_ps = res.data.data.length
+          }
         }else{
-          this.list_detail = res.data.data
-          this.total_ps = res.data.data.length
+          this.$notify({
+            title: '温馨提示',
+            message: res.data.mesg,
+            type: 'warning',
+            offset: 100
+          })
         }
       })
     }

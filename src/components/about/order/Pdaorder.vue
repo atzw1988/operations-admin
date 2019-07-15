@@ -1,18 +1,34 @@
 <template>
   <div id="row">
     <div class="total">
-      <span style="border-right:2px solid rgb(0, 162, 255)">总金额：<a href="javascript:void(0)">{{allmoney}}</a>元</span>
-      <span style="border-right:4px solid rgb(0, 47, 255)">订单总数：<a href="javascript:void(0)">{{list_num}}</a>个</span>
-      <span style="border-right:2px solid rgb(0, 162, 255)">筛选金额：<a href="javascript:void(0)">{{selmoney}}</a>元</span>
+      <span style="margin-left:50px">总金额：<a href="javascript:void(0)">{{allmoney}}</a>元</span>
+      <el-divider direction="vertical"></el-divider>
+      <span>订单总数：<a href="javascript:void(0)">{{list_num}}</a>个</span>
+      <el-divider direction="vertical"></el-divider>
+      <span>筛选金额：<a href="javascript:void(0)">{{selmoney}}</a>元</span>
+      <el-divider direction="vertical"></el-divider>
       <span>筛选订单数：<a href="#">{{sel_num}}</a>个</span>
     </div>
     <div class="select">
-      <el-select v-model="statues" class="selstate" placeholder="订单状态">
+      <el-select v-model="statues" class="selstate" placeholder="全部状态">
         <el-option value="" label="全部状态">全部状态</el-option>
         <el-option value="0" label="未支付">未支付</el-option>
-        <el-option value="1" label="交易完成">交易完成</el-option>
+        <el-option value="1" label="已支付">已支付</el-option>
         <el-option value="2" label="无需支付">无需支付</el-option>
       </el-select>
+      <el-select v-model="pay_channel" class="selstate" placeholder="全部渠道">
+        <el-option value="" label="全部渠道">全部渠道</el-option>
+        <el-option value="0" label="PDA">PDA</el-option>
+        <el-option value="1" label="小程序">小程序</el-option>
+        <el-option value="2" label="APP">APP</el-option>
+      </el-select>
+      <!-- <el-select v-model="pay_way" class="selstate" placeholder="全部方式">
+        <el-option value="" label="全部方式">全部方式</el-option>
+        <el-option value="0" label="现金">现金</el-option>
+        <el-option value="1" label="微信">微信</el-option>
+        <el-option value="2" label="支付宝">支付宝</el-option>
+        <el-option value="3" label="余额">余额</el-option>
+      </el-select> -->
       <!-- <el-select v-model="selpark" placeholder="停车区域" class="selplace" clearable>
         <el-option value="">全部区域</el-option>
         <el-option
@@ -114,19 +130,21 @@
         </el-table-column> -->
         <el-table-column
           label="支付渠道">
-          <template slot-scope="scope">
-            <span v-if="scope.row.pay_channel == 0">PDA</span>
-            <span v-if="scope.row.pay_channel == 1">小程序</span>
-            <span v-if="scope.row.pay_channel == 2">APP</span>
+          <template slot-scope="scope" v-if="scope.row.pay_type == 1">
+            <span v-if="scope.row.pay_channel == 0 && scope.row.pay_cost == 0">PDA</span>
+            <span v-if="scope.row.pay_channel == 1 && scope.row.pay_cost == 0">小程序</span>
+            <span v-if="scope.row.pay_channel == 2 && scope.row.pay_cost == 0">APP</span>
+            <span v-if="scope.row.pay_channel == 1 && scope.row.pay_cost != 0">PDA:{{scope.row.pay_cost}},小程序:{{scope.row.charge_money - scope.row.pay_cost}}</span>
+            <span v-if="scope.row.pay_channel == 2 && scope.row.pay_cost != 0">PDA:{{scope.row.pay_cost}},APP:{{scope.row.charge_money - scope.row.pay_cost}}</span>
           </template>
         </el-table-column>
         <el-table-column
           label="支付方式">
           <template slot-scope="scope">
-            <span v-if="scope.row.pay_way == 0">现金支付</span>
-            <span v-if="scope.row.pay_way == 1">微信支付</span>
-            <span v-if="scope.row.pay_way == 2">支付宝支付</span>
-            <span v-if="scope.row.pay_way == 3">余额支付</span>
+            <span v-if="scope.row.pay_way == 0 && scope.row.pay_type == 1">现金支付</span>
+            <span v-if="scope.row.pay_way == 1 && scope.row.pay_type == 1">微信支付</span>
+            <span v-if="scope.row.pay_way == 2 && scope.row.pay_type == 1">支付宝支付</span>
+            <span v-if="scope.row.pay_way == 3 && scope.row.pay_type == 1">余额支付</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -161,6 +179,8 @@ export default {
       selmoney: 0,   //筛选总金额
       sel_num:0,     //筛选总订单数
       statues:'',           //关键字订单状态绑定
+      pay_channel:'',
+      pay_way:'',
       parkareas: [],  //区域分类
       selpark: '',    //关键字区域分类绑定
       parkkinds: ['泊位停车','车库停车'],   //停车种类
@@ -303,6 +323,7 @@ export default {
       params.append('carNo', this.username)
       params.append('parkingName', this.selpark)
       params.append('orderStatus', this.statues)
+      params.append('payChannel', this.pay_channel)
       this.get_my_order(params)
     },
     selbtn(){
@@ -315,6 +336,7 @@ export default {
       params.append('carNo', this.username)
       params.append('parkingName', this.selpark)
       params.append('orderStatus', this.statues)
+      params.append('payChannel', this.pay_channel)
       this.get_my_order(params)
     }
   },
@@ -333,13 +355,17 @@ export default {
   background: #fff;
 }
 .total>span{
-  display: inline-block;
   font-size: 20px;
-  width: 200px;
-  height: 50px;
   line-height: 50px;
   font-weight: 600;
   text-align: center;
+}
+.el-divider{
+  height: 30px;
+  width: 2px;
+  line-height: 50px;
+  background: rgb(0, 162, 255);
+  margin-top: -8px;
 }
 .total>span>a{
   font-size: 20px;

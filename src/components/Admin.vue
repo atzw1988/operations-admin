@@ -154,6 +154,7 @@ export default{
       state3_show: false,
       tooltips:{},
       person_detail:{},
+      zone_list:'z3027069,z3048991,z3023959,z3025928,z1104470',
       url_park:'/its/operations/query/berth'
     }
   },
@@ -889,7 +890,7 @@ export default{
     //先获取数组
     get_list(){
       let data = {
-        zoneid: 'z3027069,z3048991'
+        zoneid: this.zone_list
       }
       axios({
         method:'post',
@@ -926,8 +927,11 @@ export default{
     },
     //接口访问定时器
     time_for(){
+      // let data = {
+      //   zoneid: 'z3027069,z3048991'
+      // }
       let data = {
-        zoneid: 'z3027069,z3048991'
+        zoneid: this.zone_list
       }
       axios({
         method:'post',
