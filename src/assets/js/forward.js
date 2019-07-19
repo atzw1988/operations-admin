@@ -181,7 +181,7 @@ export default {
       let year_start = start.getFullYear();
       let month_start = start.getMonth() + 1 < 10 ? "0" + (start.getMonth() + 1) : data.getMonth() + 1;
       let date_start = start.getDate() < 10 ? "0" + start.getDate() : start.getDate();
-      this.time_interval = [year_start + month_start + date_start, year_end + month_end + date_end]
+      this.time_interval = [year_start + '/' + month_start + '/' + date_start + ' 00:00:00', year_end + '/' + month_end + '/' + date_end + ' 23:59:59']
     },
     Vue.prototype.get_report_list = function (params, url) {
       axios({
@@ -285,6 +285,28 @@ export default {
           type: 'info',
           offset: 100
         })
+      })
+    },
+    Vue.prototype.get_my_list = function (params, url, callback) {
+      axios({
+        method: 'post',
+        url: url,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        data: params
+      }).then(res => {
+        console.log(res)
+        if (res.data.mesg == "暂无数据") {
+          this.$notify({
+            title: '温馨提示',
+            message: '暂无符合搜索条件的数据',
+            type: 'warning',
+            offset: 100
+          })
+        } else {
+          callback(res)
+        }
       })
     }
   }
