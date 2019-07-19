@@ -81,8 +81,8 @@
         <el-table-column
           label="充值渠道">
           <template slot-scope="scope">
-            <span v-if="scope.row.app_user_id.length < 13">APP</span>
-            <span v-if="scope.row.app_user_id.length >= 13">小程序</span>
+            <span v-if="scope.row.platform == 2">APP</span>
+            <span v-if="scope.row.platform == 1">小程序</span>
           </template>
         </el-table-column>
         <el-table-column
