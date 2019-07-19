@@ -44,6 +44,8 @@
             v-model="time_interval"
             type="daterange"
             range-separator="-"
+            format='yyyy-MM-dd HH:mm:ss'
+            value-format='yyyy/MM/dd HH:mm:ss'
             @change='use_mytime'
             start-placeholder="开始日期"
             end-placeholder="结束日期">
@@ -103,38 +105,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="revenue">
-        <div class="revenue-header">
-          <span class="headertext">营收总额(元)</span>
-          <span class="sequen">环比(%)</span>
-        </div>
-        <div class="revenue-cont">
-          <ul>
-            <li v-for="item in revenues">
-              <span>{{item.name}}：{{item.num}}</span>
-              <span class="sequen">{{item.sequen}}</span>
-              <img v-show="item.sequen>0" src="../../../assets/tubiao03.png" alt="">
-              <img v-show="item.sequen<0" src="../../../assets/tubiao04.png" alt="">
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="owe">
-        <div class="owe-header">
-          <span class="headertext">待缴总额(元)</span>
-          <span class="sequen">环比(%)</span>
-        </div>
-        <div class="owe-cont">
-          <ul>
-            <li v-for="item in owes" :key="item.id">
-              <span>{{item.name}}：{{item.num}}</span>
-              <span class="sequen">{{item.sequen}}</span>
-              <img v-show="item.sequen>0" src="../../../assets/tubiao03.png" alt="">
-              <img v-show="item.sequen<0" src="../../../assets/tubiao04.png" alt="">
-            </li>
-          </ul>
-        </div>
-      </div> -->
     </div>
     <!-- 图表 -->
     <div v-if="isShow" id="chart" class="chart">
@@ -154,64 +124,64 @@
           type="index">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="the_day"
           label="日期">
         </el-table-column>
         <el-table-column
-          prop="a"
+          prop="income_paid"
           label="营业收入">
         </el-table-column>
         <el-table-column
-          prop="b"
+          prop="business_paid"
           label="营业实收">
         </el-table-column>
         <el-table-column
-          prop="c"
+          prop="owe_amount"
           label="欠费金额">
         </el-table-column>
         <el-table-column
-          prop="d"
+          prop="pay_rate"
           label="付费率">
         </el-table-column>
         <el-table-column label="PDA">
           <el-table-column
-            prop="e"
+            prop="pda_income"
             label="营业收入">
           </el-table-column>
           <el-table-column
-            prop="f"
+            prop="pda_business"
             label="营业实收">
           </el-table-column>
           <el-table-column
-            prop="g"
+            prop="pda_owe"
             label="欠费金额">
           </el-table-column>
         </el-table-column>
         <el-table-column label="APP">
           <el-table-column
-            prop="h"
+            prop="app_income"
             label="营业收入">
           </el-table-column>
           <el-table-column
-            prop="i"
+            prop="app_business"
             label="营业实收">
           </el-table-column>
           <el-table-column
-            prop="g"
+            prop="app_owe"
             label="欠费金额">
           </el-table-column>
         </el-table-column>
         <el-table-column label="小程序">
           <el-table-column
-            prop="k"
+            prop="small_income"
             label="营业收入">
           </el-table-column>
           <el-table-column
-            prop="l"
+            prop="small_business"
             label="营业实收">
           </el-table-column>
           <el-table-column
-            prop="m"
+            prop="small_owe"
             label="欠费金额">
           </el-table-column>
         </el-table-column>
@@ -269,7 +239,7 @@ export default {
       fromtext:'表格数据',
       dataradio: '',
       dataradios: [
-        {label: '近7天',value:'7',isChecked: false,},
+        {label: '近7天',value:'7',isChecked: true,},
         {label: '近30天',value:'30',isChecked: false,},
         {label: '近4周',value:'3',isChecked: false,},
         {label: '近12周',value:'4',isChecked: false,},
@@ -296,23 +266,12 @@ export default {
         {name:'近一周',num:10000,sequen:10.00},
         {name:'近一月',num:10000,sequen:-10.00},
       ],
-      recovered: [7090,19170,24550,26100,17190,14330,15440,32805,52080,33720,24840,40780],
-      norecovered: [327,1776,507,1200,800,482,204,1390,1001,951,381,220],
-      recoveredsequen: [6000,18000,23000,25300,16500,10330,14400,32000,50800,31000,24000,39000],
-      norecoveredsequen: [90,85,79,92,99,85,65,93,86,92,75,96],
-      xData: ['4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','4.9','4.10','4.11','4.12'],
-      list_detail:[
-        {date:'2019-06-10',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
-        {date:'2019-06-09',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
-        {date:'2019-06-08',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
-        {date:'2019-06-07',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
-        {date:'2019-06-06',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
-        {date:'2019-06-05',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
-        {date:'2019-06-04',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
-        {date:'2019-06-03',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
-        {date:'2019-06-02',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
-        {date:'2019-06-01',a:30000,b:24000,c:6000,d:'80%',e:10000,f:8000,g:2000,h:10000,i:8000,g:2000,k:10000,l:8000,m:2000},
-      ],
+      recovered: [],
+      norecovered: [],
+      recoveredsequen: [],
+      norecoveredsequen: [],
+      xData: [],
+      list_detail:[],
       export_list:[],    //存放要导出的表格数据
       list_num: 0,
       total: 0,
@@ -320,8 +279,10 @@ export default {
       pageIndex: 1,
       ps: 10,
       allps: 0,
+      start:0,
+      end:100,
       url_income:'/its/operations/income/statements',
-      url_excel:'/its/operations/income/tableData',
+      url_excel:'/its/operations/income/statementspda',
       url_park:'/its/operations/query/berth'
     }
   },
@@ -329,48 +290,80 @@ export default {
     sel_aere:'get_sel_park'
   },
   mounted() {
+    this.get_time_interval(7)
     this.get_park()
-    this.get_income()
-    this.drowincome()
+    // this.get_income()
+    this.get_my_excel()
+    this.get_my_echart()
   },
   methods: {
-    //表格合计
-    getSummaries(param) {
-      const { columns, data } = param;
-      const sums = [];
-      columns.forEach((column, index) => {
-        if (index === 1) {
-          sums[index] = '合计';
-          return;
-        }
-        if(index != 2 && index != 3){
-          sums[index] = '';
-          return;
-        }
-        const values = data.map(item => Number(item[column.property]));
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr);
-            if (!isNaN(value)) {
-              return prev + curr;
-            } else {
-              return prev;
-            }
-          }, 0);
-          sums[index] = sums[index].toFixed(2)
-          sums[index] += ' 元';
-        } else {
-          sums[index] = '';
-        }
-      });
-      return sums;
+    //封装获取表格数据
+    get_excel_list(params){
+      this.get_my_list(params,this.url_excel,(res) => {
+        console.log(res)
+        let list = res.data.data.data
+        this.list_num = res.data.data.tr
+        this.list_detail = res.data.data.data
+      })
     },
+    //封装获取图表数据
+    get_echart_list(params){
+      this.get_my_list(params,this.url_excel,(res) => {
+        let list = res.data.data
+        list.forEach(item => {
+          this.xData.push(item.the_day)
+          this.recovered.push(item.income_paid)
+          this.norecovered.push(item.business_paid)
+          this.recoveredsequen.push(item.owe_amount)
+          this.norecoveredsequen.push((item.pay_rate * 100).toFixed(2))
+        })
+        if(list.length <= 10){
+          this.end = 100
+        }else if(list.length > 10 && list.length <= 20){
+          this.end = 70
+        }else if(list.length > 20 && list.length <= 30){
+          this.end = 50
+        }else{
+          this.end = 30
+        }
+        if(this.isShow){
+          this.drowincome()
+        }
+      })
+    },
+    //获取默认表格数据
+    get_my_excel(){
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('ps', this.ps)
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      this.get_excel_list(params)
+    },
+    //获取默认图表数据
+    get_my_echart(){
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      this.get_echart_list(params)
+    },
+    //换页
     page_change(val){
       this.pageIndex = val
-      let params = new URLSearchParams()
-      params.append('pageIndex', this.pageIndex)
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
       params.append('ps', this.ps)
-      this.get_report_list(params,this.url_excel)
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      this.get_my_list(params,this.url_excel,(res) => {
+        console.log(res)
+        res.data.data.data.forEach(item => {
+          item.pay_rate = (item.pay_rate * 100).toFixed(2) + '%'
+        })
+        this.list_num = res.data.data.tr
+        this.list_detail = res.data.data.data
+      })
     },
     //根据选择区域显示停车场
     get_sel_park(){
@@ -436,15 +429,6 @@ export default {
         ]
       })
     },
-    //获取表格数据
-    get_excel(){
-      this.total = 0
-      this.nototal = 0
-      let params = new URLSearchParams();
-      params.append('pageIndex', this.pageIndex);
-      params.append('ps', this.ps);
-      this.get_report_list(params,this.url_excel)
-    },
     //维度切换
     check(index) {
       // 先取消所有选中项
@@ -460,13 +444,28 @@ export default {
     },
     //周期切换
     datacheck(index) {
+      this.xData = []
+      this.recovered = []
+      this.norecovered = []
+      this.recoveredsequen = []
+      this.norecoveredsequen = []
       this.dataradios.forEach((item) => {
         item.isChecked = false;
       });
       this.dataradio = this.dataradios[index].value;
       this.dataradios[index].isChecked = true;
       this.get_time_interval(this.dataradio)
-      console.log(this.time_interval)
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      params.append('ps', this.ps)
+      this.get_excel_list(params)
+      let paramsdata = new URLSearchParams();
+      paramsdata.append('pageIndex', this.pageIndex);
+      paramsdata.append('sTime', this.time_interval[0])
+      paramsdata.append('eTime', this.time_interval[1])
+      this.get_echart_list(paramsdata)
     },
     //表格和图表切换
     toform(){
@@ -479,7 +478,6 @@ export default {
       }
       if(!this.isShow){
         this.fromtext = '可视化报表'
-        this.get_excel()
       }
     },
     //图表绘制
@@ -487,6 +485,15 @@ export default {
       let that = this
       let myincome = this.$echarts.init(document.getElementById('income'))
       myincome.setOption({
+        title: {
+          "text": "收入报表",
+          x: "0%",
+          y:'10',
+          textStyle: {
+              color: '#000',
+              fontSize: '22'
+          }
+        },
         tooltip:{
           trigger: "axis",
           axisPointer: {
@@ -498,7 +505,7 @@ export default {
         },
         grid: {
           "borderWidth": 0,
-          "top": 40,
+          "top": 90,
           "bottom": 45,
           containLabel: true,
           textStyle: {
@@ -507,7 +514,7 @@ export default {
         },
         legend: {
           x: '50%',
-          top: '0',
+          top: '10',
           textStyle: {
             color: '#90979c',
           },
@@ -570,13 +577,14 @@ export default {
             },
           }
         ],
-        dataZoom: [{
+        dataZoom: [
+        {
           show: true,
           height: 20,
           xAxisIndex: [0],
           bottom: 10,
-          start: 10,
-          end: 80,
+          start: this.start,
+          end: this.end,
           handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
           handleSize: '110%',
           handleStyle: {
@@ -586,13 +594,6 @@ export default {
             color:"#000"
           },
           borderColor:"#90979c"
-        },
-        {
-          "type": "inside",
-          "show": true,
-          "height": 15,
-          "start": 1,
-          "end": 35
         }],
         series: [
           {
@@ -725,7 +726,31 @@ export default {
     },
     //搜索
     sel_btn(){
-
+      this.xData = []
+      this.recovered = []
+      this.norecovered = []
+      this.recoveredsequen = []
+      this.norecoveredsequen = []
+      if(!this.time_interval){
+        this.$notify({
+          title: '温馨提示',
+          message: '必须选择时间范围',
+          type: 'warning',
+          offset: 100
+        })
+        return false
+      }
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      params.append('ps', this.ps)
+      this.get_excel_list(params)
+      let paramsdata = new URLSearchParams();
+      paramsdata.append('pageIndex', this.pageIndex);
+      paramsdata.append('sTime', this.time_interval[0])
+      paramsdata.append('eTime', this.time_interval[1])
+      this.get_echart_list(paramsdata)
     },
   },
 }
