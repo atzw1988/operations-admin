@@ -4,14 +4,22 @@
       <span style="margin-left:50px">车位总数：<a href="javascript:void(0)">{{list_num}}</a>个</span>
     </div>
     <div class="select">
-      <el-button style="float:right;margin-right:20px;margin-top:10px;" type="danger" @click="sel_del">删除</el-button>
+      <!-- <el-button style="float:right;margin-right:20px;margin-top:10px;" type="danger" @click="sel_del">删除</el-button> -->
       <el-button style="float:right;margin-right:20px;margin-top:10px;" type="success" @click="add_car">新建</el-button>
       <div class="data-interval">
+        <div class="username">
+          <span style="float:left">地磁编号:</span>
+          <el-input style="width:120px;float:left"
+            placeholder="输入车位编号"
+            v-model="magneticNo"
+            clearable>
+          </el-input>
+        </div>
         <div class="username">
           <span style="float:left">车位编号:</span>
           <el-input style="width:120px;float:left"
             placeholder="输入车位编号"
-            v-model="user_name"
+            v-model="parkingNo"
             clearable>
           </el-input>
         </div>
@@ -34,34 +42,21 @@
           type="index">
         </el-table-column>
         <el-table-column
-          prop="park_no"
-          width="100"
-          label="停车场编号">
-        </el-table-column>
-        <el-table-column
-          prop="park_name"
-          width="200"
-          label="停车场名称">
-        </el-table-column>
-        <el-table-column
-          prop="chewei_no"
-          width="100"
+          prop="parking_no"
           label="车位编号">
         </el-table-column>
         <el-table-column
-          prop="area_no"
-          width="100"
-          label="地址编号">
-        </el-table-column>
-        <el-table-column
-          prop="equip_no"
-          width="100"
+          prop="magnetic_no"
           label="地磁编号">
         </el-table-column>
         <el-table-column
-          prop="address"
-          label="详细地址">
+          prop="parking_name"
+          label="停车场名字">
         </el-table-column>
+        <!-- <el-table-column
+          prop="parking_id"
+          label="停车场编号">
+        </el-table-column> -->
         <el-table-column
           label="操作"
           width="150">
@@ -85,14 +80,28 @@
           <span @click="close">X</span>
         </div>
         <div class="editor_cont">
-          <div style="width:350px;margin:20px auto 0;font-size:18px;height:40px;line-height:40px">
-            <span>车牌：</span>
-            <el-input style="height:30px;width:250px;background:#eee;border-radius:5px" type="text" clearable></el-input>
-          </div>
-          <div style="width:350px;margin:20px auto 0;font-size:18px;height:40px;line-height:40px">
-            <span>备注：</span>
-            <el-input style="height:30px;width:250px;background:#eee;border-radius:5px" type="text" clearable></el-input>
-          </div>
+          <el-form label-position=left :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="车位编号" prop="parkingNo">
+              <el-input v-model.number="ruleForm.parkingNo"></el-input>
+            </el-form-item>
+            <el-form-item label="地磁编号" prop="magneticNo">
+              <el-input v-model.number="ruleForm.magneticNo"></el-input>
+            </el-form-item>
+            <el-form-item label="归属停车场" prop="parkingId">
+              <el-select v-model="ruleForm.parkingId" placeholder="请选择停车场">
+                <el-option
+                  v-for="item in park_list"
+                  :key="item.parkingId"
+                  :label="item.parkingName"
+                  :value="item.parkingId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button style="margin-left:20px" type="primary" @click="submitForm('ruleForm')">确认</el-button>
+              <el-button style="margin-left:200px" @click="resetForm('ruleForm')">重置</el-button>
+            </el-form-item>
+          </el-form>
         </div>
       </div>
     </div>
@@ -105,38 +114,84 @@ export default {
   data() {
     return {
       time_interval: '',    //时间区间
-      list_num: 58046,
-      sel_num: 58046,
+      list_num: 0,
       add_header_text:'',
-      consumptions: ['APP','微信小程序'],
-      user_kind:'',
-      list_detail: [
-        {park_no:'A123456',park_name:'深业U中心',chewei_no:'401012',area_no:'123456',equip_no:'123456',address:'浙江省嵊州市XX路XX街道XX号XX停车场'},
-        {park_no:'A123456',park_name:'深业U中心',chewei_no:'401012',area_no:'123456',equip_no:'123456',address:'浙江省嵊州市XX路XX街道XX号XX停车场'},
-        {park_no:'A123456',park_name:'深业U中心',chewei_no:'401012',area_no:'123456',equip_no:'123456',address:'浙江省嵊州市XX路XX街道XX号XX停车场'},
-        {park_no:'A123456',park_name:'深业U中心',chewei_no:'401012',area_no:'123456',equip_no:'123456',address:'浙江省嵊州市XX路XX街道XX号XX停车场'},
-        {park_no:'A123456',park_name:'深业U中心',chewei_no:'401012',area_no:'123456',equip_no:'123456',address:'浙江省嵊州市XX路XX街道XX号XX停车场'},
-        {park_no:'A123456',park_name:'深业U中心',chewei_no:'401012',area_no:'123456',equip_no:'123456',address:'浙江省嵊州市XX路XX街道XX号XX停车场'}
-      ],
-      user_name:'',
+      list_detail: [],
+      parkingNo:'',
+      magneticNo:'',
       multipleSelection:'',
       pageIndex: 1,
-      ps:10,
-      total_ps:40,
+      ps:15,
+      total_ps:0,
       allps:1,
       sel_user: '18318039639',
       sel_user_car_list:[],
       user_car_show:false,
       rule_editor:false,
-      // url:'http://www.lcgxlm.com:13259/its/operations/query/useressage',
-      url:'/its/operations/query/useressage',
-      car_url:'/its/operations/underthe/vehicle'
+      is_add:true,
+      ruleForm:{
+        parkingNo:'',
+        magneticNo:'',
+        parkingId:'',
+        id:''
+      },
+      rules:{
+        parkingNo: [
+          { required: true, message: '请输入车位编号', trigger: 'blur' },
+          { type: 'number', min: 100000, max: 999999, message: '车位编号必须为6位数字值'}
+        ],
+        magneticNo: [
+          { required: true, message: '请输入地磁编号', trigger: 'blur' },
+          { type: 'number', min: 100000000, max: 999999999, message: '地磁编号必须为9位数字值'}
+        ],
+        parkingId: [
+          { required: true, message: '请选择停车场', trigger: 'change' }
+        ],
+      },
+      park_list:[],
+      url:'/its/operations/parkingNo/data',
+      park_url:'/its/operations/query/parkingNo',
+      add_park:'/its/operations/add/parkingNo',
+      del_park:'/its/operations/delete/parkingNo',
+      edit_url:'/its/operations/modify/parkingNo'
     }
   },
   mounted() {
-
+    this.get_park_detail()
   },
   methods: {
+    //封装获取列表
+    get_park_list(params){
+      this.get_my_list(params,this.url,(res) => {
+        console.log(res)
+        this.list_detail = res.data.data.data
+        this.total_ps = res.data.data.tr
+        if(!this.magneticNo && !this.parkingNo){
+          this.list_num = this.total_ps
+        }
+      })
+    },
+    //封装获取停车场
+    get_all_park(){
+      axios({
+        method: 'get',
+        url:this.park_url,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        data:{}
+      }).then(res => {
+        console.log(res)
+        this.park_list = res.data.data
+      })
+    },
+    //首次进入获取表格
+    get_park_detail(){
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('ps', this.ps)
+      this.get_park_list(params)
+    },
     //表格选中
     handleSelectionChange(val) {
       console.log(val)
@@ -165,29 +220,62 @@ export default {
         })
       })
     },
-    //新建白名单车牌
+    //新建车位
     add_car(){
       console.log(1)
       this.rule_editor = true
+      this.is_add = true
       this.add_header_text = '新建车位'
+      this.ruleForm = {
+        parkingNo: '',
+        magneticNo: '',
+        parkingId: '',
+        id:''
+      }
+      this.get_all_park()
     },
     //表格内编辑
-    list_edit(){
-
+    list_edit(data){
+      console.log(data)
+      this.get_all_park()
+      this.rule_editor = true
+      this.is_add = false
+      this.add_header_text = '编辑车位'
+      this.ruleForm = {
+        parkingNo: data.parking_no,
+        magneticNo: data.magnetic_no,
+        parkingId: data.parking_id,
+        id: data.id
+      }
     },
     //表格内删除
-    list_del(params){
+    list_del(data){
       this.$confirm('此操作将该车位删除, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
         center: true
       }).then(() => {
-        this.$notify({
-          title: '温馨提示',
-          message: '删除车位成功!',
-          type: 'success',
-          offset: 100
+        console.log(data)
+        axios.get(this.del_park,{
+          params:{
+            parkingNo: data.parking_no
+          }
+        }).then(res => {
+          console.log(res)
+          if(res.data.code == 0){
+            this.$notify({
+              title: '温馨提示',
+              message: '删除车位成功!',
+              type: 'success',
+              offset: 100
+            })
+            this.parkingNo = ''
+            this.magneticNo = ''
+            this.get_park_detail()
+          }else{
+            this.show_warning(res.data.data)
+          }
         })
       }).catch(() => {
         this.$notify({
@@ -198,61 +286,74 @@ export default {
         })
       })
     },
-    //表格合计
-    getSummaries(param) {
-      const { columns, data } = param;
-      const sums = [];
-      columns.forEach((column, index) => {
-        if (index === 1) {
-          sums[index] = '合计';
-          return;
-        }
-        if (index === 2) {
-          sums[index] = '';
-          return;
-        }
-        const values = data.map(item => Number(item[column.property]));
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr);
-            if (!isNaN(value)) {
-              return prev + curr;
-            } else {
-              return prev;
+    //重置
+    resetForm(data){
+      this.$refs[data].resetFields()
+    },
+    //确认提交
+    submitForm(data){
+      this.$refs[data].validate((valid) => {
+        if (valid) {
+          let my_url = ''
+          if(this.is_add){
+            my_url = this.add_park
+          }else{
+            my_url = this.edit_url
+          }
+          console.log(this.ruleForm)
+          axios.get(my_url,{
+            params:{
+              parkingNo: this.ruleForm.parkingNo,
+              magneticNo: this.ruleForm.magneticNo,
+              parkingId: this.ruleForm.parkingId,
+              id: this.ruleForm.id
             }
-          }, 0);
-          sums[index] = sums[index].toFixed(2)
-          sums[index] += ' 元';
+          }).then(res => {
+            console.log(res)
+            if(res.data.code == 0){
+              if(this.is_add){
+                this.$notify({
+                  title: '温馨提示',
+                  message: '添加车位成功!',
+                  type: 'success',
+                  offset: 100
+                })
+              }else{
+                this.$notify({
+                  title: '温馨提示',
+                  message: '修改车位成功!',
+                  type: 'success',
+                  offset: 100
+                })
+              }
+
+              this.close()
+              this.get_park_detail()
+            }else{
+              this.show_warning(res.data.data)
+            }
+          })
         } else {
-          sums[index] = '';
+          console.log('error submit!!');
+          return false;
         }
       });
-
-      return sums;
     },
     //分页
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
     close(){
-      this.user_car_show = false
+      this.rule_editor = false
     },
     //搜索
     sel_uesr(){
-      console.log(this.time_interval[0])
-      console.log(this.time_interval[1])
-      let params = new URLSearchParams()
-      params.append('pageIndex', this.pageIndex)
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
       params.append('ps', this.ps)
-      if(this.user_kind == 'APP'){
-        params.append('appType','app')
-      }else if(this.user_kind == '微信小程序'){
-        params.append('smallType','微信小程序')
-      }
-      params.append('sTime', this.time_interval[0])
-      params.append('eTime', this.time_interval[1])
-      params.append('account', this.user_name)
-      this.get_user_list(params,this.url)
+      params.append('magneticNo', this.magneticNo)
+      params.append('parkingNo', this.parkingNo)
+      this.get_park_list(params)
     }
   },
 }
@@ -301,7 +402,7 @@ export default {
   float: left;
 }
 .data-interval{
-  width: 300px;
+  width: 600px;
   height: 40px;
   float: left;
   line-height: 40px;
@@ -373,9 +474,9 @@ export default {
 }
 .rule_editor{
   width: 600px;
-  height: 400px;
+  height: 350px;
   background: #fff;
-  margin: 30px auto 0;
+  margin: 100px auto 0;
 }
 .add-header{
   width: 100%;
@@ -394,6 +495,9 @@ export default {
   right: 20px;
   top: 0;
   cursor: pointer;
+}
+.editor_cont{
+  padding: 20px 20px 0;
 }
 </style>
 
