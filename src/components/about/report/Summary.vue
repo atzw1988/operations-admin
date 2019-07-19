@@ -3,23 +3,23 @@
     <div class="header">
       <div class="total">
         <div class="text">今日营业收入(元)</div>
-        <div class="num">10000</div>
+        <div class="num">{{sum_list.shouldmoney}}</div>
       </div>
       <div class="total">
         <div class="text">今日营业实收(元)</div>
-        <div class="num">10000</div>
+        <div class="num">{{sum_list.offline}}</div>
       </div>
       <div class="total">
         <div class="text">今日欠费总额(元)</div>
-        <div class="num">10000</div>
+        <div class="num">{{sum_list.evasionamount}}</div>
       </div>
       <div class="total">
         <div class="text">今日入账金额(元)</div>
-        <div class="num">10000</div>
+        <div class="num">{{sum_list.total}}</div>
       </div>
       <div class="total">
         <div class="text">今日预收账款(元)</div>
-        <div class="num">10000</div>
+        <div class="num">{{sum_list.deferredRevenue}}</div>
       </div>
     </div>
     <div class="content">
@@ -36,6 +36,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      sum_list:{},
       booked:[10000,9500,13000,11000,7000,5000,15000],
       income:[6000,7000,10000,8000,5000,4500,12000],
       advance:[4000,2500,3000,3000,2000,500,3000],
@@ -44,16 +45,33 @@ export default {
       xData:['6.11','6.12','6.13','6.14','6.15','6.16','6.17'],
       pay:[70,73,86,90,65,80,86,78.57],
       xData_pay:['6.11','6.12','6.13','6.14','6.15','6.16','6.17','7天付费率'],
-      recharge:[3000,1500,1800,3600,2400,2800,2000]
+      recharge:[3000,1500,1800,3600,2400,2800,2000],
+      sum_url:'/its/operations/booked/amount'
     }
   },
   mounted() {
+    this.get_summary()
     this.drowbooked()
     this.drowincome()
     this.drowpay()
     this.drowrecharge()
   },
   methods: {
+    get_summary(){
+      axios({
+        method: 'get',
+        url: this.sum_url,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        data:{}
+      }).then(res => {
+        console.log(res)
+        if(res.data.code == 0){
+          this.sum_list = res.data.data
+        }
+      })
+    },
     drowbooked(){
       let that = this
       let mybooked = this.$echarts.init(document.getElementById('booked'))
