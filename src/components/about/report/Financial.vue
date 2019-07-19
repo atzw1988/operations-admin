@@ -3,7 +3,7 @@
     <div class="header">
       <div class="up">
         <template>
-          <el-select v-model="erar_name" clearable placeholder="全部区域">
+          <el-select  style="margin-left:30px" v-model="erar_name" clearable placeholder="全部区域">
             <el-option
               v-for="item in erae"
               :key="item.value"
@@ -34,7 +34,7 @@
         </template>
       </div>
       <div class="down">
-        <div class="datamain">
+        <div class="datamain" style="margin-left:30px">
           <div class="dataradio-box" v-for="(item,index) in dataradios" :key="item.id">
             <span class="dataradio" :class="{'dataon':item.isChecked}"></span>
             <input v-model="radio" :value="item.value" class="input-dataradio" :checked='item.isChecked'  @click="datacheck(index)" type="radio">{{item.label}}
@@ -42,15 +42,18 @@
         </div>
         <div class="time">
           <el-date-picker
-            v-model="timeinterval"
+            v-model="time_interval"
             type="daterange"
             align="right"
             unlink-panels
+            format='yyyy-MM-dd HH:mm:ss'
+            value-format='yyyy/MM/dd HH:mm:ss'
+            @change='use_mytime'
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             :picker-options="pickerOptions">
           </el-date-picker>
-          <el-button type="primary">搜索</el-button>
+          <el-button type="primary" @click="sel_btn">搜索</el-button>
         </div>
         <el-button type="success" class="from" @click="toform">{{fromtext}}</el-button>
       </div>
@@ -118,34 +121,41 @@
           type="index">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="the_day"
           label="日期">
         </el-table-column>
         <el-table-column label="入账金额">
           <el-table-column
-            prop="income"
+            prop="business_paid"
             label="营业实收">
           </el-table-column>
           <el-table-column
-            prop="recharge"
+            prop="advance_account"
             label="预收账款">
           </el-table-column>
         </el-table-column>
         <el-table-column
-          prop="booked"
+          prop="booked_account"
           label="入账总金额">
         </el-table-column>
         <el-table-column label="营业实收">
           <el-table-column
-            prop="cash"
+            prop="business_paid_cash"
             label="现金">
           </el-table-column>
           <el-table-column
-            prop="online"
+            prop="business_paid_online"
             label="微信/支付宝">
           </el-table-column>
         </el-table-column>
       </el-table>
+      <el-pagination
+        @current-change="page_change"
+        :current-page="pageIndex"
+        :page-size='ps'
+        layout="total, prev, pager, next, jumper"
+        :total="list_num">
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -177,10 +187,10 @@ export default {
       ],
       radio:'1',
       dataradios: [
-        {label: '近7天',value:'7',isChecked: false},
+        {label: '近7天',value:'7',isChecked: true},
         {label: '近30天',value:'30',isChecked: false}
       ],
-      timeinterval:'',
+      time_interval:'',
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -226,39 +236,101 @@ export default {
         {name:'近一周',num:10000,sequen:10.00},
         {name:'近一月',num:10000,sequen:-10.00},
       ],
-      xData:['6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','6.10'],
-      booked_list:[20000,25000,23000,28000,21000,26000,20000,22000,24000,29000],
-      income_list:[18000,21000,20500,23000,19000,20000,15000,19000,17500,26000],
-      recharge_list:[2000,4000,2500,5000,2000,6000,5000,3000,6500,3000],
+      xData:[],
+      booked_list:[],
+      income_list:[],
+      recharge_list:[],
       table_show:true,
       fromtext:'表格数据',
-      tableData:[
-        {date:'2019-06-10',income:20000,recharge:4000,booked:24000,cash:12000,online:12000},
-        {date:'2019-06-09',income:20000,recharge:4000,booked:24000,cash:12000,online:12000},
-        {date:'2019-06-08',income:20000,recharge:4000,booked:24000,cash:12000,online:12000},
-        {date:'2019-06-07',income:20000,recharge:4000,booked:24000,cash:12000,online:12000},
-        {date:'2019-06-06',income:20000,recharge:4000,booked:24000,cash:12000,online:12000},
-        {date:'2019-06-05',income:20000,recharge:4000,booked:24000,cash:12000,online:12000},
-        {date:'2019-06-04',income:20000,recharge:4000,booked:24000,cash:12000,online:12000},
-        {date:'2019-06-03',income:20000,recharge:4000,booked:24000,cash:12000,online:12000},
-        {date:'2019-06-02',income:20000,recharge:4000,booked:24000,cash:12000,online:12000},
-        {date:'2019-06-01',income:20000,recharge:4000,booked:24000,cash:12000,online:12000},
-      ]
+      tableData:[],
+      url_excel:'/its/operations/financial/statements',
+      pageIndex:1,
+      ps:10,
+      list_num:0,
+      start:0,
+      end:100,
     }
   },
   mounted() {
-    this.drowchart()
+    this.get_time_interval(7)
+    this.get_my_excel()
+    this.get_my_echart()
   },
   methods: {
+    //封装获取表格数据
+    get_excel_list(params){
+      this.get_my_list(params,this.url_excel,(res) => {
+        console.log(res)
+        let list = res.data.data.data
+        this.list_num = res.data.data.tr
+        this.tableData = res.data.data.data
+      })
+    },
+    //封装获取图表数据
+    get_echart_list(params){
+      this.get_my_list(params,this.url_excel,(res) => {
+        console.log(res)
+        let list = res.data.data
+        list.forEach(item => {
+          this.xData.push(item.the_day)
+          this.booked_list.push(item.booked_account)
+          this.income_list.push(item.business_paid)
+          this.recharge_list.push(item.advance_account)
+        })
+        if(list.length <= 10){
+          this.end = 100
+        }else if(list.length > 10 && list.length <= 20){
+          this.end = 70
+        }else if(list.length > 20 && list.length <= 30){
+          this.end = 50
+        }else{
+          this.end = 30
+        }
+        if(this.table_show){
+          this.drowchart()
+        }
+      })
+    },
+    //获取默认表格数据
+    get_my_excel(){
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('ps', this.ps)
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      this.get_excel_list(params)
+    },
+    //获取默认图表数据
+    get_my_echart(){
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      this.get_echart_list(params)
+    },
     //周期切换
     datacheck(index) {
+      this.xData = []
+      this.booked_list = []
+      this.income_list = []
+      this.recharge_list = []
       this.dataradios.forEach((item) => {
         item.isChecked = false;
       });
       this.dataradio = this.dataradios[index].value;
       this.dataradios[index].isChecked = true;
       this.get_time_interval(this.dataradio)
-      console.log(this.time_interval)
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      params.append('ps', this.ps)
+      this.get_excel_list(params)
+      let paramsdata = new URLSearchParams();
+      paramsdata.append('pageIndex', this.pageIndex);
+      paramsdata.append('sTime', this.time_interval[0])
+      paramsdata.append('eTime', this.time_interval[1])
+      this.get_echart_list(paramsdata)
     },
     //绘制图表
     drowchart(){
@@ -286,7 +358,7 @@ export default {
         grid: {
           "borderWidth": 0,
           "top": 90,
-          "bottom": 10,
+          "bottom": 40,
           containLabel: true,
           textStyle: {
             color: "#000"
@@ -339,6 +411,30 @@ export default {
             },
           }
         ],
+        dataZoom: [{
+          show: true,
+          height: 20,
+          xAxisIndex: [0],
+          bottom: 10,
+          start: this.start,
+          end: this.end,
+          handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+          handleSize: '110%',
+          handleStyle: {
+            color:"#d3dee5",
+          },
+          textStyle: {
+            color:"#000"
+          },
+          borderColor:"#90979c"
+        },
+        {
+          "type": "inside",
+          "show": true,
+          "height": 15,
+          "start": 1,
+          "end": 35
+        }],
         series: [
           {
             name: '入账总额',
@@ -362,6 +458,7 @@ export default {
           {
             name: '营业实收',
             type: 'bar',
+            barMaxWidth: 35,
             itemStyle: {
               normal: {
                 color: "#DC143C",
@@ -380,6 +477,7 @@ export default {
           {
             name: '预收账款',
             type: 'bar',
+            barMaxWidth: 35,
             itemStyle: {
               normal: {
                 color: "#00BFFF",
@@ -412,8 +510,55 @@ export default {
       }
       if(!this.table_show){
         this.fromtext = '可视化报表'
-        // this.get_excel()
       }
+    },
+
+    //换页
+    page_change(val){
+      this.pageIndex = val
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('ps', this.ps)
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      this.get_my_list(params,this.url_excel,(res) => {
+        console.log(res)
+        this.list_num = res.data.data.tr
+        this.tableData = res.data.data.data
+      })
+    },
+    //搜索
+    sel_btn(){
+      this.xData = []
+      this.booked_list = []
+      this.income_list = []
+      this.recharge_list = []
+      if(!this.time_interval){
+        this.$notify({
+          title: '温馨提示',
+          message: '必须选择时间范围',
+          type: 'warning',
+          offset: 100
+        })
+        return false
+      }
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      params.append('ps', this.ps)
+      this.get_excel_list(params)
+      let paramsdata = new URLSearchParams();
+      paramsdata.append('pageIndex', this.pageIndex);
+      paramsdata.append('sTime', this.time_interval[0])
+      paramsdata.append('eTime', this.time_interval[1])
+      this.get_echart_list(paramsdata)
+    },
+    //自定义时间范围清除时间范围选择
+    use_mytime(){
+      this.dataradios.forEach((item) => {
+        item.isChecked = false
+      })
     },
   },
 }
@@ -544,10 +689,11 @@ export default {
 /* 表格数据 */
 .table{
   width: 100%;
-  height: 710px;
+  /* height: 710px; */
   background: #fff;
   margin-top: 20px;
   text-align: center;
+  position: relative;
 }
 .table>>>.cell{
   text-align: center;
@@ -565,5 +711,13 @@ export default {
 }
 .table>>>td{
   text-align: center;
+}
+/* 分页控制 */
+.el-pagination{
+  width: 580px;
+  height: 30px;
+  position: absolute;
+  bottom: -35px;
+  right: 80px;
 }
 </style>
