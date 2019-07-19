@@ -15,12 +15,12 @@
           <img class="one_img" v-show="!show_1" src="../../assets/wenjianjia.png" alt="">
           <span class="title_text">运营报表</span>
         </template>
-        <el-menu-item index="1-1">
+        <!-- <el-menu-item index="1-1">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'summaryLink'}">首页</router-link>
           </template>
-        </el-menu-item>
+        </el-menu-item> -->
         <el-menu-item index="1-2">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
@@ -33,7 +33,7 @@
             <router-link tag="li" class="twomenu" :to="{name:'operatingLink'}">收入报表</router-link>
           </template>
         </el-menu-item>
-        <el-menu-item index="1-4">
+        <!-- <el-menu-item index="1-4">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'orderLink'}">订单报表</router-link>
@@ -50,7 +50,7 @@
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'usersLink'}">用户报表</router-link>
           </template>
-        </el-menu-item>
+        </el-menu-item> -->
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">
@@ -111,31 +111,31 @@
           </template>
         </el-menu-item>
       </el-submenu>
-      <!-- <el-submenu index="4">
+      <el-submenu index="4">
         <template slot="title">
           <img class="one_img" v-show="show_4" src="../../assets/wenjianjia_1.png" alt="">
           <img class="one_img" v-show="!show_4" src="../../assets/wenjianjia.png" alt="">
           <span class="title_text">配置管理</span>
         </template>
-        <el-menu-item index="4-1">
+        <!-- <el-menu-item index="4-1">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'chargingrulesLink'}">收费管理</router-link>
           </template>
-        </el-menu-item>
+        </el-menu-item> -->
         <el-menu-item index="4-2">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'parkmanaLink'}">泊位管理</router-link>
+            <router-link tag="li" class="twomenu" :to="{name:'parkmanaLink'}">车位管理</router-link>
           </template>
         </el-menu-item>
-        <el-menu-item index="4-3">
+        <!-- <el-menu-item index="4-3">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'garagemanaLink'}">车库管理</router-link>
           </template>
-        </el-menu-item>
-      </el-submenu> -->
+        </el-menu-item> -->
+      </el-submenu>
       <!-- <el-submenu index="5">
         <template slot="title">
           <img class="one_img" v-show="show_5" src="../../assets/wenjianjia_1.png" alt="">
