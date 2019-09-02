@@ -244,7 +244,7 @@ export default {
 }
 /* 分页控制 */
 .el-pagination{
-  width: 580px;
+  /* width: 580px; */
   height: 30px;
   position: absolute;
   bottom: -35px;

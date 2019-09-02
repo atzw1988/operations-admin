@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-02 18:50:40
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="row">
     <div class="total">
@@ -6,7 +13,7 @@
       <span>筛选会员数：<a href="javascript:void(0)">{{sel_num}}</a>人</span>
     </div>
     <div class="select">
-      <el-button style="float:right;margin-right:20px;margin-top:10px;" type="danger" @click="sel_del">删除</el-button>
+      <!-- <el-button style="float:right;margin-right:20px;margin-top:10px;" type="danger" @click="sel_del">删除</el-button> -->
       <!-- <el-button style="float:right;margin-right:20px;margin-top:10px;" type="warning" @click="sel_to_black">加入黑名单</el-button> -->
       <!-- <el-select v-model="user_kind" placeholder="用户类型" class="selconsumption">
         <el-option value="">全部用户</el-option>
@@ -18,7 +25,6 @@
         </el-option>
       </el-select> -->
       <div class="data-interval">
-        <span>注册日期：</span>
         <div class="block">
           <el-date-picker
             v-model="time_interval"
@@ -31,21 +37,19 @@
           </el-date-picker>
         </div>
         <div class="username">
-          <span style="float:left">账户:</span>
           <el-input style="width:120px;float:left"
             placeholder="输入用户名"
             v-model="user_name"
             clearable>
           </el-input>
         </div>
-        <div class="username">
-          <span style="float:left">车牌:</span>
+        <!-- <div class="username">
           <el-input style="width:120px;float:left"
             placeholder="输入车牌号"
             v-model="user_car"
             clearable>
           </el-input>
-        </div>
+        </div> -->
         <el-button class="selbtn" type="primary" @click="sel_uesr">搜索</el-button>
       </div>
     </div>
@@ -53,57 +57,35 @@
       <el-table
         v-loading="loading"
         :summary-method="getSummaries"
-        show-summary
         :data="list_detail"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="sel_change">
-        <el-table-column
+        <!-- <el-table-column
           type="selection"
           width="55">
         </el-table-column>
         <el-table-column
           label="序号"
           type="index">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
-          label="账号"
-          width="280">
+          label="账号">
           <template slot-scope="scope">
             <span v-if="scope.row.mobile">{{scope.row.mobile}}</span>
             <span v-if="!scope.row.mobile">{{scope.row.id}}</span>
           </template>
         </el-table-column>
         <el-table-column
-          label="下挂车辆"
-          width="100">
+          label="下挂车辆">
           <template slot-scope="scope">
             <span @click="get_user_car(scope.row)" class="carshow">点击查看</span>
           </template>
         </el-table-column>
         <el-table-column
           sortable
-          prop="pay"
-          label="消费金额"
-          width="100">
-          <template slot-scope="scope">
-            ***
-          </template>
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="money"
-          label="充值金额"
-          width="100">
-          <template slot-scope="scope">
-            ***
-          </template>
-        </el-table-column>
-        <el-table-column
-          sortable
           prop="user_money"
-          label="余额"
-          width="100">
+          label="余额">
         </el-table-column>
         <el-table-column
           sortable
@@ -126,7 +108,7 @@
         :total="sel_num">
       </el-pagination>
     </div>
-    <el-dialog :title="user_mobile" :visible.sync="user_car_show">
+    <el-dialog :modal-append-to-body="false" :modal="true" :title="user_mobile" :visible.sync="user_car_show">
       <el-table :data="user_car_list">
         <el-table-column property="car_no" label="车牌号"></el-table-column>
         <el-table-column property="addTime" label="添加日期"></el-table-column>
@@ -141,7 +123,7 @@ export default {
   data() {
     return {
       loading: true,
-      time_interval: ['',''],    //时间区间
+      time_interval: '',    //时间区间
       list_num: '',
       sel_num: 0,
       consumptions: ['APP','微信小程序'],
@@ -349,6 +331,7 @@ export default {
   height: 100%;
   color: #000;
   position: relative;
+  background-color: #f5f5f5 !important;
 }
 .total{
   width: 100%;
@@ -387,7 +370,7 @@ export default {
   float: left;
 }
 .data-interval{
-  width: 960px;
+  /* width: 960px; */
   height: 40px;
   float: left;
   line-height: 40px;
@@ -405,7 +388,7 @@ export default {
   margin-left: 10px;
 }
 .username{
-  width: 180px;
+  width: 120px;
   height: 40px;
   float: left;
   margin-left: 10px;
@@ -418,6 +401,7 @@ export default {
 }
 .selbtn{
   float: left;
+  margin-left: 10px;
 }
 .selbtn>img{
   width: 40px;
@@ -451,10 +435,10 @@ export default {
 }
 /* 分页控制 */
 .el-pagination{
-  width: 580px;
+  /* width: 580px; */
   height: 30px;
   position: absolute;
-  bottom: 10px;
+  bottom: -30px;
   right: 10px;
 }
 .usr_car{
@@ -500,6 +484,9 @@ export default {
 }
 #row>>>.el-dialog__header{
   padding-left: 30px;
+}
+#row>>>.el-dialog{
+  z-index: 10000 !important;
 }
 </style>
 

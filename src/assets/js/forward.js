@@ -181,7 +181,7 @@ export default {
       let year_start = start.getFullYear();
       let month_start = start.getMonth() + 1 < 10 ? "0" + (start.getMonth() + 1) : data.getMonth() + 1;
       let date_start = start.getDate() < 10 ? "0" + start.getDate() : start.getDate();
-      this.time_interval = [year_start + '/' + month_start + '/' + date_start + ' 00:00:00', year_end + '/' + month_end + '/' + date_end + ' 23:59:59']
+      this.time_interval = [year_start + '/' + month_start + '/' + date_start, year_end + '/' + month_end + '/' + date_end]
     },
     Vue.prototype.get_report_list = function (params, url) {
       axios({
@@ -308,6 +308,21 @@ export default {
           callback(res)
         }
       })
-    }
+    },
+    Vue.prototype.on = (function () {
+      if (document.addEventListener) {
+        return function (element, event, handler) {
+          if (element && event && handler) {
+            element.addEventListener(event, handler, false)
+          }
+        }
+      } else {
+        return function (element, event, handler) {
+          if (element && event && handler) {
+            element.attachEvent('on' + event, handler)
+          }
+        }
+      }
+    })()
   }
 }

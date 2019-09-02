@@ -2,6 +2,7 @@
   <div id="row">
     <div class="up">
       <div style="width:600px;font-size:40px;top:100px;margin-left:-300px;">嵊停车综合管理平台</div>
+      <!-- <div style="width:800px;font-size:40px;top:100px;margin-left:-400px;text-aglin:center">腾讯云智能停车管理平台</div> -->
       <div style="width:600px;font-size:20px;top:180px;margin-left:-300px">让世界自由停泊</div>
     </div>
     <div class="down">
@@ -10,6 +11,7 @@
     <div class="content">
       <div class="left">
         <img src="../assets/log.png" alt="">
+        <!-- <img src="../assets/txlogoa.png" alt=""> -->
       </div>
       <div class="right">
         <div>
@@ -127,7 +129,7 @@ import axios from 'axios';
 #row{
   width: 100%;
   height: 969px;
-  position: relative;
+  position: absolute;
 }
 .up{
   width: 100%;

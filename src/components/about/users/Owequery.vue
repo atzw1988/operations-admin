@@ -1,9 +1,18 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-27 10:14:19
+ * @LastEditTime: 2019-09-02 18:50:56
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="row">
+    <!-- <div class="total">
+      <span style="margin-left:50px">欠费总额：<a href="javascript:void(0)">{{money}}</a>元</span>
+    </div> -->
     <div class="select">
       <div class="data-interval">
         <div class="username">
-          <span style="float:left">车牌:</span>
           <el-input style="width:120px;float:left"
             placeholder="输入车牌号"
             v-model="query_car"
@@ -11,7 +20,6 @@
           </el-input>
         </div>
         <div class="username">
-          <span style="float:left">手机号:</span>
           <el-input style="width:130px;float:left"
             placeholder="输入手机号"
             v-model="phone_num"
@@ -73,13 +81,30 @@ export default {
       pageIndex: 1,
       ps:20,
       total_ps:0,
+      money: 0,
       url:'/its/operations/oweThe/query',
+      url_money: '/its/operations/countOwe/money'
     }
   },
   mounted() {
+    this.get_all_money()
     this.get_rule_list()
   },
   methods: {
+    //获取欠费总额
+    get_all_money(){
+      axios({
+        method: 'post',
+        url: this.url_money,
+        headers: {
+          'content-type':'application/x-www-form-urlencoded'
+        },
+        data: {}
+      }).then(res => {
+        console.log(res)
+        this.money = -res.data.data
+      })
+    },
     //封装获取白名单列表
     get_query_list(params,url){
       axios({
@@ -153,11 +178,13 @@ export default {
   height: 100%;
   color: #000;
   position: relative;
+  background-color: #f5f5f5 !important;
 }
 .total{
   width: 100%;
   height: 50px;
   background: #fff;
+  margin-bottom: 20px;
 }
 .total>span{
   font-size: 20px;
@@ -181,6 +208,7 @@ export default {
   width: 100%;
   height: 60px;
   background: #fff;
+  /* margin-top: 20px; */
 }
 .selstate,.selplace,.selparkkind,.selconsumption{
   width: 110px;
@@ -190,7 +218,7 @@ export default {
   float: left;
 }
 .data-interval{
-  width: 800px;
+  /* width: 800px; */
   height: 40px;
   float: left;
   line-height: 40px;
@@ -208,7 +236,7 @@ export default {
   margin-left: 10px;
 }
 .username{
-  width: 200px;
+  width: 120px;
   height: 40px;
   float: left;
   margin-left: 10px;
@@ -221,6 +249,7 @@ export default {
 }
 .selbtn{
   float: left;
+  margin-left: 20px;
 }
 .selbtn>img{
   width: 40px;
@@ -251,7 +280,7 @@ export default {
 }
 /* 分页控制 */
 .el-pagination{
-  width: 580px;
+  /* width: 580px; */
   height: 30px;
   position: absolute;
   bottom: -35px;

@@ -29,8 +29,9 @@ import Users from './components/about/report/Users.vue';
 import Operating from './components/about/report/Operating.vue';
 import Order from './components/about/report/Order.vue';
 import Recharge from './components/about/report/Recharge.vue';
-import Parkorder from './components/about/order/Parkorder.vue';
+import Parkorder from './components/about/order/Parkorder.vue'
 import Pdaorder from './components/about/order/Pdaorder.vue'
+import Performance from './components/about/order/Performance.vue'
 import Rechargeorder from './components/about/order/Rechargeorder.vue';
 import Userslist from './components/about/users/Userslist.vue';
 import Userblacklist from './components/about/users/Userblacklist.vue';
@@ -143,6 +144,11 @@ export const routes = [
         path: '/about/pdaorder',
         name: 'pdaorderLink',
         component: Pdaorder
+      },
+      {
+        path: '/about/performance',
+        name: 'performanceLink',
+        component: Performance
       },
       {
         path: '/about/rechargeorder',

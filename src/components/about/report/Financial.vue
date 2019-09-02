@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-26 14:55:23
+ * @LastEditTime: 2019-09-02 18:45:31
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="row">
     <div class="header">
@@ -12,7 +19,7 @@
             </el-option>
           </el-select>
         </template>
-        <template>
+        <!-- <template>
           <el-select v-model="park_name" clearable placeholder="全部停车场">
             <el-option
               v-for="item in parks"
@@ -21,8 +28,8 @@
               :value="item.value">
             </el-option>
           </el-select>
-        </template>
-        <template>
+        </template> -->
+        <!-- <template>
           <el-select v-model="kind_name" clearable placeholder="全部类别">
             <el-option
               v-for="item in kinds"
@@ -31,7 +38,7 @@
               :value="item.value">
             </el-option>
           </el-select>
-        </template>
+        </template> -->
       </div>
       <div class="down">
         <div class="datamain" style="margin-left:30px">
@@ -46,8 +53,8 @@
             type="daterange"
             align="right"
             unlink-panels
-            format='yyyy-MM-dd HH:mm:ss'
-            value-format='yyyy/MM/dd HH:mm:ss'
+            format='yyyy-MM-dd'
+            value-format='yyyy/MM/dd'
             @change='use_mytime'
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -58,7 +65,7 @@
         <el-button type="success" class="from" @click="toform">{{fromtext}}</el-button>
       </div>
     </div>
-    <div class="percent" v-if="table_show">
+    <!-- <div class="percent" v-if="table_show">
       <div class="total">
         <div class="header_text">
           <div class="text">入账金额(元)</div>
@@ -107,13 +114,15 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="content" id="chart" v-if="table_show">
+    </div> -->
+    <div class="content" v-if="table_show">
+      <div id="chart"></div>
     </div>
     <div class="table" v-if="!table_show">
       <el-table
         :data="tableData"
         show-summary
+        :summary-method="getSummaries"
         style="width: 100%">
         <el-table-column
           label="序号"
@@ -151,11 +160,19 @@
       </el-table>
       <el-pagination
         @current-change="page_change"
+        @size-change="handleSizeChange"
         :current-page="pageIndex"
+        :page-sizes="[10, 20, 30, 40]"
         :page-size='ps'
-        layout="total, prev, pager, next, jumper"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="list_num">
       </el-pagination>
+      <div class="notice">
+        <p>费用结算说明:</p>
+        <p class="n_detail">入账金额：当日收到金额，由营业实收+预收账款构成</p>
+        <p class="n_detail">营业实收：当天已付款的订单总额 (包含当天产生已付款、之前欠费今天付款的订单)，支付方式含现金支付、微信/支付宝支付</p>
+        <p class="n_detail">预收账款：用户预充值但还未用于停车的金额</p>
+      </div>
     </div>
   </div>
 </template>
@@ -240,7 +257,7 @@ export default {
       booked_list:[],
       income_list:[],
       recharge_list:[],
-      table_show:true,
+      table_show: true,
       fromtext:'表格数据',
       tableData:[],
       url_excel:'/its/operations/financial/statements',
@@ -502,6 +519,7 @@ export default {
     //表格和图表切换
     toform(){
       this.table_show = !this.table_show
+      console.log(this.table_show)
       if(this.table_show){
         setTimeout(() => {
           this.drowchart()
@@ -509,6 +527,7 @@ export default {
         this.fromtext = '表格数据'
       }
       if(!this.table_show){
+        this.table_show = false
         this.fromtext = '可视化报表'
       }
     },
@@ -527,8 +546,32 @@ export default {
         this.tableData = res.data.data.data
       })
     },
+    //切换每页条数
+    handleSizeChange(val){
+      this.pageIndex = 1
+      this.ps = val
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('ps', this.ps)
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      this.get_my_list(params,this.url_excel,(res) => {
+        console.log(res)
+        this.list_num = res.data.data.tr
+        this.tableData = res.data.data.data
+      })
+    },
     //搜索
     sel_btn(){
+      if (this.erar_name != 0) {
+        this.$notify({
+          title: '温馨提示',
+          message: '所选区域无数据',
+          type: 'warning',
+          offset: 100
+        })
+        return
+      }
       this.xData = []
       this.booked_list = []
       this.income_list = []
@@ -560,13 +603,39 @@ export default {
         item.isChecked = false
       })
     },
+    getSummaries(param){
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '当页合计';
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]))
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+          sums[index] += ' 元';
+        } else {
+          sums[index] = '';
+        }
+      })
+      return sums
+    }
   },
 }
 </script>
 <style scoped>
 #row{
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
+  background-color: #f5f5f5 !important;
 }
 /* 头部区间选择 */
 .header{
@@ -682,9 +751,13 @@ export default {
 /* 图表 */
 .content{
   width: 100%;
-  height: 510px;
+  height: 710px;
   margin-top: 20px;
   background: #fff;
+}
+#chart{
+  width: 100%;
+  height: 100%;
 }
 /* 表格数据 */
 .table{
@@ -714,10 +787,21 @@ export default {
 }
 /* 分页控制 */
 .el-pagination{
-  width: 580px;
+  /* width: 580px; */
   height: 30px;
   position: absolute;
-  bottom: -35px;
+  bottom: 60px;
   right: 80px;
+}
+.notice{
+  /* position: absolute; */
+  margin-top: 20px;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: left;
+  margin-left: 50px;
+}
+.n_detail{
+  margin-bottom: 0;
 }
 </style>

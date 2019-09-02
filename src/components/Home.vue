@@ -1,6 +1,13 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-02 18:31:25
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
 <!-- 实况主页面 -->
-  <div class="row">
+  <div id="row">
     <!-- 今日明细 -->
     <div id="home" class="col-sm-12 text-center detail">
       <div id="liveText" class="liveText">
@@ -14,9 +21,6 @@
               <span class="order">今日总订单</span>
               <span class="ordertext">{{order}}</span><span class="unit">单</span>
             </div>
-            <span class="ordermore">
-              <router-link tag="a" :to="{name:'orderLink'}">更多></router-link>
-            </span>
           </li>
           <li>
             <div class="div2"><img src="../assets/jine.png" alt=""></div>
@@ -24,9 +28,6 @@
               <span class="income">今日总收入</span>
               <span class="incometext">{{income}}</span><span class="unit">元</span>
             </div>
-            <span class="incomemore">
-              <router-link tag="a" :to="{name:'operatingLink'}">更多></router-link>
-            </span>
           </li>
           <li>
             <div class="div3"><img src="../assets/yonghu.png" alt=""></div>
@@ -34,9 +35,13 @@
               <span class="user">今日注册用户数</span>
               <span class="usertext">{{user}}</span><span class="unit">人</span>
             </div>
-            <span class="usermore">
-              <router-link tag="a" :to="{name:'usersLink'}">更多></router-link>
-            </span>
+          </li>
+          <li>
+            <div class="div3"><img src="../assets/zhishu.png" alt=""></div>
+            <div>
+              <span class="user">今日车位利用率</span>
+              <span class="usertext">{{parkingIndex}}</span><span class="unit">%</span>
+            </div>
           </li>
         </ul>
       </div>
@@ -60,15 +65,15 @@
               <span class="chewei"><img style="width:60px;height:60px;margin-bottom:-10px" src="../assets/p.png" alt=""></span>
               <span>泊位停车</span>
             </div>
-            <span class="sp">当前路边空泊位数/总泊位数</span>
-            <span class="freesp">{{freesp}}</span>/<span class="allsp">{{allsp}}</span>
+            <span class="sp">实时停车流量次数/总泊位数</span>
+            <span class="freesp">{{parking_flow}}</span>/<span class="allsp">{{allsp}}</span>
           </li>
           <li>
             <div>
               <img style="margin-bottom:10px" src="../assets/chewei.png" alt="">
               <span>车库停车</span>
             </div>
-            <span class="lp">当前车库空车位数/总车位数</span>
+            <span class="lp">当前车库已用车位/总车位数</span>
             <span class="freelp">{{freelp}}</span>/<span class="alllp">{{alllp}}</span>
           </li>
         </ul>
@@ -80,6 +85,7 @@
 import echarts from "echarts";
 import axios from 'axios';
 import $ from 'jquery';
+import './Home.css'
 import shenzhenJSON from '../components/datas/newshenzhen.json';
 import shaoxingJSON from '../components/datas/shaoxing.json'
   export default{
@@ -92,6 +98,13 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
         order: '0',   //订单量
         income: '0',   //订单金额
         user: '0',   //注册用户数
+        parking_flow: 0,
+        data: [],
+        myChart: '',
+        time_tip: 1,
+        count: 0,
+        timeTicket: null,
+        parkingIndex: '',
         mapdata: [
           {name:'嵊州市',value:[120.766909,29.613277,0]},
           {name:'新昌县',value:[120.907412,29.467813,0]},
@@ -104,7 +117,7 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
         socket: new WebSocket("ws://www.lcgxlm.com:13259/its/websocket"),
         // socket: new WebSocket("ws://192.168.1.104:13259/its/websocket"),
         url:'/its/operations/live/amount',
-        // url:'/its/operations/live/amount'
+        url_park:'/its/operations/query/berth'
       }
     },
     beforeCreate() {
@@ -116,30 +129,12 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
     },
     beforeMount() {
       //首页实时通讯
-      let that = this
       this.socket.onopen = function() {
 				console.log("Socket 已打开");
 			};
       // 获得消息事件
 			this.socket.onmessage = function(msg) {
-        axios({
-          method: 'post',
-          url:that.url,
-          headers:{
-          'content-type':'application/x-www-form-urlencoded'
-          },
-          data:{
-          }
-        }).then(res => {
-          that.income = res.data.data.amount
-          that.user = res.data.data.total_revenue
-          that.order = res.data.data.total_order
-          that.freesp = res.data.data.usable
-          that.allsp = res.data.data.parkTotal
-          that.freelp = res.data.data.outerUsable
-          that.alllp = res.data.data.outerParkTotal
-          that.mapdata[0].value[2] = res.data.data.parkTotal
-        })
+        console.log(msg)
 			};
 			//发生了错误事件
 			this.socket.onerror = function() {
@@ -147,100 +142,57 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
 			}
     },
     mounted() {
-      // this.timer_home = setInterval(() => {
-      //   axios({
-      //     method: 'post',
-      //     url:'/its/operations/live/amount',
-      //     headers:{
-      //     'content-type':'application/x-www-form-urlencoded'
-      //     },
-      //     data:{
-      //     }
-      //   }).then(res => {
-      //     console.log(res)
-      //     this.income = res.data.data.amount
-      //     this.user = res.data.data.total_revenue
-      //     this.order = res.data.data.total_order
-      //     this.freesp = res.data.data.usable
-      //     this.allsp = res.data.data.parkTotal
-      //     this.freelp = res.data.data.outerUsable
-      //     this.alllp = res.data.data.outerParkTotal
-      //     this.mapdata[0].value[2] = res.data.data.parkTotal
-      //   })
-      // }, 500);
-      let that = this
-      axios({
-        method: 'post',
-        url:that.url,
-        headers:{
-        'content-type':'application/x-www-form-urlencoded'
-        },
-        data:{
-        }
-      }).then(res => {
-        console.log(res)
-        that.income = res.data.data.amount
-        that.user = res.data.data.total_revenue
-        that.order = res.data.data.total_order
-        that.freesp = res.data.data.usable
-        that.allsp = res.data.data.parkTotal
-        that.freelp = res.data.data.outerUsable
-        that.alllp = res.data.data.outerParkTotal
-        that.mapdata[0].value[2] = res.data.data.parkTotal
-        that.map();
-      })
+      this.myChart = this.$echarts.init(document.getElementById('mymap'))
+      this.myChart.on('mousemove', this.echartsMapMove)
+      this.myChart.on('mouseout', this.echartsMapOut)
+      this.get_amount_data()
+      this.getparks()
+      this.timer_home = setInterval(() => {
+        this.get_amount_data()
+      }, 3600000);
     },
     beforeDestroy(){
       this.socket.close()
       this.socket.onclose = function() {
 				console.log("Socket已关闭");
       };
-      // clearInterval(this.timer_home)
+      clearInterval(this.timer_home)
     },
     methods:{
       goToMenu(){
         this.$router.push({name:'menuLink'})
       },
+      // 获取实况数据
+      get_amount_data(){
+        axios({
+          method: 'post',
+          url:this.url,
+          headers:{
+          'content-type':'application/x-www-form-urlencoded'
+          },
+          data:{
+          }
+        }).then(res => {
+          console.log(res)
+          this.income = res.data.data.amount
+          this.user = res.data.data.total_revenue
+          this.order = res.data.data.total_order
+          this.freesp = res.data.data.usable
+          this.allsp = res.data.data.parkTotal
+          this.freelp = res.data.data.currentLots
+          this.alllp = res.data.data.totalLots
+          this.parking_flow = res.data.data.parking_flow
+          this.mapdata[0].value[2] = res.data.data.parkTotal,
+          this.parkingIndex = (res.data.data.parkingIndex * 100).toFixed(0)
+        })
+      },
       //地图
       map(){
-        // $.get('../assets/json/newshenzhen.json',function(shenzhenJson){
-        //   console.log(shenzhenJson)
-
-        // })
         let that = this
         echarts.registerMap('shenzhen', shaoxingJSON);
           var mapChart = echarts.init(document.getElementById('mymap'));
-          // var geoCoordMap = {
-          //   '嵊州市':[120.766909,29.613277],
-          //   '新昌县':[120.907412,29.467813],
-          //   '诸暨市':[120.218340,29.737768],
-          //   '上虞区':[120.874507,30.03349],
-          //   '柯桥区':[120.4518,30.076753],
-          //   '越城区':[120.590445,29.997687]
-          // };
-          // var data = [
-          //   {name: '嵊州市', value: 452},
-          //   {name: '新昌县', value: 0},
-          //   {name: '诸暨市', value: 0},
-          //   {name: '上虞区', value: 0},
-          //   {name: '柯桥区', value: 0},
-          //   {name: '越城区', value: 0},
-          // ];
           var max = 480, min = 9; // todo
           var maxSize4Pin = 40, minSize4Pin = 20;
-          // var convertData = function (data) {
-          //   var res = [];
-          //   for (var i = 0; i < data.length; i++) {
-          //     var geoCoord = geoCoordMap[data[i].name];
-          //     if (geoCoord) {
-          //       res.push({
-          //         name: data[i].name,
-          //         value: geoCoord.concat(data[i].value)
-          //       });
-          //     }
-          //   }
-          //   return res;
-          // };
           mapChart.setOption({
             backgroundColor: 'rgb(15, 24, 48)',
             title: {
@@ -431,6 +383,304 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
           window.addEventListener("resize",function(){
             mapChart.resize();
           });
+      },
+      //获取停车场列表
+      getparks(){
+        axios({
+          method: 'post',
+          url:this.url_park,
+          headers:{
+            'content-type':'application/x-www-form-urlencoded'
+          },
+          data: {}
+        }).then(res => {
+          console.log(res)
+          let park = res.data.data
+          window.localStorage.setItem('park_list', park)
+          //高德坐标转百度坐标
+          let x_PI = 3.14159265358979324 * 3000.0 / 180.0;
+          park.map(function (item) {
+            let z = Math.sqrt(item.longitude * item.longitude + item.latitude * item.latitude) + 0.00002 * Math.sin(item.latitude * x_PI);
+            let theta = Math.atan2(item.latitude, item.longitude) + 0.000003 * Math.cos(item.longitude * x_PI);
+            item.longitude = z * Math.cos(theta) + 0.0065;
+            item.latitude = z * Math.sin(theta) + 0.006;
+          })
+          for(var i =0;i < park.length;i++){
+            if(park[i].parking_name != '深业U中心'){
+              let color = '#16adf8'
+              let pro = park[i].kyCount/park[i].maxCount
+              let arr = [park[i].longitude,park[i].latitude,{name:park[i].parking_name,kyCount:park[i].kyCount,maxCount:park[i].maxCount},color]
+              this.data.push(arr)
+            }
+
+            // this.data = this.data.slice(1,12)
+          }
+          console.log(this.data)
+          this.mymap()
+        })
+      },
+      mymap(){
+        let that = this
+        this.myChart.setOption({
+          bmap: {
+            center: [120.830358,29.590902],
+            zoom: 15,
+            roam: true,
+            mapStyle: {
+              'styleJson':[
+                {
+                  "featureType": "water",
+                  "elementType": "all",
+                  "stylers": {
+                    "color": "#021019"
+                  }
+                },
+                {
+                  "featureType": "highway",
+                  "elementType": "geometry.fill",
+                  "stylers": {
+                    "color": "#000000"
+                  }
+                },
+                {
+                  "featureType": "highway",
+                  "elementType": "geometry.stroke",
+                  "stylers": {
+                    "color": "#147a92"
+                  }
+                },
+                {
+                  "featureType": "arterial",
+                  "elementType": "geometry.fill",
+                  "stylers": {
+                    "color": "#000000"
+                  }
+                },
+                {
+                  "featureType": "arterial",
+                  "elementType": "geometry.stroke",
+                  "stylers": {
+                    "color": "#0b3d51"
+                  }
+                },
+                {
+                  "featureType": "local",
+                  "elementType": "geometry",
+                  "stylers": {
+                    "color": "#000000"
+                  }
+                },
+                {
+                  "featureType": "land",
+                  "elementType": "all",
+                  "stylers": {
+                    "color": "#08304b"
+                  }
+                },
+                {
+                  "featureType": "railway",
+                  "elementType": "geometry.fill",
+                  "stylers": {
+                    "color": "#000000"
+                  }
+                },
+                {
+                  "featureType": "railway",
+                  "elementType": "geometry.stroke",
+                  "stylers": {
+                    "color": "#08304b"
+                  }
+                },
+                {
+                  "featureType": "subway",
+                  "elementType": "geometry",
+                  "stylers": {
+                    "lightness": -70
+                  }
+                },
+                {
+                  "featureType": "building",
+                  "elementType": "geometry.fill",
+                  "stylers": {
+                    "color": "#000000"
+                  }
+                },
+                {
+                  "featureType": "all",
+                  "elementType": "labels.text.fill",
+                  "stylers": {
+                    "color": "#857f7f"
+                  }
+                },
+                {
+                  "featureType": "all",
+                  "elementType": "labels.text.stroke",
+                  "stylers": {
+                    "color": "#000000"
+                  }
+                },
+                {
+                  "featureType": "building",
+                  "elementType": "geometry",
+                  "stylers": {
+                    "color": "#022338"
+                  }
+                },
+                {
+                  "featureType": "green",
+                  "elementType": "geometry",
+                  "stylers": {
+                    "color": "#062032"
+                  }
+                },
+                {
+                  "featureType": "boundary",
+                  "elementType": "all",
+                  "stylers": {
+                    "color": "#1e1c1c"
+                  }
+                },
+                {
+                  "featureType": "manmade",
+                  "elementType": "geometry",
+                  "stylers": {
+                    "color": "#022338"
+                  }
+                },
+                {
+                  "featureType": "poi",
+                  "elementType": "all",
+                  "stylers": {
+                    "visibility": "off"
+                  }
+                },
+                {
+                  "featureType": "all",
+                  "elementType": "labels.icon",
+                  "stylers": {
+                    "visibility": "off"
+                  }
+                },
+                {
+                  "featureType": "all",
+                  "elementType": "labels.text.fill",
+                  "stylers": {
+                    "color": "#2da0c6",
+                    "visibility": "on"
+                  }
+                }
+              ]
+            }
+          },
+          tooltip: {
+            padding: 0,
+            enterable: true,
+            // confine: true,
+            transitionDuration: this.time_tip,
+            textStyle: {
+              color: '#000',
+              decoration: 'none'
+            },
+            backgroundColor: 'rgba(0, 0, 0, 0)',
+            formatter: function (item) {
+              let tipHtml = '<div class="tips">' +
+                  '<div class="tips_up">' +
+                    '<div class="tip_left b_down">收费路段</div>' +
+                    '<div class="tip_right b_down" style="background: #fff;height: 25px;">' + item.data[2].name + '</div>' +
+                  '</div>' +
+                  '<div class="tips_middle">' +
+                    '<div class="tip_left b_down">收费时间</div>' +
+                    '<div class="tip_right b_down">8:00-20:00</div>' +
+                  '</div>' +
+                  '<div class="tips_down">' +
+                    '<div class="tip_left">收费车位</div>' +
+                    '<div class="tip_right">' + item.data[2].maxCount + '个</div>' +
+                  '</div>' +
+                '</div>'
+              return tipHtml;
+            }
+          },
+          series: [
+            {
+              name:'点',
+              type: 'scatter',
+              coordinateSystem: 'bmap',
+              symbol: 'path://M714.835718 834.86814a42.810016 42.810016 0 0 1-6.654165 10.004515L551.552732 1001.571274a43.159011 43.159011 0 0 1-6.328437 9.515922 49.464182 49.464182 0 0 1-66.402058 0 43.298609 43.298609 0 0 1-6.11904-9.306525l-157.536206-157.536207a43.275343 43.275343 0 0 1-6.491302-9.771851 442.05995 442.05995 0 1 1 406.160029 0.395527zM512 93.719734a348.994698 348.994698 0 0 0-162.864192 657.552543v17.170539a44.205995 44.205995 0 0 1 29.315554 12.656874L512 914.648328l132.920447-132.943713a44.205995 44.205995 0 0 1 29.85068-12.726674v-17.705664A348.994698 348.994698 0 0 0 512 93.719734z m0 558.391516a209.396819 209.396819 0 1 1 209.396819-209.396818 209.396819 209.396819 0 0 1-209.396819 209.396818z m0-372.261011a162.864192 162.864192 0 1 0 162.864192 162.864193 162.864192 162.864192 0 0 0-162.864192-162.864193z',
+              symbolSize: '30',
+              label: {
+                normal: {
+                  show: true,
+                  textStyle: {
+                    color: '#fff',
+                    fontSize: 12,
+                    fontWeight: 600
+                  },
+                  padding: 4,
+                  borderRadius: 5,
+                  offset: [0,30],
+                  backgroundColor: 'rgba(252, 149, 14)',
+                  formatter:function(params){
+                    let text = params.data[2].name.split('(').join(',').split('（')[0].split(',')[0]
+                    return text
+                  }
+                }
+              },
+              itemStyle: {
+                normal: {
+                  color: function (params) {
+                    return params.data[3]
+                  },
+                }
+              },
+              data: this.data
+            }
+          ]
+        })
+        // window.addEventListener("resize",function(){
+        //   console.log(1)
+        //   // this.myChart.resize();
+        // })
+        this.timeTick()
+        this.on(window, 'resize', this.resize)
+      },
+      resize () {
+        this.myChart.resize()
+      },
+      echartsMapMove (params) {
+        console.log('移入')
+        this.time_tip = 0
+        clearInterval(this.timeTicket)
+        this.myChart.dispatchAction({
+          type: 'showTip',
+          seriesIndex: 0,
+          dataIndex: params.dataIndex
+        })
+      },
+      echartsMapOut () {
+        console.log('移出')
+        this.time_tip = 1
+        let dataLength = this.data.length
+        clearInterval(this.timeTicket)
+        this.timeTicket = setInterval(() => {
+          this.myChart.dispatchAction({
+            type: 'showTip',
+            seriesIndex: 0,
+            dataIndex: (this.count) % dataLength
+          })
+          this.count++
+        }, 10000)
+      },
+      timeTick () {
+        let dataLength = this.data.length
+        clearInterval(this.timeTicket)
+        this.timeTicket = setInterval(() => {
+          this.myChart.dispatchAction({
+            type: 'showTip',
+            seriesIndex: 0,
+            dataIndex: (this.count) % dataLength
+          })
+          this.count++
+        }, 10000)
       }
     }
   }
@@ -439,7 +689,7 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
 <style scoped>
 #home{
   width: 100%;
-  height: 904px;
+  height: 100%;
   padding: 0;
   background: rgb(15, 24, 48);
   overflow-x: hidden;
@@ -470,7 +720,7 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
   }
   .liveDetail>ul>li{
     display: inline-block;
-    width: 32%;
+    width: 24.5%;
     height: 200px;
     border-right: 2px solid #0b3247;
     /* margin: 0 40px; */
@@ -613,7 +863,7 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
     bottom: -2px;
   }
 }
-@media screen and (max-width:1525px) and (min-width:1100px){
+@media screen and (max-width:1525px) and (min-width:1270px){
   .liveDetail{
     width: 98%;
     height: 150px;
@@ -632,7 +882,7 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
   }
   .liveDetail>ul>li{
     display: inline-block;
-    width: 32%;
+    width: 24.5%;
     height: 150px;
     border-right: 2px solid #0b3247;
     /* margin: 0 40px; */
@@ -682,7 +932,7 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
     margin-top: 40px;
   }
   .map{
-    width: 50%;
+    width: 60%;
     height: 500px;
     position: relative;
     margin-left: 20px;
@@ -691,7 +941,7 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
     float: left;
   }
   .details{
-    width: 45%;
+    width: 35%;
     height: 500px;
     border: 2px solid #013254;
     float: left;
@@ -775,7 +1025,7 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
     bottom: -2px;
   }
 }
-@media screen and (max-width:1099px) and (min-width:650px) {
+@media screen and (max-width:1269px) and (min-width:650px) {
   .liveDetail{
     width: 98%;
     height: 100px;
@@ -794,7 +1044,7 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
   }
   .liveDetail>ul>li{
     display: inline-block;
-    width: 32%;
+    width: 24.5%;
     height: 100px;
     border-right: 2px solid #0b3247;
     /* margin: 0 40px; */
@@ -938,7 +1188,7 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
     margin-top: 40px;
   }
 }
-@media screen and (max-width:1099px) and (min-width:750px) {
+@media screen and (max-width:1269px) and (min-width:750px) {
   .map{
     width: 100%;
     height: 500px;
@@ -1130,5 +1380,40 @@ import shaoxingJSON from '../components/datas/shaoxing.json'
     width: 100%;
     height: 100%;
   }
+}
+.tips{
+  position: absolute;
+  z-index: 99999999;
+  width: 300px;
+  height: 77px;
+  border: 1px solid #9999;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.tip_left{
+  float: left;
+  background: #16adf8;
+  width: 150px;
+  height: 25px;
+  font-size: 14px;
+  line-height: 25px;
+  color: #fff;
+  font-weight: 600;
+  text-align: left;
+  padding-left: 30px;
+}
+.tip_right{
+  background: #fff;
+  height: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 25px;
+  text-align: left;
+  padding-left: 20px;
+  width: 148px;
+  float: left;
+}
+.b_down{
+  border-bottom: 1px solid #999;
 }
 </style>

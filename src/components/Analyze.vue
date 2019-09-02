@@ -1,6 +1,13 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-02 18:31:15
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
 <!-- 实况主页面 -->
-  <div class="row">
+  <div id="row">
     <!-- 今日明细 -->
     <div id="home" class="col-sm-12 text-center detail">
       <div class="leftcont">
@@ -9,39 +16,24 @@
           <img src="../assets/bj-2.png" alt="" class="bj-2">
           <img src="../assets/bj-3.png" alt="" class="bj-3">
           <img src="../assets/bj-4.png" alt="" class="bj-4">
-          <span>在场车辆走势</span>
+          <span>停车指数变化</span>
           <div id="myChart" style="width: 100%;height: 80%;"></div>
-        </div>
-        <div class="load">
-          <img src="../assets/bj-1.png" alt="" class="bj-1">
-          <img src="../assets/bj-2.png" alt="" class="bj-2">
-          <img src="../assets/bj-3.png" alt="" class="bj-3">
-          <img src="../assets/bj-4.png" alt="" class="bj-4">
-          <span>区域下单车辆分析</span>
-          <div id="myload"></div>
         </div>
         <div class="predict">
           <img src="../assets/bj-1.png" alt="" class="bj-1">
           <img src="../assets/bj-2.png" alt="" class="bj-2">
           <img src="../assets/bj-3.png" alt="" class="bj-3">
           <img src="../assets/bj-4.png" alt="" class="bj-4">
-          <span>TOP下单停车场</span>
-          <div id="mypredict">
-            <div class="head">
-              <span class="headarea">区域</span>
-              <span class="headpark">停车场</span>
-              <span class="headmoney">经停车辆/车位</span>
-            </div>
-            <div class="predictscont">
-              <ul>
-                <li v-for="(predict,index) in predicts" :key="index">
-                  <span class="predictscontarea">嵊州市</span>
-                  <span class="predictscontpark">{{predict.parking_name}}</span>
-                  <span class="predictscontmoney">{{predict.times}}/{{predict.parkingTotal}}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <span>营收趋势变化</span>
+          <div id="mypredict"></div>
+        </div>
+        <div class="load">
+          <img src="../assets/bj-1.png" alt="" class="bj-1">
+          <img src="../assets/bj-2.png" alt="" class="bj-2">
+          <img src="../assets/bj-3.png" alt="" class="bj-3">
+          <img src="../assets/bj-4.png" alt="" class="bj-4">
+          <span>收入来源统计分析</span>
+          <div id="myload"></div>
         </div>
       </div>
       <div class="middlecont">
@@ -51,7 +43,8 @@
         <img src="../assets/bj-4.png" alt="" class="bj-4">
         <div class="midheader">
           <span class="data">{{nowday}}</span>
-          <span class="headertext">嵊州市泊位负荷热力图</span>
+          <!-- <span class="headertext">嵊州市泊位负荷热力图</span> -->
+          <span class="headertext">泊位负荷热力图</span>
           <span class="time">{{nowtime}}</span>
         </div>
         <div class="midcont">
@@ -64,40 +57,24 @@
           <img src="../assets/bj-2.png" alt="" class="bj-2">
           <img src="../assets/bj-3.png" alt="" class="bj-3">
           <img src="../assets/bj-4.png" alt="" class="bj-4">
-          <span>待缴区域排行</span>
+          <span>停车用户增长</span>
           <div class="ownanalyze" id="myanalyze"></div>
-          <div class="ownanalyze" id="myanalyzenew"></div>
-        </div>
-        <div class="owe">
-          <img src="../assets/bj-1.png" alt="" class="bj-1">
-          <img src="../assets/bj-2.png" alt="" class="bj-2">
-          <img src="../assets/bj-3.png" alt="" class="bj-3">
-          <img src="../assets/bj-4.png" alt="" class="bj-4">
-          <span>TOP待缴停车场</span>
-          <div id="myowe">
-            <div class="head">
-              <span class="headarea">区域</span>
-              <span class="headpark">停车场</span>
-              <span class="headmoney">待缴金额(元)</span>
-            </div>
-            <div class="owecont">
-              <ul>
-                <li v-for="(owe,index) in owes" :key="index">
-                  <span class="owecontarea">嵊州市</span>
-                  <span class="owecontpark">{{owe.parking_name}}</span>
-                  <span class="owecontmoney">{{owe.totalMoney}}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
         </div>
         <div class="warning">
           <img src="../assets/bj-1.png" alt="" class="bj-1">
           <img src="../assets/bj-2.png" alt="" class="bj-2">
           <img src="../assets/bj-3.png" alt="" class="bj-3">
           <img src="../assets/bj-4.png" alt="" class="bj-4">
-          <span>区域追缴完成情况</span>
+          <span>停车待缴路段分析</span>
           <div id="mywarning"></div>
+        </div>
+        <div class="owe">
+          <img src="../assets/bj-1.png" alt="" class="bj-1">
+          <img src="../assets/bj-2.png" alt="" class="bj-2">
+          <img src="../assets/bj-3.png" alt="" class="bj-3">
+          <img src="../assets/bj-4.png" alt="" class="bj-4">
+          <span>区域追缴完成情况</span>
+          <div id="myowe"></div>
         </div>
       </div>
     </div>
@@ -114,10 +91,33 @@
       return {
         today: [5, 20, 36, 10, 10, 20, 35],
         yesterday: [6, 12, 25, 40, 15, 10, 26],
+        car_index: [],
+        car_date: [],
+        money_data: [],
+        money_date: [],
+        user_list:[],
+        user_date: [],
         area: [],
         areaval: [{value: [60,70,85,40,25,46,90,18,65,35,47,86,100]}],
         carkind: [{value:1548, name:'本市车辆'},{value:335, name:'外市车辆'}],
-        carnum: [
+        carnum: [],
+        income_num: [
+          {
+            name: '现金',
+            value: 0
+          },
+          {
+            name: '微信',
+            value: 0
+          },
+          {
+            name: '支付宝',
+            value: 0
+          },
+          {
+            name: '余额',
+            value: 0
+          }
         ],
         realtime: ["60", "89", "59", "70", "71", "89", "64"],
         predict: ["45", "67", "34", "90", "23", "45", "100"],
@@ -137,64 +137,36 @@
         allrecovered: [1036,3693,2962,3810,2519,1915,1748,4675,6209],
         xData: ['无名路(龙盛路-双塔大桥)','长宁路（长广路-长泰中路）','龙盛路（嵊州大道-无名路）','相公殿路(嵊州大道-官河横路','长广路（东南路-长泰西路）','经环西路（双塔大桥-达成路）','信杨路（一景路-环城南路）','商业城（北直街-官河路）','三江南街（剡兴路-四海路）'],
         owes: [],
+        owes_name: [],
+        owes_list: [],
         predicts: [],
+        recovered_max: [],
+        recovered_owe: [],
+        recovered_chase: [],
         timer: null,
         owetimer: null,
         predicttimer: null,
         url_predicts: '/its/operations/load/dateQueryOrder',
         url_load:'/its/operations/area/parking',
         url_owe:'/its/operations/not/unpaid',
-        url_line:'/its/operations/vehicle/movements'
+        url_line:'/its/operations/countParking/index',
+        url_user: '/its/operations/new/registeredUser',
+        url_income: '/its/operations/income/source',
+        url_money: '/its/operations/revenue/income',
+        url_recovered: '/its/operations/area/recovered'
       }
     },
     mounted() {
-
       this.get_map()
       this.getpredicts()
       this.getload()
       this.getmyowe()
-      this.drawLine()
-
-      this.drawanalyze()
-      this.drawwarning()
       this.nowtimes()
       this.get_line()
-
-      let that = this
-      let index = 0;
-      that.timer = setInterval(function(){
-        index = (index == 1)? 0 : index + 1;
-        if(index == 0){
-          $('#myanalyzenew').slideUp()
-          $('#myanalyze').slideDown()
-          $('#myanalyze').removeAttr('_echarts_instance_')
-          that.drawanalyze();
-        }else{
-          $('#myanalyze').slideUp()
-          $('#myanalyzenew').slideDown()
-          $('#myanalyzenew').removeAttr('_echarts_instance_')
-          that.drawanalyzenew()
-        }
-      },5000)
-      $('.ownanalyze').bind('mouseenter',function(){
-        clearInterval(that.timer)
-      })
-      $('.ownanalyze').bind('mouseleave',function(){
-        that.timer = setInterval(function(){
-          index = (index == 1)? 0 : index + 1;
-          if(index == 0){
-            $('#myanalyzenew').slideUp()
-            $('#myanalyze').slideDown()
-            $('#myanalyze').removeAttr('_echarts_instance_')
-            that.drawanalyze();
-        }else{
-            $('#myanalyze').slideUp()
-            $('#myanalyzenew').slideDown()
-            $('#myanalyzenew').removeAttr('_echarts_instance_')
-            that.drawanalyzenew()
-        }
-        },5000)
-      })
+      this.get_user_list()
+      this.get_income()
+      this.get_money()
+      this.get_recovered()
     },
     methods:{
       //地图数据
@@ -209,7 +181,7 @@
         myChart.setOption({
           animation: false,
           bmap: {
-            center: [120.840358,29.585902],
+            center: [120.140501,30.250184],
             zoom: 14,
             roam: true
           },
@@ -247,6 +219,13 @@
           data: {}
         }).then(res => {
           console.log(res)
+          this.car_index = res.data.data.map(item => {
+            return (item.sum).toFixed(2)
+          })
+          this.car_date = res.data.data.map(item => {
+            return item.click_date.split('-').slice(1,3).join('-')
+          })
+          this.drawLine()
         })
       },
       //在场车辆走势图
@@ -255,83 +234,74 @@
         let myChart = this.$echarts.init(document.getElementById('myChart'))
         myChart.setOption({
             title: { text: '' },
+            grid: {
+              left: 60,
+              right: 60
+            },
             tooltip: {
               trigger: 'axis'
             },
             legend: {
-              data:['今天','昨天'],
+              data:['停车指数'],
               textStyle: {
                 color: '#fff'
               }
             },
             toolbox: {
-                show: true,
-                feature: {
-                    dataZoom: {
-                      show: false
-                    },
-                    dataView: {readOnly: false},
-                    magicType: {type: ['line', 'bar']},
-                    restore: {
-                      show:false
-                    },
-                    saveAsImage: {
-                      show: false
-                    }
+              show: true,
+              feature: {
+                dataZoom: {
+                  show: false
+                },
+                dataView: {readOnly: false},
+                magicType: {type: ['line', 'bar']},
+                restore: {
+                  show:false
+                },
+                saveAsImage: {
+                  show: false
                 }
+              }
             },
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: ['0','4','8','12','16','20','24'],
+                data: this.car_date,
                 axisLabel: {
-                            show: true,
-                            textStyle: {
-                                color: '#fff'
-                            }
-                        }
+                  show: true,
+                  textStyle: {
+                    color: '#fff'
+                  }
+                }
             },
             yAxis: {
               type: 'value',
               axisLabel: {
-                  formatter: '{value}',
-                  textStyle: {
-                                color: '#fff'
-                            }
+                formatter: '{value}',
+                textStyle: {
+                  color: '#fff'
+                }
               },
+              splitLine: {
+                show: false
+              }
             },
             series: [
               {
-                name: '今天',
+                name: '停车指数',
                 type: 'line',
-                data: that.today,
+                data: this.car_index,
                 markPoint: {
                   data: [
-                      {type: 'max', name: '最大值'},
-                      {type: 'min', name: '最小值'}
+                    {type: 'max', name: '最大值'},
+                    {type: 'min', name: '最小值'}
                   ]
                 },
-                markLine: {
-                  data: [
-                      {type: 'average', name: '平均值'}
-                  ]
-                }
-              },
-              {
-                name: '昨天',
-                type: 'line',
-                data: that.yesterday,
-                markPoint: {
-                  data: [
-                      {type: 'max', name: '最大值'},
-                      {type: 'min', name: '最小值'}
-                  ]
-                },
-                markLine: {
-                  data: [
-                      {type: 'average', name: '平均值'}
-                  ]
-                }
+                // markLine: {
+                //   data: [
+                //     {type: 'average', name: '平均值'}
+                //   ]
+                // }
               }
             ]
         });
@@ -339,8 +309,33 @@
           myChart.resize();
         });
       },
-      //区域停泊车辆分析图表
-      drawbread(){
+      //获取收入来源
+      get_income(){
+        axios({
+          method:'post',
+          url: this.url_income,
+          headers:{
+            'content-type':'application/x-www-form-urlencoded'
+          },
+          data: {}
+        }).then(res => {
+          let data = res.data.data
+          data.forEach(item => {
+            if(item.pay_way == 0){
+              this.income_num[0].value += item.pay_money
+            }else if(item.pay_way == 1){
+              this.income_num[1].value += item.pay_money
+            }else if(item.pay_way == 2){
+              this.income_num[2].value += item.pay_money
+            }else{
+              this.income_num[3].value += item.pay_money
+            }
+          })
+          this.drawload()
+        })
+      },
+      //收入来源统计分析
+      drawload(){
         let that = this
         let myload = this.$echarts.init(document.getElementById('myload'))
         myload.setOption({
@@ -354,30 +349,14 @@
             data:[]
           },
           series: [
-            // {
-            //   name: '车辆类别',
-            //   type:'pie',
-            //   selectedMode: 'single',
-            //   radius: [0,'30%'],
-            //   label: {
-            //     normal: {
-            //       position: 'inner'
-            //     }
-            //   },
-            //   labelLine: {
-            //     normal: {
-            //       show: false
-            //     }
-            //   },
-            //   data: that.carkind
-            // },
             {
-              name: '车辆数量',
+              name: '金额',
               type:'pie',
-              radius: ['40%','55%'],
+              radius: ['40%','60%'],
+              center: ['50%', '60%'],
               label: {
                 normal: {
-                  formatter: '{b|{b}：}{c}辆{per|{d}%}  ',
+                  formatter: '{b|{b}：}{c}元{per|{d}%}',
                   borderWidth: 1,
                   borderRadius: 4,
                   rich: {
@@ -401,7 +380,7 @@
                   color:'#fff'
                 }
               },
-              data: that.carnum
+              data: this.income_num
             }
           ]
         });
@@ -409,481 +388,294 @@
           myload.resize();
         });
       },
-      //待缴排行
-      drawanalyze(){
-        let that = this
-        let myanalyze = this.$echarts.init(document.getElementById('myanalyze'))
-        let myColor = that.color1
-        myanalyze.setOption({
-          grid: {
-            left: '8%',
-            top: '1%',
-            right: '10%',
-            bottom: '1%',
-            containLabel: true
+      //获取7天的营收
+      get_money(){
+        axios({
+          method:'post',
+          url: this.url_money,
+          headers:{
+            'content-type':'application/x-www-form-urlencoded'
           },
-          xAxis: [{
-            show: false,
-          }],
-          yAxis: [
-            {
-              axisTick: 'none',
-              axisLine: 'none',
-              offset: '27',
-              axisLabel: {
-                textStyle: {
-                  color: '#ffffff',
-                  fontSize: '16',
-                }
-              },
-              data: that.circle1
-            },
-            {
-              axisTick: 'none',
-              axisLine: 'none',
-                axisLabel: {
-                    textStyle: {
-                        color: '#ffffff',
-                        fontSize: '16',
-                    }
-                },
-              data: ['','','','','']
-            },
-            {
-              name: '区域负荷指数TOP10',
-              nameGap: '50',
-              nameTextStyle: {
-                  color: '#ffffff',
-                  fontSize: '16',
-              },
-              axisLine: {
-                  lineStyle: {
-                      color: 'rgba(0,0,0,0)'
-                  }
-              },
-              data: [],
-            }
-          ],
-          series: [
-            {
-              name: '条',
-              type: 'bar',
-              yAxisIndex: 0,
-              data: that.load1,
-              label: {
-                normal: {
-                  show: true,
-                  position: 'right',
-                  textStyle: {
-                    color: '#ffffff',
-                    fontSize: '16',
-                  }
-                }
-              },
-              barWidth: 12,
-              itemStyle: {
-                normal: {
-                  color: function(params) {
-                    var num = myColor.length;
-                    return myColor[params.dataIndex % num]
-                  },
-                }
-              },
-              z:2
-            },
-          ]
-        });
-        window.addEventListener("resize",function(){
-          myanalyze.resize();
-        });
+          data: {}
+        }).then(res => {
+          console.log(res)
+          this.money_data = res.data.data.map(item => {
+            return item.sum
+          })
+          this.money_date = res.data.data.map(item => {
+            return item.click_date.split('-').slice(1,3).join('-')
+          })
+          this.drawpredict()
+        })
       },
-      //待缴排行
-      drawanalyzenew(){
-        let that = this
-        let myanalyzenew = this.$echarts.init(document.getElementById('myanalyzenew'))
-        let myColor = that.color2
-        myanalyzenew.setOption({
-          grid: {
-            left: '8%',
-            top: '1%',
-            right: '10%',
-            bottom: '1%',
-            containLabel: true
-          },
-          xAxis: [{
-            show: false,
-          }],
-          yAxis: [
-            {
-              axisTick: 'none',
-              axisLine: 'none',
-              offset: '27',
-              axisLabel: {
-                textStyle: {
-                  color: '#ffffff',
-                  fontSize: '16',
-                }
-              },
-              data: that.circle2
-            },
-            {
-              axisTick: 'none',
-              axisLine: 'none',
-                axisLabel: {
-                    textStyle: {
-                        color: '#ffffff',
-                        fontSize: '16',
-                    }
-                },
-              data: ['','','','','']
-            },
-            {
-              name: '区域负荷指数TOP10',
-              nameGap: '50',
-              nameTextStyle: {
-                  color: '#ffffff',
-                  fontSize: '16',
-              },
-              axisLine: {
-                  lineStyle: {
-                      color: 'rgba(0,0,0,0)'
-                  }
-              },
-              data: [],
-            }
-          ],
-          series: [
-            {
-              name: '条',
-              type: 'bar',
-              yAxisIndex: 0,
-              data: that.load2,
-              label: {
-                normal: {
-                  show: true,
-                  position: 'right',
-                  textStyle: {
-                    color: '#ffffff',
-                    fontSize: '16',
-                  }
-                }
-              },
-              barWidth: 12,
-              itemStyle: {
-                normal: {
-                  color: function(params) {
-                    var num = myColor.length;
-                    return myColor[params.dataIndex % num]
-                  },
-                }
-              },
-              z:2
-            },
-          ]
-        });
-        window.addEventListener("resize",function(){
-          myanalyzenew.resize();
-        });
-      },
+      //营收趋势变化
       drawpredict(){
-        let that = this
-        let mypredict = this.$echarts.init(document.getElementById('mypredict'))
-        mypredict.setOption({
-          tooltip: {
-            trigger: 'axis',
-            backgroundColor: 'rgba(67,100,247,0.8)',
-            axisPointer: {
-              type: 'shadow',
-              shadowStyle: {
-                  color: 'rgba(67,100,247,0.08)'
+        let myChart = this.$echarts.init(document.getElementById('mypredict'))
+        myChart.setOption({
+            title: { text: '' },
+            grid: {
+              left: 60,
+              right: 60
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            legend: {
+              data:['营收'],
+              textStyle: {
+                color: '#fff'
               }
             },
-          },
-          legend: {
-            data:['实时','预测'],
-             textStyle: {
-                                color: '#fff'
-                            }
-          },
-          xAxis: [{
-            axisLine: {
-              lineStyle: {
-                  color: '#666'
-              }
+            toolbox: {
+                show: true,
+                feature: {
+                    dataZoom: {
+                      show: false
+                    },
+                    dataView: {readOnly: false},
+                    magicType: {type: ['line', 'bar']},
+                    restore: {
+                      show:false
+                    },
+                    saveAsImage: {
+                      show: false
+                    }
+                }
             },
-            type: 'category',
-            axisTick: {
-              show: false,
-              alignWithLabel: true,
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: this.money_date,
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#fff'
+                    }
+                }
             },
-            data: ['0时', '4时', '8时', '12时', '16时', '20时', '24时'],
-            axisLabel: {
-                            show: true,
-                            textStyle: {
-                                color: '#fff'
-                            }
-                        }
-          }],
-          yAxis: [
-            {
+            yAxis: {
               type: 'value',
-              name: '万辆',
-              color: '#fff',
-              splitLine: {
-                  show: false
-              },
-              axisTick: {
-                  show: false
-              },
-              axisLine: {
-                  lineStyle: {
-                      color: '#666'
-                  }
-              },
-              position: 'left',
               axisLabel: {
-                            show: true,
-                            textStyle: {
-                                color: '#fff'
-                            }
-                        }
+                formatter: '{value}',
+                textStyle: {
+                  color: '#fff'
+                }
+              },
+              splitLine: {
+                show: false
+              }
             },
-          ],
-          series:[
-            {
-              name: '实时',
-              type: 'line',
-              smooth: true,
-              symbol: 'emptyCircle',
-              symbolSize: 2,
-              yAxisIndex: 0,
-              itemStyle: {
-                  color: '#01fbfe',
-              },
-              data: that.realtime
-            },
-            {
-              name: '预测',
-              type: 'line',
-              smooth: true,
-              symbol: 'emptyCircle',
-              symbolSize: 2,
-              yAxisIndex: 0,
-              itemStyle: {
-                  color: 'rgb(214,127,143)',
-              },
-              data: that.predict
-            },
-            {
-              name: '辅助',
-              type: 'bar',
-              barWidth: 10,
-              yAxisIndex: 0,
-              stack: '总人数',
-              itemStyle: {
-                  normal: {
-                      barBorderColor: 'rgba(0,0,0,0)',
-                      color: 'rgba(0,0,0,0)',
-                  },
-                  emphasis: {
-                      barBorderColor: 'rgba(0,0,0,0)',
-                      color: 'rgba(0,0,0,0)'
-                  }
-              },
-              data: that.auxiliary
-            },
-            {
-              name: '差值',
-              type: 'bar',
-              stack: '总人数',
-              yAxisIndex: 0,
-              barWidth: 10,
-              itemStyle: {
-                  color: 'rgb(86,135,196)',
-              },
-              label: {
-                  normal: {
-                      show: false,
-                      position: 'top'
-                  }
-              },
-              data: that.balance
-            }
-          ]
+            series: [
+              {
+                name: '营收',
+                type: 'line',
+                data: this.money_data,
+                markPoint: {
+                  data: [
+                      {type: 'max', name: '最大值'},
+                      {type: 'min', name: '最小值'}
+                  ]
+                },
+                markLine: {
+                  data: [
+                      {type: 'average', name: '平均值'}
+                  ]
+                }
+              }
+            ]
         });
         window.addEventListener("resize",function(){
-          mypredict.resize();
+          myChart.resize();
         });
       },
-      //追缴完成情况
+      // 获取停车用户状况
+      get_user_list(){
+        axios({
+          method:'post',
+          url: this.url_user,
+          headers:{
+            'content-type':'application/x-www-form-urlencoded'
+          },
+          data: {}
+        }).then(res => {
+          console.log(res)
+          this.user_list = res.data.data.map(item => {
+            return item.sum
+          })
+          this.user_date = res.data.data.map(item => {
+            return item.click_date.split('-').slice(1,3).join('-')
+          })
+          this.drawanalyze()
+        })
+      },
+      //停车用户情况
+      drawanalyze(){
+        let myChart = this.$echarts.init(document.getElementById('myanalyze'))
+        myChart.setOption({
+            title: { text: '' },
+            grid: {
+              left: 60,
+              right: 60
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            legend: {
+              data:['新增用户'],
+              textStyle: {
+                color: '#fff'
+              }
+            },
+            toolbox: {
+              show: true,
+              feature: {
+                dataZoom: {
+                  show: false
+                },
+                dataView: {readOnly: false},
+                magicType: {type: ['line', 'bar']},
+                restore: {
+                  show:false
+                },
+                saveAsImage: {
+                  show: false
+                }
+              }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: this.user_date,
+                axisLabel: {
+                  show: true,
+                  textStyle: {
+                    color: '#fff'
+                  }
+                }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                formatter: '{value}',
+                textStyle: {
+                  color: '#fff'
+                }
+              },
+              splitLine: {
+                show: false
+              }
+            },
+            series: [
+              {
+                name: '新增用户',
+                type: 'line',
+                data: this.user_list,
+                markPoint: {
+                  data: [
+                    {type: 'max', name: '最大值'},
+                    {type: 'min', name: '最小值'}
+                  ]
+                },
+                // markLine: {
+                //   data: [
+                //     {type: 'average', name: '平均值'}
+                //   ]
+                // }
+              }
+            ]
+        });
+        window.addEventListener("resize",function(){
+          myChart.resize();
+        });
+      },
+      //停车待缴路段分析
       drawwarning(){
         let that = this
         let mywarning = this.$echarts.init(document.getElementById('mywarning'))
         mywarning.setOption({
           tooltip:{
-            trigger: "axis",
-            axisPointer: {
-              type: "shadow",
-              textStyle: {
-                color: "#fff"
-              }
-            }
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
           },
-          grid: {
-            "borderWidth": 0,
-            "top": 10,
-            "bottom": 65,
-            textStyle: {
-              color: "#fff"
-            }
-          },
-          legend: {
-            x: '15%',
-            top: '10%',
-            textStyle: {
-              color: '#90979c',
-            },
-            'data': ['已追回', '未追回', '平均']
-          },
-          calculable: true,
-          xAxis: [{
-            type: "category",
-            show: false,
-            axisLine: {
-              lineStyle:{
-                color: '#90979c'
-              }
-            },
-            splitLine: {
-              show:false
-            },
-            axisTick: {
-              show:false
-            },
-            splitArea: {
-              show:false
-            },
-            axisLabel: {
-              interval: 0
-            },
-            data: that.xData
-          }],
-          yAxis: [{
-            type: "value",
-            splitLine: {
-              show:false
-            },
-            axisLine: {
-              lineStyle:{
-                color: '#90979c'
-              }
-            },
-            axisTick: {
-              show:false
-            },
-            axisLabel: {
-              interval: 0
-            },
-            splitArea: {
-              show:false
-            }
-          }],
-          dataZoom: [{
-            show: true,
-            height: 20,
-            xAxisIndex: [0],
-            bottom: 20,
-            start: 10,
-            end: 80,
-            handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
-            handleSize: '110%',
-            handleStyle: {
-              color:"#d3dee5",
-            },
-            textStyle: {
-              color:"#fff"
-            },
-            borderColor:"#90979c"
-          },
-          {
-            "type": "inside",
-            "show": true,
-            "height": 15,
-            "start": 1,
-            "end": 35
-          }],
-          series: [
+          series : [
             {
-              name: '已追回',
-              type: 'bar',
-              stack: '总量',
-              barMaxWidth: 35,
-              barGap: '10%',
+              name: '待缴金额(元)',
+              type: 'pie',
+              radius : '60%',
+              center: ['50%', '50%'],
+              data: this.owes_list,
               itemStyle: {
-                normal: {
-                  color: "rgba(0,191,183,1)",
-                  label: {
-                    show: true,
-                    textStyle: {
-                      color: "#fff"
-                    },
-                    position: "insideTop",
-                    formatter: function (p) {
-                      return p.value > 0 ? (p.value) : '';
-                    }
-                  }
+                emphasis: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
                 }
-              },
-              data: that.recovered
-            },
-            {
-              name: '未追回',
-              type: 'bar',
-              stack: '总量',
-              itemStyle: {
-                normal: {
-                  color: "rgba(255,144,128,1)",
-                  barBorderRadius: 0,
-                  label: {
-                    show: true,
-                    position: "top",
-                    formatter: function (p) {
-                      return p.value > 0 ? (p.value) : '';
-                    }
-                  }
-                }
-              },
-              data: that.norecovered
-            },
-            {
-              name: '总数',
-              type: 'line',
-              stack: '总量',
-              symbolSize: 5,
-              symbol:'circle',
-              itemStyle: {
-                normal: {
-                  color: "rgba(252,230,48,1)",
-                  barBorderRadius: 0,
-                  label: {
-                    show: true,
-                    textStyle: {
-                      color: "#fff"
-                    },
-                    position: "insideTop",
-                    formatter: function (p) {
-                      return p.value > 0 ? (p.value) : '';
-                    }
-                  }
-                }
-              },
-              data: that.allrecovered
+              }
             }
           ]
         })
         window.addEventListener("resize",function(){
           mywarning.resize();
         });
+      },
+      // 获取区域追缴完成情况
+      get_recovered(){
+        this.recovered_owe = []
+        this.recovered_max = []
+        this.recovered_chase = []
+        axios({
+          method:'post',
+          url: this.url_recovered,
+          headers:{
+            'content-type':'application/x-www-form-urlencoded'
+          },
+          data: {}
+        }).then(res => {
+          console.log(res)
+          if (res.data.code == 0) {
+            let list = res.data.data
+            list.forEach(item => {
+              let ele = {
+                name: item.parking_name,
+                max: item.owe
+              }
+              this.recovered_max.push(ele)
+              this.recovered_owe.push(item.owe)
+              this.recovered_chase.push(item.chase)
+            })
+            this.drawown()
+          }
+        })
+      },
+      //区域追缴完成分析
+      drawown(){
+        let myChart = this.$echarts.init(document.getElementById('myowe'))
+        myChart.setOption({
+          tooltip: {},
+          radar: {
+            center: ['50%', '50%'],
+            // shape: 'circle',
+            indicator: this.recovered_max
+          },
+          series: [{
+            name: '欠费VS追缴',
+            type: 'radar',
+            // areaStyle: {normal: {}},
+            data : [
+              {
+                value : this.recovered_chase,
+                name : '追缴金额'
+              },
+              {
+                value : this.recovered_owe,
+                name : '欠费金额'
+              }
+            ]
+          }]
+        })
+        window.addEventListener("resize",function(){
+          myChart.resize();
+        })
       },
       goToMenu(){
         this.$router.push({name:'menuLink'})
@@ -929,27 +721,6 @@
           }
         })
       },
-      //获取TOP负荷停车场轮播
-      predicts_lunbo(){
-        let that = this
-        let no = 0
-        let dic = this.predicts.length - 5
-        that.predicttimer = setInterval(function(){
-          no = (no == dic)? 0 : no + 1;
-          let height = $('.predictscont ul li').height()
-          $('.predictscont ul').animate({top: -height*no + 'px'})
-        },5000)
-        $('.predictscont ul').bind('mouseenter',function(){
-          clearInterval(that.predicttimer)
-        })
-        $('.predictscont ul').bind('mouseleave',function(){
-          that.predicttimer = setInterval(function(){
-          no = (no == dic)? 0 : no + 1;
-            let height = $('.predictscont ul li').height()
-            $('.predictscont ul').animate({top: -height*no + 'px'})
-          },5000)
-        })
-      },
       //获取区域停泊车辆分析数据
       getload(){
         axios({
@@ -966,7 +737,6 @@
               this.carnum.push({value:ele.inthe,name:ele.parking_name})
             }
           });
-          this.drawbread();
         })
       },
       //获取TOP待缴车场数据
@@ -984,39 +754,20 @@
             this.owes = data.sort(function(a,b){
               return b.totalMoney - a.totalMoney
             })
-            if(this.owes.length > 5){
-              this.myowe_lunbo()
-            }
+            this.owes_name = this.owes.map(item => {
+              return item.parking_name
+            })
+            this.owes.forEach(item => {
+              let data = {
+                name: item.parking_name,
+                value: item.totalMoney
+              }
+              this.owes_list.push(data)
+            })
+            this.drawwarning()
           }
         })
-        // this.myowe_lunbo()
       },
-      //TOP待缴车场轮播
-      myowe_lunbo(){
-        let that = this
-        let num = 0
-        let dic = this.owes.length - 5
-        that.owetimer = setInterval(function(){
-          num = (num == dic)? 0 : num + 1;
-          let height = $('.owecont ul li').height()
-          $('.owecont ul').animate({top: -height*num + 'px'})
-        },5000)
-        $('.owecont ul').bind('mouseenter',function(){
-          clearInterval(that.owetimer)
-        })
-        $('.owecont ul').bind('mouseleave',function(){
-          that.owetimer = setInterval(function(){
-          num = (num == dic)? 0 : num + 1;
-            let height = $('.owecont ul li').height()
-            $('.owecont ul').animate({top: -height*num + 'px'})
-          },5000)
-        })
-      }
-    },
-    beforeDestroy(){
-      clearInterval(this.timer)
-      clearInterval(this.owetimer)
-      clearInterval(this.predicttimer)
     }
   }
 </script>
@@ -1186,8 +937,8 @@
 }
 #myowe{
   width: 90%;
-  height: 85%;
-  margin: 14% auto 0;
+  height: 100%;
+  margin: 0 auto 0;
 }
 .head{
   width: 90%;

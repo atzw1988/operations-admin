@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-02 18:50:27
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="row">
     <div class="total">
@@ -11,8 +18,8 @@
     </div>
     <div class="select">
       <el-select v-model="rec_consumptions" class="selconsumption" placeholder="充值渠道">
-        <el-option value="appType">APP</el-option>
-        <el-option value="smallType">微信小程序</el-option>
+        <el-option label="APP" value="appType">APP</el-option>
+        <el-option label="微信小程序" value="smallType">微信小程序</el-option>
       </el-select>
       <div class="data-interval">
         <div class="block">
@@ -27,7 +34,6 @@
           </el-date-picker>
         </div>
         <div class="orderno">
-          <span style="float:left">订单编号:</span>
           <el-input style="width:120px;float:left"
             placeholder="输入订单号"
             v-model="order_no"
@@ -35,7 +41,6 @@
           </el-input>
         </div>
         <div class="username">
-          <span style="float:left">账户:</span>
           <el-input style="width:120px;float:left"
             placeholder="输入帐户名"
             v-model="user_name"
@@ -48,13 +53,13 @@
     <div class="detail">
       <el-table
         :summary-method="getSummaries"
-        show-summary
         :data="list_detail"
         tooltip-effect="dark"
         style="width: 100%">
         <el-table-column
           label="序号"
-          type="index">
+          type="index"
+          width="80">
         </el-table-column>
         <el-table-column
           prop="pay_id"
@@ -72,17 +77,17 @@
           label="充值金额(元)">
         </el-table-column>
         <el-table-column
-          label="支付方式">
-          <template slot-scope="scope">
-            <span v-if="scope.row.top_up == 1">微信</span>
-            <span v-if="scope.row.top_up == 2">支付宝</span>
-          </template>
-        </el-table-column>
-        <el-table-column
           label="充值渠道">
           <template slot-scope="scope">
             <span v-if="scope.row.platform == 2">APP</span>
             <span v-if="scope.row.platform == 1">小程序</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="支付方式">
+          <template slot-scope="scope">
+            <span v-if="scope.row.top_up == 1">微信</span>
+            <span v-if="scope.row.top_up == 2">支付宝</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -201,6 +206,7 @@ export default {
   width: 100%;
   height: 100%;
   color: #000;
+  background-color: #f5f5f5 !important;
 }
 .total{
   width: 100%;
@@ -249,22 +255,21 @@ export default {
   float: left;
 }
 .data-interval{
-  width: 900px;
   height: 40px;
   float: left;
   line-height: 40px;
   font-size: 20px;
-  margin-left: 20px;
+  margin-left: 10px;
   margin-top: 10px;
 }
 .orderno{
-  width: 220px;
+  width: 120px;
   height: 40px;
   float: left;
   margin-left: 10px;
 }
 .username{
-  width: 180px;
+  width: 130px;
   height: 40px;
   float: left;
   margin-left: 10px;
@@ -301,10 +306,10 @@ export default {
 }
 /* 分页控制 */
 .el-pagination{
-  width: 580px;
+  /* width: 580px; */
   height: 30px;
   position: absolute;
-  bottom: 7px;
+  bottom: -30px;
   right: 10px;
 }
 .block{

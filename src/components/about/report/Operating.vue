@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-02 18:48:20
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="row">
     <!-- 区域和时间维度 -->
@@ -11,14 +18,14 @@
             :value="item.id">
           </el-option>
         </el-select>
-        <el-select v-model="sel_park" placeholder="--全部停车场--" class="parkselect" clearable>
+        <!-- <el-select v-model="sel_park" placeholder="--全部停车场--" class="parkselect" clearable>
           <el-option
             v-for="item in parks_list"
             :key="item.parking_name"
             :label="item.parking_name"
             :value="item.parking_name">
           </el-option>
-        </el-select>
+        </el-select> -->
       </div>
       <!-- <div class="datadimension">
         <div class="radio-box" v-for="(item,index) in radios" :key="item.id">
@@ -26,7 +33,7 @@
           <input v-model="radio" :value="item.value" class="input-radio" :checked='item.isChecked'  @click="check(index)" type="radio">{{item.label}}
         </div>
       </div> -->
-      <button class="export" @click="export_op">导出</button>
+      <!-- <button class="export" @click="export_op">导出</button> -->
     </div>
     <!-- 事件区间选择 -->
     <div class="datesearch">
@@ -44,8 +51,8 @@
             v-model="time_interval"
             type="daterange"
             range-separator="-"
-            format='yyyy-MM-dd HH:mm:ss'
-            value-format='yyyy/MM/dd HH:mm:ss'
+            format='yyyy-MM-dd'
+            value-format='yyyy/MM/dd'
             @change='use_mytime'
             start-placeholder="开始日期"
             end-placeholder="结束日期">
@@ -56,7 +63,7 @@
       <el-button type="success" class="form" @click="toform">{{fromtext}}</el-button>
     </div>
     <!-- 环比图 -->
-    <div v-if="isShow" class="sequential">
+    <!-- <div v-if="isShow" class="sequential">
       <div class="total">
         <div class="header_text">
           <div class="text">营业收入(元)</div>
@@ -105,7 +112,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- 图表 -->
     <div v-if="isShow" id="chart" class="chart">
       <!-- <div class="switch_cont">
@@ -117,6 +124,7 @@
       <el-table
         :data="list_detail"
         show-summary
+        :summary-method="getSummaries"
         style="width: 100%">
         <el-table-column
           label="序号"
@@ -143,7 +151,7 @@
           prop="pay_rate"
           label="付费率">
         </el-table-column>
-        <el-table-column label="PDA">
+        <!-- <el-table-column label="PDA">
           <el-table-column
             prop="pda_income"
             label="营业收入">
@@ -184,15 +192,24 @@
             prop="small_owe"
             label="欠费金额">
           </el-table-column>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <el-pagination
         @current-change="page_change"
+        @size-change="handleSizeChange"
         :current-page="pageIndex"
+        :page-sizes="[10, 20, 30, 40]"
         :page-size='ps'
-        layout="total, prev, pager, next, jumper"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="list_num">
       </el-pagination>
+      <div class="notice">
+        <p>费用结算说明:</p>
+        <p class="n_detail">营业收入：当天产生的订单总额（含未缴和已缴）</p>
+        <p class="n_detail">营业实收：当天已付款的订单额 (包含当天产生已付款、之前欠费今天付款的订单)</p>
+        <p class="n_detail">欠费金额：当天产生的订单额中未缴的金额</p>
+        <p class="n_detail">付费率：营业实收/营业收入</p>
+      </div>
     </div>
   </div>
 </template>
@@ -338,7 +355,14 @@ export default {
       params.append('ps', this.ps)
       params.append('sTime', this.time_interval[0])
       params.append('eTime', this.time_interval[1])
-      this.get_excel_list(params)
+      this.get_my_list(params,this.url_excel,(res) => {
+        console.log(res)
+        res.data.data.data.forEach(item => {
+          item.pay_rate = (item.pay_rate * 100).toFixed(2) + '%'
+        })
+        this.list_num = res.data.data.tr
+        this.list_detail = res.data.data.data
+      })
     },
     //获取默认图表数据
     get_my_echart(){
@@ -351,6 +375,25 @@ export default {
     //换页
     page_change(val){
       this.pageIndex = val
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('ps', this.ps)
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      this.get_my_list(params,this.url_excel,(res) => {
+        console.log(res)
+        res.data.data.data.forEach(item => {
+          item.pay_rate = (item.pay_rate * 100).toFixed(2) + '%'
+        })
+        this.list_num = res.data.data.tr
+        this.list_detail = res.data.data.data
+      })
+    },
+    //切换每页条数
+    handleSizeChange(val){
+      console.log(val)
+      this.pageIndex = 1
+      this.ps = val
       let params = new URLSearchParams();
       params.append('pageIndex', this.pageIndex);
       params.append('ps', this.ps)
@@ -460,7 +503,14 @@ export default {
       params.append('sTime', this.time_interval[0])
       params.append('eTime', this.time_interval[1])
       params.append('ps', this.ps)
-      this.get_excel_list(params)
+      this.get_my_list(params,this.url_excel,(res) => {
+        console.log(res)
+        res.data.data.data.forEach(item => {
+          item.pay_rate = (item.pay_rate * 100).toFixed(2) + '%'
+        })
+        this.list_num = res.data.data.tr
+        this.list_detail = res.data.data.data
+      })
       let paramsdata = new URLSearchParams();
       paramsdata.append('pageIndex', this.pageIndex);
       paramsdata.append('sTime', this.time_interval[0])
@@ -518,7 +568,7 @@ export default {
           textStyle: {
             color: '#90979c',
           },
-          'data': ['营收收入', '营业实收', '营业欠费','付费率']
+          'data': ['营业收入', '营业实收', '营业欠费','付费率']
         },
         calculable: true,
         xAxis: [{
@@ -597,7 +647,7 @@ export default {
         }],
         series: [
           {
-            name: '营收收入',
+            name: '营业收入',
             type: 'bar',
             barMaxWidth: 35,
             barGap: '10%',
@@ -635,7 +685,7 @@ export default {
                 }
               }
             },
-            data: that.recoveredsequen
+            data: that.norecovered
           },
           {
             name: '营业欠费',
@@ -654,7 +704,7 @@ export default {
                 }
               }
             },
-            data: that.norecovered
+            data: that.recoveredsequen
           },
           {
             name: '付费率',
@@ -726,6 +776,15 @@ export default {
     },
     //搜索
     sel_btn(){
+      if (this.sel_aere != 0) {
+        this.$notify({
+          title: '温馨提示',
+          message: '所选区域无数据',
+          type: 'warning',
+          offset: 100
+        })
+        return
+      }
       this.xData = []
       this.recovered = []
       this.norecovered = []
@@ -752,19 +811,71 @@ export default {
       paramsdata.append('eTime', this.time_interval[1])
       this.get_echart_list(paramsdata)
     },
+    getSummaries(param){
+      const { columns, data } = param;
+      const sums = [];
+      let a = 0
+      let b = 0
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '当页合计';
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]))
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+          sums[index] += ' 元';
+        } else {
+          sums[index] = '';
+        }
+        if (index === 2) {
+          a = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0)
+        }
+        if (index === 3) {
+          b = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0)
+        }
+        if (index === 5) {
+          console.log(b,a)
+          sums[index] = ((b/a)*100).toFixed(2) + "%"
+        }
+      });
+
+      return sums
+    }
   },
 }
 </script>
 <style scoped>
 #row{
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   background: #f5f5f5;
   color: #000;
 }
 .dimension{
   width: 100%;
-  height: 120px;
+  height: 60px;
   position: relative;
   background: #fff;
 }
@@ -773,7 +884,7 @@ export default {
   height: 40px;
   margin-left: 5%;
   position: absolute;
-  top: 20px;
+  top: 10px;
 }
 .aereselect,.parkselect{
   width: 200px;
@@ -940,7 +1051,7 @@ export default {
 }
 .chart{
   width: 100%;
-  height: 415px;
+  height: 655px;
   margin-top: 30px;
   position: relative;
   background: #fff;
@@ -957,6 +1068,7 @@ export default {
   margin-top: 20px;
   background: #fff;
   position: relative;
+  margin-bottom: 40px;
 }
 .table>>>.is-leaf{
   text-align: center;
@@ -974,11 +1086,22 @@ export default {
 }
 /* 分页控制 */
 .el-pagination{
-  width: 580px;
+  /* width: 580px; */
   height: 30px;
   position: absolute;
-  bottom: -35px;
+  bottom: 80px;
   right: 80px;
+}
+.notice{
+  /* position: absolute; */
+  margin-top: 30px;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: left;
+  margin-left: 50px;
+}
+.n_detail{
+  margin-bottom: 0;
 }
 .switch_cont{
   position: absolute;

@@ -1,12 +1,19 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-02 18:30:59
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
-  <div class="row">
+  <div id="row">
     <div class="opera">
       <div class="header">
         <div class="headertext">
-          <span>区域内违停与空泊位对比分析</span>
+          <span>区域内空泊位对比分析</span>
         </div>
         <div class="input">
-          <div class="block" >
+          <!-- <div class="block" >
             <el-date-picker
               v-model="time_interval"
               type="daterange"
@@ -17,7 +24,7 @@
           </div>
           <select name="distance" id="distance">
             <option value="两公里内">两公里内</option>
-          </select>
+          </select> -->
         </div>
       </div>
       <div class="content">
@@ -41,31 +48,14 @@
                     <span style="width:70px">剩余泊位数</span>
                   </li>
                   <li style="border-top:1px solid #bbd4e7" v-for="(park,index) in park_list" :key="index">
-                    <span style="width:40px">{{index+1}}</span>
-                    <span style="width:240px">{{park[2].name}}</span>
-                    <span style="width:70px">{{park[2].maxCount}}</span>
-                    <span style="width:70px">{{park[2].kyCount}}</span>
+                    <span :class="{active:index == 0}" style="width:40px">{{index+1}}</span>
+                    <span :class="{active:index == 0}" style="width:240px">{{park[2].name}}</span>
+                    <span :class="{active:index == 0}" style="width:70px">{{park[2].maxCount}}</span>
+                    <span :class="{active:index == 0}" style="width:70px">{{park[2].kyCount}}</span>
                   </li>
                 </ul>
               </div>
             </div>
-            <!-- <div class="del_down">
-              <span>违停信息</span>
-              <div>
-                <ul>
-                  <li style="background: #bbd4e7;border-top-right-radius: 10px;border-top-left-radius: 10px">
-                    <span style="width:40px">序号</span>
-                    <span style="width:300px">违停停车场名称</span>
-                    <span style="width:80px">违停车辆数</span>
-                  </li>
-                  <li style="border-top:1px solid #bbd4e7" v-for="(vol,index) in vol_list" :key="index">
-                    <span style="width:40px">{{index+1}}</span>
-                    <span style="width:300px">{{vol.name}}</span>
-                    <span style="width:80px">{{vol.num}}</span>
-                  </li>
-                </ul>
-              </div>
-            </div> -->
           </div>
           <div class="map" id="map">
           </div>
@@ -137,9 +127,10 @@ export default {
         },
         data:{}
       }).then(res => {
+        console.log(res)
         let data = res.data.data
         data.sort((a,b) => {
-          return a.loads - b.loads
+          return b.loads - a.loads
         })
         this.highcircle = res.data.data.map(element => {
           return element.parking_name
@@ -169,7 +160,7 @@ export default {
           return element.parking_name
         });
         this.lowval = res.data.data.sort(function(a,b){
-          return b.loads - a.loads
+          return a.loads - b.loads
         }).map(element => {
           if(element.loads){
             return element.loads
@@ -620,10 +611,14 @@ export default {
             let point = new BMap.Point(params.value[0], params.value[1])
             that.detail_show = true
             that.data_new = that.data.filter(function(item){
-              return that.get_dis(params.value[0],params.value[1],item[0],item[1]) < 2
+              item.dis = that.get_dis(params.value[0],params.value[1],item[0],item[1])
+              return item.dis < 2
             })
+            that.data_new = that.data_new.sort((a, b) => {
+              return a.dis - b.dis
+            })
+            console.log(that.data_new)
             that.park_list = that.data_new.slice(0,5)
-            console.log(that.park_list)
             that.drawmapnew(point)
           })
         }
@@ -691,7 +686,7 @@ export default {
             },
             itemStyle: {
               normal: {
-                color: '#d0570e',
+                color: '#34da62',
                 barBorderRadius: 10,
               }
             }
@@ -749,7 +744,7 @@ export default {
             },
             itemStyle: {
               normal: {
-                color: '#34da62',
+                color: '#d0570e',
                 barBorderRadius: 10,
               }
             }
@@ -764,6 +759,10 @@ export default {
 }
 </script>
 <style scoped>
+.row{
+  width: 100%;
+  margin: 0 !important;
+}
 .opera{
   width: 100%;
   height: 904px;
@@ -963,5 +962,8 @@ export default {
 }
 .block{
   float: left;
+}
+.active{
+  color: #d0570e;
 }
 </style>

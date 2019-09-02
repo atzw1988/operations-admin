@@ -1,20 +1,27 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-02 18:48:38
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div class="content">
-    <div class="region">
+    <!-- <div class="region">
       <select class="regionslt">
         <option value="">--请选择--</option>
         <option v-for="item in region_list">{{item}}</option>
 
       </select>
       <span class="regionText">区域</span>
-    </div>
-    <div class="area">
+    </div> -->
+    <!-- <div class="area">
       <select class="areaslt">
         <option value="">--请选择--</option>
         <option v-for="item in area_list">{{item.parking_name}}</option>
       </select>
       <span class="areaText">片区</span>
-    </div>
+    </div> -->
     <div class="search">
       <input type="text" v-model="parkname" placeholder="请输入路段名称">
       <button @click="search" class="btn" style="background:rgb(57, 102, 252);">搜索</button>
@@ -27,7 +34,8 @@
       <ul>
         <li v-for="road in roads" :key="road.parking_name">
           <h6 v-on:click='toroad(road)'>{{road.parking_name}}</h6>
-          <span>泊位数量：剩余{{road.kyCount}}个，总共{{road.maxCount}}个</span>
+          <span class="yc_de">泊位状态：正常{{road.maxCount - road.abnormal_count}}个，离线{{road.abnormal_count}}个</span>
+          <span class="ky_de">泊位数量：空闲{{road.kyCount}}个，总共{{road.maxCount}}个</span>
         </li>
       </ul>
       <div class="button">
@@ -84,6 +92,7 @@ export default {
         },
         data: params
       }).then(res => {
+        console.log(res)
         this.roads = res.data.data.data
         this.pageindex = res.data.data.pc
         this.allps = res.data.data.tp
@@ -109,10 +118,18 @@ export default {
         },
         data: params
       }).then(res => {
-        this.roads = res.data.data.data
-        this.pageindex = res.data.data.pc
-        this.allps = res.data.data.tp
-        this.roadnum = res.data.data.tr
+        console.log(res)
+        if (res.data.success) {
+          this.roads = res.data.data.data
+          this.pageindex = res.data.data.pc
+          this.allps = res.data.data.tp
+          this.roadnum = res.data.data.tr
+        } else {
+          this.roads = []
+          this.roadnum = 0
+          this.pageindex = 1
+          this.allps = 0
+        }
       })
     },
     forward(){
@@ -224,7 +241,12 @@ select{
   margin: 0 0 0 15px;
   cursor: pointer;
 }
-.detail>ul>li>span{
+.yc_de{
+  font-size: 13px;
+  display: block;
+  margin: 5px 0 5px 30px;
+}
+.ky_de{
   font-size: 13px;
   display: block;
   margin: 5px 0 20px 30px;

@@ -196,7 +196,7 @@ export default {
 .cont{
   width: 600px;
   height: 240px;
-  border: 1px solid rgb(151, 151, 151);
+  /* border: 1px solid rgb(151, 151, 151); */
   position: absolute;
   top: 150px;
   left: 50%;

@@ -1,14 +1,23 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-02 18:46:23
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="row">
     <div class="header">
       <div class="headertitle">
         <div class="roadname">
           <img src="../assets/tingchechang1.png" alt="">
-          <span>{{roadname}}</span>
+          <span style="margin-right:50px;">{{roadname}}</span>
+          <div class="timer">{{time_num}}秒后刷新车位</div>
         </div>
         <div class="parknum">
           <span class="freenum">
-            剩<a href="javascript:void(0)">{{freenum}}</a>空车位
+            离线车位<a style="color:red" href="javascript:void(0)">{{unnum}}</a>个&nbsp;&nbsp;&nbsp;&nbsp;
+            空闲车位<a href="javascript:void(0)">{{freenum}}</a>个
           </span>
           <span class="allnum">
             总车位<a href="javascript:void(0)">{{allnum}}</a>个
@@ -31,10 +40,16 @@
           <div class="park upparks">
             <ul class="uppark">
               <li class="parkimg" v-for="uppark in upparks" :key="uppark.parkno">
-                <div><div v-if="uppark.status != '0'"></div></div>
+                <div :class="{abnormal:uppark.magnetic_state == 1}"><div v-if="uppark.status != '0'"></div></div>
                 <span>{{uppark.parking_no}} <h5 v-if="uppark.status != '0'">有车</h5><h5 v-if="uppark.status == '0'">无车</h5></span>
-                <span class="text">电量：<h6>100%</h6></span>
-                <span class="text">电压：<h6>3.6伏</h6></span>
+                <span class="text">电容电压：
+                  <h6>{{uppark.cell_voltage.toFixed(2)}}伏</h6>
+                  <!-- <h6>3.6伏</h6> -->
+                  <h6 v-if="uppark.magnetic_state == 1" style="color:#d81e06">&nbsp;车位离线</h6>
+                </span>
+                <span class="text">电池电压：<h6>{{uppark.vol.toFixed(2)}}伏</h6></span>
+                <!-- <span class="text">电池电压：<h6>3.6伏</h6></span> -->
+                <span class="text">信号值：<h6>{{uppark.signal_of}}</h6></span>
               </li>
             </ul>
           </div>
@@ -64,10 +79,16 @@
           <div class="park downparks">
             <ul class="downpark">
               <li class="parkimg" v-for="downpark in downparks" :key="downpark.parkno">
-                <div><div v-if="downpark.status != '0'"></div></div>
+                <div :class="{abnormal:downpark.magnetic_state == 1}"><div v-if="downpark.status != '0'"></div></div>
                 <span>{{downpark.parking_no}} <h5 v-if="downpark.status != '0'">有车</h5><h5 v-if="downpark.status == '0'">无车</h5></span>
-                <span class="text">电量：<h6>100%</h6></span>
-                <span class="text">电压：<h6>3.6伏</h6></span>
+                <span class="text">电容电压：
+                  <h6>{{downpark.cell_voltage.toFixed(2)}}伏</h6>
+                  <!-- <h6>3.6伏</h6> -->
+                  <h6 v-if="downpark.magnetic_state == 1" style="color:#d81e06">&nbsp;车位离线</h6>
+                </span>
+                <span class="text">电池电压：<h6>{{downpark.vol.toFixed(2)}}伏</h6></span>
+                <!-- <span class="text">电池电压：<h6>3.6伏</h6></span> -->
+                <span class="text">信号值：<h6>{{downpark.signal_of}}</h6></span>
               </li>
             </ul>
           </div>
@@ -84,14 +105,17 @@ export default {
   data() {
     return {
       roadname: '',
-      freenum: '28',
-      allnum: '44',
+      freenum: 0,
+      allnum: 0,
+      unnum: 0,
       region: '嵊州市',
       area: '嵊州市',
       upfristnum: '1',
       downfristnum: '1',
       upparks: [],
       downparks: [],
+      timer: null,
+      time_num: 60,
       url:'/its/operations/parking/parkNo'
     };
   },
@@ -105,56 +129,82 @@ export default {
 
   },
   mounted() {
-    this.roadname = window.localStorage.getItem('parkname')
-    let parkno = window.localStorage.getItem('parkno')
-    let params = new URLSearchParams();
-    params.append('parkingNo', parkno);
-    axios({
-      method: 'post',
-      url:this.url,
-      headers:{
-        'content-type':'application/x-www-form-urlencoded'
-      },
-      data: params
-    }).then(res => {
-      console.log(res)
-      let num = 0
-      let parks = res.data.data
-      let len = parks.length
-      let a = parks.length/2
-      this.allnum = len
-      for(var i = 0;i < len; i++){
-        if(parks[i].status == 1){
-          num ++
-        }
-        if (i<a) {
-          this.upparks.push(parks[i])
-        }else{
-          this.downparks.push(parks[i])
-        }
-        this.freenum = len - num
-      }
-    })
-    let that = this
-    $(function(){
-      $('.upparks').scroll(function(){
-        let left = $('.upparks').scrollLeft()
-        let width = $('.park').width()
-        let num = that.upparks.length*240 - $('.park').width()
-        that.upfristnum = Math.ceil(left/(num/(that.upparks.length-(width/240))))
-      })
-      $('.downparks').scroll(function(){
-        let left = $('.downparks').scrollLeft()
-        console.log(left)
-
-        let width = $('.park').width()
-        console.log(width)
-        let num = that.downparks.length*240 - $('.park').width()
-        that.downfristnum = Math.ceil(left/(num/(that.downparks.length-(width/240))))
-      })
-    })
+    this.get_park_list()
+    this.time()
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
   },
   methods: {
+    //定时器
+    time () {
+      this.timer = setInterval(() => {
+        if (this.time_num > 0) {
+          this.time_num --
+        } else {
+          this.time_num = 60
+          this.get_park_list()
+        }
+      }, 1000);
+    },
+    // 获取车位详情
+    get_park_list () {
+      this.upparks = []
+      this.downparks = []
+      this.roadname = window.localStorage.getItem('parkname')
+      let parkno = window.localStorage.getItem('parkno')
+      let params = new URLSearchParams();
+      params.append('parkingNo', parkno);
+      axios({
+        method: 'post',
+        url:this.url,
+        headers:{
+          'content-type':'application/x-www-form-urlencoded'
+        },
+        data: params
+      }).then(res => {
+        console.log(res)
+        let num = 0
+        let unnum = 0
+        let parks = res.data.data
+        let len = parks.length
+        let a = parks.length/2
+        this.allnum = len
+        for(var i = 0;i < len; i++){
+          if(parks[i].status == 1){
+            num ++
+          }
+          if(parks[i].magnetic_state == 1){
+            unnum++
+          }
+          if (i<a) {
+            this.upparks.push(parks[i])
+          }else{
+            this.downparks.push(parks[i])
+          }
+          this.unnum = unnum
+          this.freenum = len - num
+        }
+      })
+      let that = this
+      $(function(){
+        $('.upparks').scroll(function(){
+          let left = $('.upparks').scrollLeft()
+          let width = $('.park').width()
+          let num = that.upparks.length*240 - $('.park').width()
+          that.upfristnum = Math.ceil(left/(num/(that.upparks.length-(width/240))))
+        })
+        $('.downparks').scroll(function(){
+          let left = $('.downparks').scrollLeft()
+          console.log(left)
+
+          let width = $('.park').width()
+          console.log(width)
+          let num = that.downparks.length*240 - $('.park').width()
+          that.downfristnum = Math.ceil(left/(num/(that.downparks.length-(width/240))))
+        })
+      })
+    },
     back_parklist(){
       this.$router.push({name:'adminLink'})
     }
@@ -173,7 +223,7 @@ export default {
   margin: 0 auto;
 }
 .roadname{
-  width: 400px;
+  /* width: 500px; */
   height: 50px;
   float: left;
   font-size: 25px;
@@ -191,16 +241,16 @@ export default {
   line-height: 50px;
 }
 .parknum{
-  width: 200px;
+  width: 300px;
   height: 100px;
   float: right;
 }
-.parknum>span{
+.freenum{
   display: block;
   width: 80%;
   height: 50px;
-  margin: 0 auto;
-  text-align: center;
+  float: right;
+  text-align: right;
   line-height: 50px;
   font-size: 14px;
 }
@@ -208,6 +258,13 @@ export default {
   background: #1296db;
   border-radius: 5px;
   color: #fff;
+  display: block;
+  width: 50%;
+  height: 50px;
+  float: right;
+  text-align: center;
+  line-height: 50px;
+  font-size: 14px;
 }
 .parknum .allnum>a{
   font-size: 25px;
@@ -337,8 +394,11 @@ export default {
   width: 200px;
   height: 98px;
   margin: 0 auto;
-  background-image: url('../assets/chewei.jpg');
+  background-image: url('../assets/cheweinew.png');
   background-size: 100%;
+}
+.abnormal{
+  background-color: #d81e06;
 }
 .park>ul>li>div>div{
   width: 70%;
@@ -351,6 +411,8 @@ export default {
   display: block;
   font-size: 20px;
   font-weight: 700;
+  height: 25px;
+  line-height: 10px;
 }
 .park>ul>li>.text{
   font-size: 14px;
@@ -405,6 +467,10 @@ export default {
 }
 .road>ul>.direction2{
   margin: 37px 0;
+}
+.timer{
+  font-size: 14px;
+  display: block;
 }
 </style>
 

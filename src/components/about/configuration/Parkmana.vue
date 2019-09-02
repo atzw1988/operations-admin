@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-02 18:51:17
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="row">
     <div class="total">
@@ -8,16 +15,14 @@
       <el-button style="float:right;margin-right:20px;margin-top:10px;" type="success" @click="add_car">新建</el-button>
       <div class="data-interval">
         <div class="username">
-          <span style="float:left">地磁编号:</span>
-          <el-input style="width:120px;float:left"
-            placeholder="输入车位编号"
+          <el-input style="width:150px;float:left"
+            placeholder="输入地磁编号"
             v-model="magneticNo"
             clearable>
           </el-input>
         </div>
         <div class="username">
-          <span style="float:left">车位编号:</span>
-          <el-input style="width:120px;float:left"
+          <el-input style="width:150px;float:left"
             placeholder="输入车位编号"
             v-model="parkingNo"
             clearable>
@@ -32,13 +37,13 @@
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange">
-        <el-table-column
+        <!-- <el-table-column
           type="selection"
           width="55">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           label="序号"
-          width="50"
+          width="100"
           type="index">
         </el-table-column>
         <el-table-column
@@ -341,7 +346,11 @@ export default {
     },
     //分页
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pageIndex = val
+      let params = new URLSearchParams();
+      params.append('pageIndex', this.pageIndex);
+      params.append('ps', this.ps)
+      this.get_park_list(params)
     },
     close(){
       this.rule_editor = false
@@ -364,6 +373,7 @@ export default {
   height: 100%;
   color: #000;
   position: relative;
+  background-color: #f5f5f5 !important;
 }
 .total{
   width: 100%;
@@ -402,7 +412,7 @@ export default {
   float: left;
 }
 .data-interval{
-  width: 600px;
+  /* width: 600px; */
   height: 40px;
   float: left;
   line-height: 40px;
@@ -414,13 +424,14 @@ export default {
   float: left;
 }
 .username{
-  width: 220px;
+  width: 150px;
   height: 40px;
   float: left;
   margin-left: 10px;
 }
 .selbtn{
   float: left;
+  margin-left: 10px;
 }
 .selbtn>img{
   width: 40px;
@@ -451,7 +462,7 @@ export default {
 }
 /* 分页控制 */
 .el-pagination{
-  width: 580px;
+  /* width: 580px; */
   height: 30px;
   position: absolute;
   bottom: -35px;

@@ -2,7 +2,8 @@
   <header>
     <div class="menu">
       <div class="log">
-        <img src="../assets/log.png" alt="">
+        <img class="huateng" src="../assets/log.png" alt="">
+        <!-- <img class="tengxun" src="../assets/txlogob.png" alt=""> -->
       </div>
       <ul class="menulist">
         <li class="one">
@@ -52,11 +53,11 @@
     </div>
     <div class="userinfo">
       <div class="gomy" style="cursor: pointer" @click="userinfo">
-        <router-link tag='span' :to="{name:'usernameLink'}">安全设置</router-link>
+        <router-link tag='span' :to="{name:'passwordLink'}">修改密码</router-link>
       </div>
-      <div class="gomy" style="cursor: pointer" @click="userinfo">
+      <!-- <div class="gomy" style="cursor: pointer" @click="userinfo">
         <router-link tag='span' :to="{name:'passwordLink'}">个人设置</router-link>
-      </div>
+      </div> -->
       <div style="cursor: pointer" class="exit" @click="exit">退出</div>
     </div>
   </header>
@@ -129,14 +130,14 @@
   height: 65px;
   background: rgb(1, 2, 3);
   position: relative;
-  z-index: 10000;
+  z-index: 2002;
 }
 .userinfo{
-  position: absolute;
+  position: fixed;
   width: 150px;
   right: 0;
   top: -55px;
-  z-index: 9999;
+  z-index: 2001;
   color: #fff;
 }
 .gomy,.exit{
@@ -178,10 +179,16 @@
   float: left;
   margin: 0 20px;
 }
-.log>img{
+.huateng{
   width: 65px;
   height: 65px;
   margin-left: 80px;
+  margin-top: 10px;
+}
+.tengxun{
+  width: 160px;
+  margin-left: 20px;
+  margin-top: 10px;
 }
 .active{
   background: rgb(13, 75, 247);
@@ -254,5 +261,13 @@
     line-height: 65px;
     margin-left: 25px;
   }
+
+}
+li{
+    list-style: none;
+}
+ul{
+  margin: 0;
+  padding: 0;
 }
 </style>

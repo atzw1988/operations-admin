@@ -1,28 +1,43 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-26 10:24:10
+ * @LastEditTime: 2019-09-02 18:19:18
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="row">
     <div class="header">
       <div class="total">
-        <div class="text">今日营业收入(元)</div>
-        <div class="num">{{sum_list.shouldmoney}}</div>
+        <div class="text">今日营业收入</div>
+        <div class="num">{{sum_list.shouldmoney}}(元)</div>
       </div>
       <div class="total">
-        <div class="text">今日营业实收(元)</div>
-        <div class="num">{{sum_list.offline}}</div>
+        <div class="text">今日欠费总额</div>
+        <div class="num">{{sum_list.evasionamount}}(元)</div>
       </div>
       <div class="total">
-        <div class="text">今日欠费总额(元)</div>
-        <div class="num">{{sum_list.evasionamount}}</div>
+        <div class="text">今日入账金额</div>
+        <div class="num">{{sum_list.total}}(元)</div>
       </div>
       <div class="total">
-        <div class="text">今日入账金额(元)</div>
-        <div class="num">{{sum_list.total}}</div>
+        <div class="text">今日预收账款</div>
+        <div class="num">{{sum_list.deferredRevenue}}(元)</div>
       </div>
       <div class="total">
-        <div class="text">今日预收账款(元)</div>
-        <div class="num">{{sum_list.deferredRevenue}}</div>
+        <div class="text">今日营业实收</div>
+        <div class="num">{{sum_list.offline}}(元)</div>
+      </div>
+      <div class="total">
+        <div class="text">今日营业实收(现金)</div>
+        <div class="num">{{sum_list.receivedTodayCash}}(元)</div>
+      </div>
+      <div class="total">
+        <div class="text">今日营业实收(微信/支付宝)</div>
+        <div class="num">{{sum_list.resultsTodayWeChatAlipay}}(元)</div>
       </div>
     </div>
-    <div class="content">
+    <div class="content" v-if="is_show">
       <div class="chart" id="booked"></div>
       <div class="chart" id="income"></div>
       <div class="chart" id="pay"></div>
@@ -36,25 +51,32 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      time_interval: [],
+      is_show: true,
       sum_list:{},
-      booked:[10000,9500,13000,11000,7000,5000,15000],
-      income:[6000,7000,10000,8000,5000,4500,12000],
-      advance:[4000,2500,3000,3000,2000,500,3000],
-      owe:[3000,1000,5000,1500,1300,2500,1200],
-      amount:[9000,8000,15000,9500,6300,7000,13200],
-      xData:['6.11','6.12','6.13','6.14','6.15','6.16','6.17'],
-      pay:[70,73,86,90,65,80,86,78.57],
-      xData_pay:['6.11','6.12','6.13','6.14','6.15','6.16','6.17','7天付费率'],
-      recharge:[3000,1500,1800,3600,2400,2800,2000],
-      sum_url:'/its/operations/booked/amount'
+      booked:[],
+      income:[],
+      advance:[],
+      owe:[],
+      amount:[],
+      xData:[],
+      pay:[],
+      xData_pay:[],
+      recharge:[],
+      xData_recharge: [],
+      sum_url:'/its/operations/booked/amount',
+      booked_url: '/its/operations/index/recordMoney',
+      income_url: '/its/operations/index/incomeMoney',
+      url_excel:'/its/operations/income/statementspda',
+      recharge_url: '/its/operations/recharge/report'
     }
   },
   mounted() {
+    this.get_time_interval(7)
     this.get_summary()
-    this.drowbooked()
-    this.drowincome()
-    this.drowpay()
-    this.drowrecharge()
+    this.get_booked()
+    this.get_drowpay()
+    this.get_recharge()
   },
   methods: {
     get_summary(){
@@ -70,6 +92,97 @@ export default {
         if(res.data.code == 0){
           this.sum_list = res.data.data
         }
+      })
+    },
+    get_booked () {
+      let params = new URLSearchParams()
+      params.append('daySum', 7)
+      axios({
+        method: 'post',
+        url: this.booked_url,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        data:params
+      }).then(res => {
+        console.log(res)
+        this.xData = res.data.data.map(item => {
+          return item.the_day
+        })
+        this.booked = res.data.data.map(item => {
+          return item.booked_account
+        })
+        this.income = res.data.data.map(item => {
+          return item.business_paid
+        })
+        this.advance = res.data.data.map(item => {
+          return item.advance_account
+        })
+        this.drowbooked()
+        axios({
+          method: 'post',
+          url: this.income_url,
+          headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+          },
+          data:params
+        }).then(res => {
+          console.log(res)
+          this.owe = res.data.data.map(item => {
+            return item.owe_amount
+          })
+          this.amount = res.data.data.map(item => {
+            return item.income_paid
+          })
+          this.drowincome()
+        })
+      })
+    },
+    //获取付费率
+    get_drowpay () {
+      console.log(this.time_interval)
+      let params = new URLSearchParams()
+      params.append('pageIndex', 1);
+      params.append('sTime', this.time_interval[0])
+      params.append('eTime', this.time_interval[1])
+      this.get_my_list(params,this.url_excel,(res) => {
+        console.log(res)
+        let total = 0
+        this.pay = res.data.data.map(item => {
+          return (item.pay_rate * 100).toFixed(0)
+        })
+        this.pay.forEach(item => {
+          total += (item * 1)
+        })
+        console.log(total)
+        // this.pay.push((total/7).toFixed(2))
+        this.xData_pay = res.data.data.map(item => {
+          return item.the_day
+        })
+        console.log(this.pay)
+        // this.xData_pay.push('7天付费率')
+        this.drowpay()
+      })
+    },
+    //获取充值金额
+    get_recharge () {
+      axios({
+        method: 'post',
+        url: this.recharge_url,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        data:{}
+      }).then(res => {
+        console.log(res)
+        let data = res.data.data.reverse()
+        this.xData_recharge = data.map(item => {
+          return item.click_date
+        })
+        this.recharge = data.map(item => {
+          return item.sum
+        })
+        this.drowrecharge()
       })
     },
     drowbooked(){
@@ -109,7 +222,7 @@ export default {
           textStyle: {
             color: '#90979c',
           },
-          'data': ['营收实收', '预收账款', '入账总额']
+          'data': ['营业实收', '预收账款', '入账总额']
         },
         calculable: true,
         xAxis: [{
@@ -152,7 +265,7 @@ export default {
         ],
         series: [
           {
-            name: '营收实收',
+            name: '营业实收',
             type: 'bar',
             stack: '总量',
             barMaxWidth: 35,
@@ -165,7 +278,7 @@ export default {
                   textStyle: {
                     color: "#000"
                   },
-                  position: "insideTop",
+                  position: "inside",
                   formatter: function (p) {
                     return p.value > 0 ? (p.value) : '';
                   }
@@ -178,6 +291,7 @@ export default {
             name: '预收账款',
             type: 'bar',
             stack: '总量',
+            barMaxWidth: 35,
             itemStyle: {
               normal: {
                 color: "rgba(255,144,128,1)",
@@ -260,7 +374,7 @@ export default {
           textStyle: {
             color: '#90979c',
           },
-          'data': ['营收实收', '营收欠费', '营收总额']
+          'data': ['营业实收', '营收欠费', '营收总额']
         },
         calculable: true,
         xAxis: [{
@@ -303,7 +417,7 @@ export default {
         ],
         series: [
           {
-            name: '营收实收',
+            name: '营业实收',
             type: 'bar',
             stack: '总量',
             barMaxWidth: 35,
@@ -316,7 +430,7 @@ export default {
                   textStyle: {
                     color: "#000"
                   },
-                  position: "insideTop",
+                  position: "inside",
                   formatter: function (p) {
                     return p.value > 0 ? (p.value) : '';
                   }
@@ -329,6 +443,7 @@ export default {
             name: '营收欠费',
             type: 'bar',
             stack: '总量',
+            barMaxWidth: 35,
             itemStyle: {
               normal: {
                 color: "rgba(255,144,128,1)",
@@ -468,7 +583,9 @@ export default {
                   },
                   position: "insideTop",
                   formatter: function (p) {
-                    return p.value > 0 ? (p.value) : '';
+                    // console.log(p)
+                    // return p.value > 0 ? (p.value) : '';
+                    return p.value + '%'
                   }
                 }
               }
@@ -540,7 +657,7 @@ export default {
           axisLabel: {
             interval: 0
           },
-          data: that.xData
+          data: that.xData_recharge
         }],
         yAxis: [
           {
@@ -595,6 +712,7 @@ export default {
   #row{
     width: 100%;
     height: 100%;
+    background-color: #f5f5f5;
   }
   .header{
     width: 100%;
@@ -604,14 +722,14 @@ export default {
     background: #fff;
   }
   .total{
-    width: 20%;
+    width: 14%;
     height: 100px;
     /* border: 1px solid darkcyan; */
     float: left;
     text-align: center;
   }
   .text{
-    font-size: 18px;
+    font-size: 16px;
     margin-top: 20px;
   }
   .num{

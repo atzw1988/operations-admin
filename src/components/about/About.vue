@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-02 18:17:48
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="row">
     <div class="leftmenu">
@@ -38,14 +45,14 @@
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'orderLink'}">订单报表</router-link>
           </template>
-        </el-menu-item>
-        <el-menu-item index="1-5">
+        </el-menu-item> -->
+        <!-- <el-menu-item index="1-5">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'rechargeLink'}">充值报表</router-link>
           </template>
-        </el-menu-item>
-        <el-menu-item index="1-6">
+        </el-menu-item> -->
+        <!-- <el-menu-item index="1-6">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'usersLink'}">用户报表</router-link>
@@ -70,6 +77,12 @@
             <template slot="title">
               <img src="../../assets/wenjian.png" alt="">
               <router-link tag="li" class="twomenu" :to="{name:'pdaorderLink'}">PDA订单</router-link>
+            </template>
+          </el-menu-item>
+          <el-menu-item index="2-1-3">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'performanceLink'}">PDA个人业绩</router-link>
             </template>
           </el-menu-item>
         </el-submenu>
@@ -98,12 +111,12 @@
             <router-link tag="li" class="twomenu" :to="{name:'userblacklistLink'}">用户黑名单</router-link>
           </template>
         </el-menu-item> -->
-        <el-menu-item index="3-3">
+        <!-- <el-menu-item index="3-3">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
             <router-link tag="li" class="twomenu" :to="{name:'carwhitelistLink'}">车辆白名单</router-link>
           </template>
-        </el-menu-item>
+        </el-menu-item> -->
         <el-menu-item index="3-4">
           <template slot="title">
             <img src="../../assets/wenjian.png" alt="">
@@ -229,8 +242,12 @@ export default {
 <style scoped>
 #row{
   width: 100%;
-  height: 904px;
-  background: #f5f5f5
+  /* height: 904px; */
+  background: #38434e;
+  min-height: 904px;
+  /* height: 100%; */
+  /* padding-bottom:50px; */
+  /* margin-bottom: 100px; */
 }
 .leftmenu{
   float: left;

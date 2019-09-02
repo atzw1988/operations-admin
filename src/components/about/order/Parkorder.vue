@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-02 18:49:37
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="row">
     <div class="total">
@@ -16,8 +23,8 @@
         <el-option value="1" label="交易完成"></el-option>
         <el-option value="2" label="无需支付"></el-option>
       </el-select>
-      <el-select v-model="selpark" placeholder="停车区域" class="selplace" filterable clearable>
-        <el-option value="">全部区域</el-option>
+      <el-select v-model="selpark" placeholder="全部路段" class="selplace" filterable clearable>
+        <el-option label="全部路段" value="">全部路段</el-option>
         <el-option
           v-for="item in parkareas"
           :key="item.parking_name"
@@ -52,7 +59,6 @@
           </el-date-picker>
         </div>
         <div class="username">
-          <span style="float:left">账户:</span>
           <el-input style="width:120px;float:left"
             placeholder="请输入帐户"
             v-model="username"
@@ -87,13 +93,42 @@
         <el-table-column
           prop="car_no"
           width="100"
-          label="停泊车辆">
+          label="车牌号">
         </el-table-column>
         <el-table-column
-          sortable
+          prop="parking_name"
+          label="停车地点">
+        </el-table-column>
+        <el-table-column
+          prop="parkstart_time"
+          label="入场时间">
+        </el-table-column>
+        <el-table-column
+          prop="parkend_time"
+          label="出场时间">
+        </el-table-column>
+        <el-table-column
+          prop="money"
+          width="80"
+          label="消费渠道">
+          <template slot-scope="scope">
+            <span v-if="scope.row.user_id == 2">APP</span>
+            <span v-if="scope.row.user_id == 1">小程序</span>
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="charge_money"
           width="130"
-          label="消费金额(元)">
+          label="订单金额(元)">
+        </el-table-column>
+        <el-table-column
+          width="80"
+          label="订单状态">
+          <template slot-scope="scope">
+            <span v-if="scope.row.pay_type == 1">交易完成</span>
+            <span v-if="scope.row.pay_type == 0">未支付</span>
+            <span v-if="scope.row.pay_type == 2">免费时段</span>
+          </template>
         </el-table-column>
         <el-table-column
           prop=""
@@ -110,36 +145,6 @@
             泊位停车
           </template>
         </el-table-column> -->
-        <el-table-column
-          prop="money"
-          width="80"
-          label="消费渠道">
-          <template slot-scope="scope">
-            <span v-if="scope.row.user_id == 2">APP</span>
-            <span v-if="scope.row.user_id == 1">小程序</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="parking_name"
-          label="停车地点">
-        </el-table-column>
-        <el-table-column
-          prop="parkstart_time"
-          label="入场时间">
-        </el-table-column>
-        <el-table-column
-          prop="parkend_time"
-          label="出场时间">
-        </el-table-column>
-        <el-table-column
-          width="80"
-          label="订单状态">
-          <template slot-scope="scope">
-            <span v-if="scope.row.pay_type == 1">交易完成</span>
-            <span v-if="scope.row.pay_type == 0">未支付</span>
-            <span v-if="scope.row.pay_type == 2">免费时段</span>
-          </template>
-        </el-table-column>
       </el-table>
       <el-pagination
         @current-change="page_change"
@@ -158,9 +163,9 @@ export default {
   data() {
     return {
       time_interval: [],    //时间区间
-      allmoney: '',   //总金额
+      allmoney: 0,   //总金额
       list_num:0,     //总订单数
-      selmoney: '',   //筛选总金额
+      selmoney: 0,   //筛选总金额
       sel_num:0,     //筛选总订单数
       statues:'',           //关键字订单状态绑定
       parkareas: [],  //区域分类
@@ -265,6 +270,7 @@ export default {
   width: 100%;
   height: 100%;
   /* background: rgb(219, 219, 219); */
+  background-color: #f5f5f5 !important;
   color: #000;
 }
 .total{
@@ -356,7 +362,7 @@ export default {
 }
 /* 分页控制 */
 .el-pagination{
-  width: 580px;
+  /* width: 580px; */
   height: 30px;
   position: absolute;
   bottom: 7px;

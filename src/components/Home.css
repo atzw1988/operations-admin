@@ -1,0 +1,38 @@
+.tips {
+  position: absolute;
+  /* z-index: 99999999; */
+  width: 350px;
+  height: 77px;
+  border: 1px solid #9999;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.tip_left {
+  float: left;
+  background: #16adf8;
+  width: 120px;
+  height: 25px;
+  font-size: 14px;
+  line-height: 25px;
+  color: #fff;
+  font-weight: 600;
+  text-align: left;
+  padding-left: 30px;
+}
+
+.tip_right {
+  background: #fff;
+  height: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 25px;
+  text-align: left;
+  padding-left: 20px;
+  width: 228px;
+  float: left;
+}
+
+.b_down {
+  border-bottom: 1px solid #999;
+}
