@@ -20,6 +20,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import { store } from './store/store.js';
 
 // 配置默认根路径
+//测试
 // axios.defaults.baseURL = 'https://wd0992259444dcaaxf.wilddogio.com/';
 // axios.defaults.baseURL = 'http://192.168.0.187:13259';  //本地接口
 // axios.defaults.baseURL = 'http://192.168.0.130:13259';  //本地接口
