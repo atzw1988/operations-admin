@@ -1,8 +1,8 @@
 {
-  "name": "pizza-app",
+  "name": "operations-admin",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "Mr.Wu <309595700@qq.com>",
+  "author": "Mr.Zhang <386553646@qq.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --host 192.168.1.102 --progress --config build/webpack.dev.conf.js",

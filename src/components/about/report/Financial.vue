@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-06-26 14:55:23
- * @LastEditTime: 2019-09-02 18:45:31
+ * @LastEditTime: 2019-09-03 18:09:55
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -126,7 +126,7 @@
         style="width: 100%">
         <el-table-column
           label="序号"
-          width="70"
+          width="80"
           type="index">
         </el-table-column>
         <el-table-column
@@ -620,7 +620,7 @@ export default {
             } else {
               return prev;
             }
-          }, 0);
+          }, 0).toFixed(2)
           sums[index] += ' 元';
         } else {
           sums[index] = '';

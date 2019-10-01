@@ -2,185 +2,185 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-05-28 11:03:07
- * @LastEditTime: 2019-09-02 18:17:48
+ * @LastEditTime: 2019-09-03 18:09:18
  * @LastEditors: Please set LastEditors
  -->
 <template>
   <div id="row">
     <div class="leftmenu">
       <el-menu
-      default-active="2"
-      class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
-      background-color="#38434e"
-      text-color="#fff"
-      active-text-color="#ffd04b">
-      <el-submenu index="1">
-        <template slot="title">
-          <img class="one_img" v-show="show_1" src="../../assets/wenjianjia_1.png" alt="">
-          <img class="one_img" v-show="!show_1" src="../../assets/wenjianjia.png" alt="">
-          <span class="title_text">运营报表</span>
-        </template>
-        <!-- <el-menu-item index="1-1">
+        default-active="2"
+        class="el-menu-vertical-demo"
+        @open="handleOpen"
+        @close="handleClose"
+        background-color="#38434e"
+        text-color="#fff"
+        active-text-color="#ffd04b">
+        <el-submenu index="1" v-if="this.isHas(['财务报表', '收入报表'])">
           <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'summaryLink'}">首页</router-link>
+            <img class="one_img" v-show="show_1" src="../../assets/wenjianjia_1.png" alt="">
+            <img class="one_img" v-show="!show_1" src="../../assets/wenjianjia.png" alt="">
+            <span class="title_text">运营报表</span>
           </template>
-        </el-menu-item> -->
-        <el-menu-item index="1-2">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'financialLink'}">财务报表</router-link>
-          </template>
-        </el-menu-item>
-        <el-menu-item index="1-3">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'operatingLink'}">收入报表</router-link>
-          </template>
-        </el-menu-item>
-        <!-- <el-menu-item index="1-4">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'orderLink'}">订单报表</router-link>
-          </template>
-        </el-menu-item> -->
-        <!-- <el-menu-item index="1-5">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'rechargeLink'}">充值报表</router-link>
-          </template>
-        </el-menu-item> -->
-        <!-- <el-menu-item index="1-6">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'usersLink'}">用户报表</router-link>
-          </template>
-        </el-menu-item> -->
-      </el-submenu>
-      <el-submenu index="2">
-        <template slot="title">
-          <img class="one_img" v-show="show_2" src="../../assets/wenjianjia_1.png" alt="">
-          <img class="one_img" v-show="!show_2" src="../../assets/wenjianjia.png" alt="">
-          <span class="title_text">订单管理</span>
-        </template>
-        <el-submenu index="2-1">
-          <template slot="title"><img src="../../assets/wenjian.png" alt="">停车订单</template>
-          <el-menu-item index="2-1-1">
+          <!-- <el-menu-item index="1-1">
             <template slot="title">
               <img src="../../assets/wenjian.png" alt="">
-              <router-link tag="li" class="twomenu" :to="{name:'parkorderLink'}">网络订单</router-link>
+              <router-link tag="li" class="twomenu" :to="{name:'summaryLink'}">首页</router-link>
+            </template>
+          </el-menu-item> -->
+          <el-menu-item index="1-2" v-if="this.isHave('财务报表')">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'financialLink'}">财务报表</router-link>
             </template>
           </el-menu-item>
-          <el-menu-item index="2-1-2">
+          <el-menu-item index="1-3" v-if="this.isHave('收入报表')">
             <template slot="title">
               <img src="../../assets/wenjian.png" alt="">
-              <router-link tag="li" class="twomenu" :to="{name:'pdaorderLink'}">PDA订单</router-link>
+              <router-link tag="li" class="twomenu" :to="{name:'operatingLink'}">收入报表</router-link>
             </template>
           </el-menu-item>
-          <el-menu-item index="2-1-3">
+          <!-- <el-menu-item index="1-4">
             <template slot="title">
               <img src="../../assets/wenjian.png" alt="">
-              <router-link tag="li" class="twomenu" :to="{name:'performanceLink'}">PDA个人业绩</router-link>
+              <router-link tag="li" class="twomenu" :to="{name:'orderLink'}">订单报表</router-link>
+            </template>
+          </el-menu-item> -->
+          <!-- <el-menu-item index="1-5">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'rechargeLink'}">充值报表</router-link>
+            </template>
+          </el-menu-item> -->
+          <!-- <el-menu-item index="1-6">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'usersLink'}">用户报表</router-link>
+            </template>
+          </el-menu-item> -->
+        </el-submenu>
+        <el-submenu index="2" v-if="this.isHas(['订单管理', '停车订单'])">
+          <template slot="title">
+            <img class="one_img" v-show="show_2" src="../../assets/wenjianjia_1.png" alt="">
+            <img class="one_img" v-show="!show_2" src="../../assets/wenjianjia.png" alt="">
+            <span class="title_text">订单管理</span>
+          </template>
+          <el-submenu index="2-1" v-if="this.isHas(['PDA订单', 'PDA个人业绩'])">
+            <template slot="title"><img src="../../assets/wenjian.png" alt="">停车订单</template>
+            <!-- <el-menu-item index="2-1-1">
+              <template slot="title">
+                <img src="../../assets/wenjian.png" alt="">
+                <router-link tag="li" class="twomenu" :to="{name:'parkorderLink'}">网络订单</router-link>
+              </template>
+            </el-menu-item> -->
+            <el-menu-item index="2-1-2" v-if="this.isHave('PDA订单')">
+              <template slot="title">
+                <img src="../../assets/wenjian.png" alt="">
+                <router-link tag="li" class="twomenu" :to="{name:'pdaorderLink'}">PDA订单</router-link>
+              </template>
+            </el-menu-item>
+            <el-menu-item index="2-1-3" v-if="this.isHave('PDA个人业绩')">
+              <template slot="title">
+                <img src="../../assets/wenjian.png" alt="">
+                <router-link tag="li" class="twomenu" :to="{name:'performanceLink'}">PDA个人业绩</router-link>
+              </template>
+            </el-menu-item>
+          </el-submenu>
+          <el-menu-item index="2-2" v-if="this.isHave('充值订单')">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'rechargeorderLink'}">充值订单</router-link>
             </template>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item index="2-2">
+        <el-submenu index="3" v-if="this.isHas(['用户信息', '欠费查询'])">
           <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'rechargeorderLink'}">充值订单</router-link>
+            <img class="one_img" v-show="show_3" src="../../assets/wenjianjia_1.png" alt="">
+            <img class="one_img" v-show="!show_3" src="../../assets/wenjianjia.png" alt="">
+            <span class="title_text">用户管理</span>
           </template>
-        </el-menu-item>
-      </el-submenu>
-      <el-submenu index="3">
-        <template slot="title">
-          <img class="one_img" v-show="show_3" src="../../assets/wenjianjia_1.png" alt="">
-          <img class="one_img" v-show="!show_3" src="../../assets/wenjianjia.png" alt="">
-          <span class="title_text">用户管理</span>
-        </template>
-        <el-menu-item index="3-1">
+          <el-menu-item index="3-1" v-if="this.isHave('用户信息')">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'userslistLink'}">用户信息</router-link>
+            </template>
+          </el-menu-item>
+          <!-- <el-menu-item index="3-2">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'userblacklistLink'}">用户黑名单</router-link>
+            </template>
+          </el-menu-item> -->
+          <!-- <el-menu-item index="3-3">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'carwhitelistLink'}">车辆白名单</router-link>
+            </template>
+          </el-menu-item> -->
+          <el-menu-item index="3-4" v-if="this.isHave('欠费查询')">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'owequeryLink'}">欠费查询</router-link>
+            </template>
+          </el-menu-item>
+        </el-submenu>
+        <el-submenu index="4" v-if="this.isHave('车位管理')">
           <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'userslistLink'}">用户信息</router-link>
+            <img class="one_img" v-show="show_4" src="../../assets/wenjianjia_1.png" alt="">
+            <img class="one_img" v-show="!show_4" src="../../assets/wenjianjia.png" alt="">
+            <span class="title_text">配置管理</span>
           </template>
-        </el-menu-item>
-        <!-- <el-menu-item index="3-2">
+          <!-- <el-menu-item index="4-1">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'chargingrulesLink'}">收费管理</router-link>
+            </template>
+          </el-menu-item> -->
+          <el-menu-item index="4-2">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'parkmanaLink'}">车位管理</router-link>
+            </template>
+          </el-menu-item>
+          <!-- <el-menu-item index="4-3">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'garagemanaLink'}">车库管理</router-link>
+            </template>
+          </el-menu-item> -->
+        </el-submenu>
+        <!-- <el-submenu index="5">
           <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'userblacklistLink'}">用户黑名单</router-link>
+            <img class="one_img" v-show="show_5" src="../../assets/wenjianjia_1.png" alt="">
+            <img class="one_img" v-show="!show_5" src="../../assets/wenjianjia.png" alt="">
+            <span class="title_text">月卡管理</span>
           </template>
-        </el-menu-item> -->
-        <!-- <el-menu-item index="3-3">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'carwhitelistLink'}">车辆白名单</router-link>
-          </template>
-        </el-menu-item> -->
-        <el-menu-item index="3-4">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'owequeryLink'}">欠费查询</router-link>
-          </template>
-        </el-menu-item>
-      </el-submenu>
-      <el-submenu index="4">
-        <template slot="title">
-          <img class="one_img" v-show="show_4" src="../../assets/wenjianjia_1.png" alt="">
-          <img class="one_img" v-show="!show_4" src="../../assets/wenjianjia.png" alt="">
-          <span class="title_text">配置管理</span>
-        </template>
-        <!-- <el-menu-item index="4-1">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'chargingrulesLink'}">收费管理</router-link>
-          </template>
-        </el-menu-item> -->
-        <el-menu-item index="4-2">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'parkmanaLink'}">车位管理</router-link>
-          </template>
-        </el-menu-item>
-        <!-- <el-menu-item index="4-3">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'garagemanaLink'}">车库管理</router-link>
-          </template>
-        </el-menu-item> -->
-      </el-submenu>
-      <!-- <el-submenu index="5">
-        <template slot="title">
-          <img class="one_img" v-show="show_5" src="../../assets/wenjianjia_1.png" alt="">
-          <img class="one_img" v-show="!show_5" src="../../assets/wenjianjia.png" alt="">
-          <span class="title_text">月卡管理</span>
-        </template>
-        <el-menu-item index="5-1">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'userpreferenLink'}">月卡用户</router-link>
-          </template>
-        </el-menu-item>
-        <el-menu-item index="5-2">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'addpreferenLink'}">月卡配置</router-link>
-          </template>
-        </el-menu-item>
-        <el-menu-item index="5-3">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'setpreferenLink'}">月卡类型配置</router-link>
-          </template>
-        </el-menu-item>
-        <el-menu-item index="5-4">
-          <template slot="title">
-            <img src="../../assets/wenjian.png" alt="">
-            <router-link tag="li" class="twomenu" :to="{name:'numpreferenLink'}">月卡名额配置</router-link>
-          </template>
-        </el-menu-item>
-      </el-submenu> -->
-    </el-menu>
+          <el-menu-item index="5-1">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'userpreferenLink'}">月卡用户</router-link>
+            </template>
+          </el-menu-item>
+          <el-menu-item index="5-2">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'addpreferenLink'}">月卡配置</router-link>
+            </template>
+          </el-menu-item>
+          <el-menu-item index="5-3">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'setpreferenLink'}">月卡类型配置</router-link>
+            </template>
+          </el-menu-item>
+          <el-menu-item index="5-4">
+            <template slot="title">
+              <img src="../../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'numpreferenLink'}">月卡名额配置</router-link>
+            </template>
+          </el-menu-item>
+        </el-submenu> -->
+      </el-menu>
     </div>
     <div class="rightdetile">
       <router-view></router-view>

@@ -176,10 +176,10 @@ export default {
       let start = new Date()
       start.setTime(start.getTime() - 3600 * 1000 * 24 * num)
       let year_end = end.getFullYear();
-      let month_end = end.getMonth() + 1 < 10 ? "0" + (end.getMonth() + 1) : data.getMonth() + 1;
+      let month_end = end.getMonth() + 1 < 10 ? "0" + (end.getMonth() + 1) : end.getMonth() + 1;
       let date_end = end.getDate() < 10 ? "0" + end.getDate() : end.getDate();
       let year_start = start.getFullYear();
-      let month_start = start.getMonth() + 1 < 10 ? "0" + (start.getMonth() + 1) : data.getMonth() + 1;
+      let month_start = start.getMonth() + 1 < 10 ? "0" + (start.getMonth() + 1) : start.getMonth() + 1;
       let date_start = start.getDate() < 10 ? "0" + start.getDate() : start.getDate();
       this.time_interval = [year_start + '/' + month_start + '/' + date_start, year_end + '/' + month_end + '/' + date_end]
     },
@@ -323,6 +323,28 @@ export default {
           }
         }
       }
-    })()
+    })(),
+    Vue.prototype.role_type = function () {
+      return window.localStorage.getItem('role_type')
+    },
+    Vue.prototype.isHave = function (str) {
+      let list = window.localStorage.getItem('page_views').split(',')
+      console.log(list)
+      return list.some(item => {
+        return item == str
+      })
+    },
+    Vue.prototype.isHas = function (arr) {
+      let list = window.localStorage.getItem('page_views').split(',')
+      let isShow = false
+      list.forEach(item => {
+        arr.forEach(ele => {
+          if (item == ele) {
+            isShow = true
+          }
+        })
+      })
+      return isShow
+    }
   }
 }

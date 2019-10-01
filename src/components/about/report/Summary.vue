@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-06-26 10:24:10
- * @LastEditTime: 2019-09-02 18:19:18
+ * @LastEditTime: 2019-09-07 17:41:07
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -690,7 +690,7 @@ export default {
                   textStyle: {
                     color: "#000"
                   },
-                  position: "insideTop",
+                  position: "top",
                   formatter: function (p) {
                     return p.value > 0 ? (p.value) : '';
                   }

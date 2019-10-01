@@ -1,7 +1,14 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-05-28 11:03:07
+ * @LastEditTime: 2019-09-07 09:06:45
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="row">
     <div class="leftmenu">
-      <ul>
+      <!-- <ul>
         <li v-for="(menulist,index) in menulists" :key="menulist.name">
           <div class="onemenu" @click="showToggle(menulist,index)">
             <span>{{menulist.name}}</span>
@@ -17,7 +24,42 @@
             </li>
           </ul>
         </li>
-      </ul>
+      </ul> -->
+      <el-menu
+        default-active="2"
+        class="el-menu-vertical-demo"
+        @open="handleOpen"
+        @close="handleClose"
+        background-color="#38434e"
+        text-color="#fff"
+        active-text-color="#ffd04b">
+        <el-submenu index="1">
+          <template slot="title">
+            <img class="one_img" v-show="show_1" src="../assets/wenjianjia_1.png" alt="">
+            <img class="one_img" v-show="!show_1" src="../assets/wenjianjia.png" alt="">
+            <span class="title_text">安全设置</span>
+          </template>
+          <el-menu-item index="1-1">
+            <template slot="title">
+              <img src="../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'passwordLink'}">密码修改</router-link>
+            </template>
+          </el-menu-item>
+        </el-submenu>
+        <el-submenu index="2" v-if="this.isHave('超级管理员')">
+          <template slot="title">
+            <img class="one_img" v-show="show_2" src="../assets/wenjianjia_1.png" alt="">
+            <img class="one_img" v-show="!show_2" src="../assets/wenjianjia.png" alt="">
+            <span class="title_text">账号管理</span>
+          </template>
+          <el-menu-item index="2-1">
+            <template slot="title">
+              <img src="../assets/wenjian.png" alt="">
+              <router-link tag="li" class="twomenu" :to="{name:'alluserLink'}">账户列表</router-link>
+            </template>
+          </el-menu-item>
+        </el-submenu>
+      </el-menu>
     </div>
     <div class="rightdetile">
       <router-view></router-view>
@@ -25,7 +67,6 @@
   </div>
 </template>
 <script>
-import echarts from "echarts";
 import $ from 'jquery';
 export default {
   name: "echarts",
@@ -42,16 +83,18 @@ export default {
             // {name:'用户信息',to:'usernameLink'},
           ]
         },
-        // {
-        //   name: '账号管理',
-        //   issubshow: false,
-        //   subitems: [
-        //     {name:'账号列表',to:'alluserLink'},
-        //     {name:'添加账号',to:'adduserLink'},
-        //     {name:'账号日志',to:'userlogLink'}
-        //   ]
-        // }
-      ]
+        {
+          name: '账号管理',
+          issubshow: false,
+          subitems: [
+            {name:'账号列表',to:'alluserLink'},
+            {name:'添加账号',to:'adduserLink'},
+            {name:'账号日志',to:'userlogLink'}
+          ]
+        }
+      ],
+      show_1:true,
+      show_2:true
     };
   },
   mounted() {
@@ -70,6 +113,20 @@ export default {
     this.chart = null;
   },
   methods: {
+    handleOpen(key, keyPath) {
+      if(key == 1){
+        this.show_1 = false
+      }else{
+        this.show_2 = false
+      }
+    },
+    handleClose(key, keyPath) {
+      if(key == 1){
+        this.show_1 = true
+      }else{
+        this.show_2 = true
+      }
+    },
     showToggle:function(item,ind){
       this.menulists.forEach(i => {
         // 判断如果数据中的menuList[i]的show属性不等于当前数据的isSubShow属性那么menuList[i]等于false
@@ -85,9 +142,11 @@ export default {
 
 <style scoped>
 #row{
-  width: 88.9%;
-  height: 93.3vh;
-  background: rgb(219, 219, 219)
+  width: 100%;
+  /* height: 93.3vh; */
+  min-height: 904px;
+  background: #38434e;
+  /* background: rgb(219, 219, 219) */
 }
 .leftmenu{
   float: left;
@@ -98,44 +157,34 @@ export default {
   background: #38434e;
 }
 .rightdetile{
-  width: 100%;
-  margin-left: 210px;
+  width: calc(100% - 200px);
+  margin-left: 200px;
   height: 100%;
   background: #fff;
 }
-.onemenu{
-  width: 100%;
-  height: 50px;
-  margin: 2px auto 0;
-  position: relative;
-  cursor: pointer;
+.el-menu-item{
+  padding-right: 0;
 }
-.onemenu>span{
-  line-height: 50px;
-  font-size: 18px;
-  font-weight: 600;
-  margin-left: 20px;
-}
-.onemenu>img{
+img{
   width: 30px;
   height: 30px;
   float: left;
   margin-top: 10px;
 }
-.twomenus>li{
-  width: 160px;
-  height: 40px;
-  margin: 2px 0 0 40px;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 40px;
-  text-align: center;
-  cursor: pointer;
+.one_img{
+  margin-top: 13px;
 }
-.twomenus>li>img{
-  width: 30px;
-  height: 30px;
+.title_text{
+  font-size: 20px;
+  line-height: 56px;
+  font-weight: 600;
   float: left;
-  margin: 5px 0 0 20px;
 }
+.leftmenu>>>.el-menu-item{
+  width: 199px;
+}
+.el-menu{
+  border: 0;
+}
+
 </style>

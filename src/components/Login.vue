@@ -94,11 +94,14 @@ import axios from 'axios';
             },
             data: params
           }).then(res => {
+            console.log(res)
             if(res.data.success){
               this.login_text = '登陆'
               this.is_login = false
-              let token = res.data.data
+              let token = res.data.data.token
               window.localStorage.setItem('username', this.username)
+              window.localStorage.setItem('role_type', res.data.data.role_type)
+              window.localStorage.setItem('page_views', res.data.data.page_views)
               window.localStorage.setItem('token', token)
               this.$store.dispatch("setUser",this.username)
               this.$router.push({name:"homeLink"})

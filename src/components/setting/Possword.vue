@@ -190,8 +190,9 @@ export default {
 <style scoped>
 #row{
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   position: relative;
+  background-color: #f5f5f5 !important;
 }
 .cont{
   width: 600px;

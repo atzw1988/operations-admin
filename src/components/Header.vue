@@ -12,25 +12,25 @@
             <span>实况</span>
           </router-link>
         </li>
-        <li class="">
+        <li class="" v-if="this.isHave('大屏')">
           <router-link :to="{name:'analyzeLink'}" class="nav-link" :class="{active:this.$route.name === 'analyzeLink'}">
             <img src="../assets/diqiu.png" alt="" id="headerImg" class="headerImg">
             <span>大屏</span>
           </router-link>
         </li>
-        <li class="">
+        <li class="" v-if="this.isHave('分析')">
           <router-link :to="{name:'operationsLink'}" class="nav-link" :class="{active:this.$route.name === 'operationsLink'}">
             <img src="../assets/erji-yingyongyunhangbaobiao.png" alt="" id="headerImg" class="headerImg">
             <span>分析</span>
           </router-link>
         </li>
-        <li class="">
+        <li class="" v-if="this.isHave('监管')">
           <router-link :to="{name:'adminLink'}" class="nav-link" :class="{active:$route.name === 'historyLink'||$route.name === 'parksLink'}">
             <img src="../assets/zaixianjianguan.png" alt="" id="headerImg" class="headerImg">
             <span>监管</span>
           </router-link>
         </li>
-        <li class="">
+        <li class="" v-if="this.isHas(['财务报表', '收入报表', '停车订单', '充值订单', '用户信息', '欠费查询', '车位管理'])">
           <router-link :to="{name:'aboutLink'}" class="nav-link" :class="{active:this.$route.path.match(/about/g)}">
             <img src="../assets/baobiao.png" alt="" id="headerImg" class="headerImg">
             <span>报表</span>
@@ -183,7 +183,7 @@
   width: 65px;
   height: 65px;
   margin-left: 80px;
-  margin-top: 10px;
+  margin-top: 0px;
 }
 .tengxun{
   width: 160px;
