@@ -15,7 +15,7 @@
     "echarts": "^4.2.1",
     "element-ui": "^2.8.2",
     "file-saver": "^2.0.1",
-    "jquery": "^3.4.0",
+    "jquery": "^3.5.0",
     "vue": "^2.5.2",
     "vue-baidu-map": "^0.21.18",
     "vue-date-time-m": "^1.0.30",
